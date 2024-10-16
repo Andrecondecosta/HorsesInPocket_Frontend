@@ -22,7 +22,7 @@ export const useLogin = () => {
 
       if (response.ok) {
         setToken(data.token);
-        localStorage.setItem('token', data.token);  // Salva o token no localStorage
+        localStorage.setItem('authToken', data.token);  // Use a chave 'authToken'
       } else {
         setError(data.error || 'Erro ao fazer login');
       }
@@ -35,7 +35,7 @@ export const useLogin = () => {
 
   const logout = () => {
     setToken(null);
-    localStorage.removeItem('token');  // Remove o token do localStorage
+    localStorage.removeItem('authToken');  // Use a chave 'authToken'
   };
 
   return { login, logout, token, loading, error };

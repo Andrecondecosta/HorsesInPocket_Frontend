@@ -1,18 +1,21 @@
 import React, { useState } from 'react';
 import { useNavigate } from 'react-router-dom';
+import { useLogin } from '../hooks/useLogin';
 
 const LoginPage = ({ setIsLoggedIn }) => {
   const [email, setEmail] = useState('');
   const [password, setPassword] = useState('');
+  const { login, loading, error } = useLogin();
   const navigate = useNavigate();
 
   const handleSubmit = async (e) => {
     e.preventDefault();
-    // Simulação de login
-    const token = 'fake-jwt-token'; // Substitua pelo token real da sua API
-    localStorage.setItem('authToken', token);
-    setIsLoggedIn(true);
-    navigate('/dashboard'); // Redireciona para o dashboard após o login
+    await login(email, password);
+
+    if (localStorage.getItem('authToken')) {  // Verifique a chave 'authToken'
+      setIsLoggedIn(true);
+      navigate('/dashboard'); // Redireciona para o dashboard após o login
+    }
   };
 
   return (
@@ -31,7 +34,8 @@ const LoginPage = ({ setIsLoggedIn }) => {
           value={password}
           onChange={e => setPassword(e.target.value)}
         />
-        <button type="submit">Login</button>
+        <button type="submit" disabled={loading}>Login</button>
+        {error && <p>{error}</p>}
       </form>
     </div>
   );

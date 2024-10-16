@@ -3,14 +3,16 @@ import { BrowserRouter as Router, Route, Routes, Link } from 'react-router-dom';
 import LoginPage from './pages/LoginPage';
 import RegisterPage from './pages/RegisterPage';
 import DashboardPage from './pages/DashboardPage';
+import ProfilePage from './pages/ProfilePage';
+import UpdateProfilePage from './pages/UpdateProfilePage';
 import ProtectedRoute from './components/ProtectedRoute';
-import Logout from './components/Logout'; // Importe o componente Logout
+import Logout from './components/Logout';
 
 function App() {
   const [isLoggedIn, setIsLoggedIn] = useState(false);
 
   useEffect(() => {
-    const token = localStorage.getItem('authToken');
+    const token = localStorage.getItem('authToken');  // Verifique a chave 'authToken'
     if (token) {
       setIsLoggedIn(true);
     }
@@ -22,6 +24,7 @@ function App() {
         <ul>
           <li><Link to="/dashboard">Dashboard</Link></li>
           <li><Link to="/register">Registrar</Link></li>
+          <li><Link to="/profile">Perfil</Link></li>
           {isLoggedIn ? (
             <li><Logout setIsLoggedIn={setIsLoggedIn} /></li> // Use o componente Logout
           ) : (
@@ -38,6 +41,8 @@ function App() {
         <Route path="/login" element={<LoginPage setIsLoggedIn={setIsLoggedIn} />} />
         <Route path="/register" element={<RegisterPage />} />
         <Route path="/dashboard" element={<ProtectedRoute element={<DashboardPage />} />} />
+        <Route path="/profile" element={<ProtectedRoute element={<ProfilePage />} />} />
+        <Route path="update-profile" element={<ProtectedRoute element={<UpdateProfilePage />} />} />
         <Route path="/" element={
           <div>
             <h1>Bem-vindo ao sistema de autenticação!</h1>
