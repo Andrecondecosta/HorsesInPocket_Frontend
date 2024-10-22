@@ -1,0 +1,29 @@
+.Menu {
+  display: flex;
+  align-items: center; /* Centraliza os itens verticalmente */
+  justify-content: center; /* Centraliza os itens horizontalmente */
+  background-color: #000000;
+  height: 60px;
+  color: #ffffff;
+}
+
+.Menu ul {
+  display: flex;
+  list-style: none; /* Remove os marcadores da lista */
+  padding: 0;
+  margin: 0;
+}
+
+.Menu li {
+  margin: 0 20px; /* Espaçamento entre os itens */
+}
+
+.Menu a {
+  color:#ffffff; /* Define a cor branca para os links */
+  text-decoration: none; /* Remove o sublinhado dos links */
+  transition: color 0.3s ease; /* Adiciona uma transição suave */
+}
+
+.Menu a:hover {
+  color: #aaa; /* Adiciona uma cor mais escura ao passar o mouse */
+}
