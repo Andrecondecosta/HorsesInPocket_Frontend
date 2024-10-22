@@ -1,0 +1,38 @@
+.Dashboard {
+  position: relative; /* Necessário para posicionar a sobreposição */
+  background-image: url('https://images.unsplash.com/photo-1550785330-003a9afa3bd9?q=80&w=2070&auto=format&fit=crop&ixlib=rb-4.0.3&ixid=M3wxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8fA%3D%3D');
+  background-size: cover; /* Faz a imagem cobrir todo o contêiner */
+  background-position: center; /* Centraliza a imagem */
+  height: 100vh; /* Faz o contêiner ter a altura da tela */
+  color: #ffffff; /* Define a cor do texto */
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+}
+
+.Dashboard::before {
+  content: '';
+  position: absolute;
+  top: 0;
+  left: 0;
+  right: 0;
+  bottom: 0;
+  background-color: rgba(0, 0, 0, 0.5); /* Cor preta com 50% de opacidade */
+  z-index: 1; /* Coloca a sobreposição atrás do conteúdo */
+}
+
+.Dashboard h1,
+.Dashboard p {
+  position: relative;
+  z-index: 2; /* Coloca o texto acima da sobreposição */
+}
+
+.Dashboard h1 {
+  font-size: 6em; /* Aumenta o tamanho do título */
+
+}
+
+.Dashboard p {
+  font-size: 1.5em; /* Aumenta o tamanho do parágrafo */
+}

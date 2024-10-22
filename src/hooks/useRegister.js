@@ -5,7 +5,7 @@ export const useRegister = () => {
   const [error, setError] = useState(null);
   const [token, setToken] = useState(null);
 
-  const register = async (email, password, passwordConfirmation) => {
+  const register = async (userData) => {
     setLoading(true);
     setError(null);
 
@@ -15,21 +15,18 @@ export const useRegister = () => {
         headers: {
           'Content-Type': 'application/json',
         },
-        body: JSON.stringify({
-          user: { email, password, password_confirmation: passwordConfirmation },
-        }),
+        body: JSON.stringify({ user: userData }),  // Enviando os dados corretamente
       });
 
       const data = await response.json();
 
-      if (response.ok) {
-        setToken(data.token);
-        localStorage.setItem('token', data.token);  // Salva o token no localStorage
-      } else {
-        setError(data.errors ? data.errors.join(', ') : 'Erro ao registrar');
+      if (!response.ok) {
+        throw new Error(data.errors || 'Falha ao registrar usuário');
       }
+
+      setToken(data.token);  // Supondo que o backend retorne um token JWT
     } catch (err) {
-      setError('Erro de rede');
+      setError(err.message);
     } finally {
       setLoading(false);
     }
