@@ -1,0 +1,18 @@
+.content-container {
+  padding: 20px;
+  max-width: 1200px; /* Desktop grande */
+  margin: 0 auto;
+  width: 100%;
+}
+
+@media (max-width: 1200px) {
+  .content-container {
+    max-width: 1000px; /* Laptop */
+  }
+}
+
+@media (max-width: 768px) {
+  .content-container {
+    max-width: 90%; /* Tablet e smartphones */
+  }
+}

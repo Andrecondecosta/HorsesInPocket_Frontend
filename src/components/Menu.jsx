@@ -17,6 +17,7 @@ function Menu({ isLoggedIn, setIsLoggedIn }) {
         <li><Link to="/dashboard">Dashboard</Link></li>
         <li><Link to="/register">Registrar</Link></li>
         <li><Link to="/profile">Perfil</Link></li>
+        <li><Link to="/myhorses">Meus Cavalos</Link></li>
         {isLoggedIn ? (
           <li><Logout setIsLoggedIn={setIsLoggedIn} /></li>
         ) : (

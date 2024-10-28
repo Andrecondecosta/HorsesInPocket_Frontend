@@ -1,0 +1,79 @@
+/* Container principal */
+.edit-horse-container {
+  max-width: 600px;
+  margin: 20px auto;
+  padding: 20px;
+  box-shadow: 0 4px 12px rgba(0, 0, 0, 0.1);
+  border-radius: 8px;
+  background-color: #ffffff;
+}
+
+/* Título */
+.edit-horse-title {
+  font-size: 1.8em;
+  font-weight: 700;
+  color: #333;
+  text-align: center;
+  font-family: 'Poppins', sans-serif;
+  margin-bottom: 20px;
+}
+
+/* Label de entrada */
+.edit-input-label {
+  font-size: 1em;
+  color: #666;
+  font-weight: 500;
+  margin-top: 10px;
+  display: block;
+}
+
+/* Estilos de formulário */
+.edit-horse-form input[type="text"],
+.edit-horse-form input[type="date"],
+.edit-horse-form textarea {
+  width: calc(100% - 20px); /* Ajustando para margem lateral */
+  padding: 10px;
+  margin: 5px 10px 15px 0; /* Margem nos campos */
+  font-size: 1em;
+  border: 1px solid #ddd;
+  border-radius: 5px;
+  box-sizing: border-box;
+}
+
+/* Caixa de Data de Nascimento com largura menor */
+.edit-horse-form input[type="date"] {
+  width: calc(50% - 20px); /* Largura menor */
+}
+
+/* Campo de descrição */
+.edit-horse-form textarea {
+  height: 100px;
+  resize: vertical;
+}
+
+/* Botão de submissão */
+.edit-horse-submit-button {
+  width: 100%;
+  padding: 12px;
+  font-size: 1em;
+  font-weight: bold;
+  color: #fff;
+  background-color: #4CAF50;
+  border: none;
+  border-radius: 5px;
+  cursor: pointer;
+  transition: background-color 0.3s ease;
+  margin-top: 15px;
+}
+
+.edit-horse-submit-button:hover {
+  background-color: #45a049;
+}
+
+/* Ajuste de margem e espaçamento entre os campos */
+.edit-horse-form input[type="text"] {
+  margin-bottom: 15px;
+}
+.edit-horse-form textarea {
+  margin-bottom: 15px;
+}

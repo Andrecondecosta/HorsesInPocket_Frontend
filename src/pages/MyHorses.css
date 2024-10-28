@@ -1,0 +1,100 @@
+/* Contêiner principal */
+.horses-container {
+  max-width: 1200px;
+  margin: 0 auto;
+  padding: 20px;
+}
+
+/* Cabeçalho */
+.header {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  margin-bottom: 20px;
+  padding: 0 20px;
+}
+
+.title {
+  font-size: 2em;
+  font-weight: 700;
+  color: #333;
+  font-family: 'Poppins', sans-serif;
+  margin: 0;
+}
+
+/* Botão de criação de novo cavalo */
+.create-button {
+  padding: 8px 14px;
+  font-size: 1.2em;
+  background-color: #4CAF50;
+  color: white;
+  border: none;
+  border-radius: 50%;
+  cursor: pointer;
+  transition: background-color 0.3s, transform 0.3s;
+  font-weight: bold;
+}
+
+.create-button:hover {
+  background-color: #45a049;
+  transform: scale(1.05);
+}
+
+/* Grid de cavalos */
+.horses-grid {
+  display: grid;
+  grid-template-columns: repeat(auto-fit, minmax(220px, 1fr));
+  gap: 20px;
+  padding: 20px;
+  margin: auto;
+}
+
+/* Cartão de cavalo */
+.horse-card {
+  border: 1px solid #ddd;
+  border-radius: 8px;
+  overflow: hidden;
+  text-align: center;
+  padding: 0;
+  box-shadow: 0 4px 12px rgba(0, 0, 0, 0.1);
+  transition: transform 0.2s, box-shadow 0.2s;
+  background-color: white;
+  height: 340px;
+  display: flex;
+  flex-direction: column;
+  justify-content: space-between;
+}
+
+.horse-card:hover {
+  transform: scale(1.05);
+  box-shadow: 0 6px 16px rgba(0, 0, 0, 0.2);
+}
+
+/* Imagem do cavalo */
+.horse-image {
+  width: 100%;
+  height: 270px;
+  object-fit: cover;
+  object-position: center;
+  border-radius: 8px 8px 0 0;
+}
+
+/* Informações do cavalo */
+.horse-info {
+  padding: 15px;
+}
+
+/* Nome do cavalo */
+.horse-name {
+  font-size: 20px;
+  color: #333;
+  margin-top: 10px;
+  font-weight: bold;
+  text-decoration: none;
+}
+
+/* Link do cavalo (sem sublinhado) */
+.horse-link {
+  text-decoration: none;
+  color: inherit;
+}
