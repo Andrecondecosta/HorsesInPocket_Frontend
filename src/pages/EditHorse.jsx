@@ -6,11 +6,12 @@ const EditHorse = () => {
   const { id } = useParams();
   const [horse, setHorse] = useState({
     name: '',
-    birthDate: '',
+    age: '',
     description: '',
-    image: null,
+    images: [], // URLs das imagens existentes
   });
-  const [image, setImage] = useState(null);
+  const [newImages, setNewImages] = useState([]); // Novas imagens selecionadas
+  const [deletedImages, setDeletedImages] = useState([]); // Imagens a excluir
   const navigate = useNavigate();
   const token = localStorage.getItem('authToken');
 
@@ -25,45 +26,48 @@ const EditHorse = () => {
           },
         });
 
-        if (!response.ok) {
-          throw new Error('Failed to fetch horse');
+        if (response.ok) {
+          const data = await response.json();
+          setHorse(data);
+        } else {
+          console.error('Erro ao carregar perfil do cavalo');
         }
-
-        const data = await response.json();
-        setHorse(data);
       } catch (error) {
         console.error('Erro ao carregar perfil do cavalo:', error);
       }
     };
 
-    if (token) {
-      fetchHorse();
-    } else {
-      console.error('Token não encontrado');
-    }
+    fetchHorse();
   }, [id, token]);
 
-  const handleChange = (e) => {
-    const { name, value } = e.target;
-    setHorse((prevHorse) => ({
-      ...prevHorse,
-      [name]: value,
-    }));
+  const handleImageChange = (e) => {
+    const files = Array.from(e.target.files);
+    setNewImages((prev) => [...prev, ...files]);
   };
 
-  const handleImageChange = (e) => {
-    setImage(e.target.files[0]);
+  const handleDeleteExistingImage = (imageUrl) => {
+    setHorse((prev) => ({
+      ...prev,
+      images: prev.images.filter((img) => img !== imageUrl),
+    }));
+    setDeletedImages((prev) => [...prev, imageUrl]);
   };
 
   const handleSubmit = async (e) => {
     e.preventDefault();
+
     const formData = new FormData();
     formData.append('horse[name]', horse.name);
-    formData.append('horse[birthDate]', horse.birthDate);
+    formData.append('horse[age]', horse.age);
     formData.append('horse[description]', horse.description);
-    if (image) {
-      formData.append('horse[image]', image);
-    }
+
+    newImages.forEach((image) => {
+      formData.append('horse[images][]', image);
+    });
+
+    deletedImages.forEach((imageUrl) => {
+      formData.append('deleted_images[]', imageUrl);
+    });
 
     const response = await fetch(`http://localhost:3000/api/v1/horses/${id}`, {
       method: 'PUT',
@@ -90,17 +94,17 @@ const EditHorse = () => {
           name="name"
           placeholder="Nome"
           value={horse.name}
-          onChange={handleChange}
+          onChange={(e) => setHorse({ ...horse, name: e.target.value })}
           required
         />
 
-        <label className="edit-input-label">Data de Nascimento</label>
+        <label className="edit-input-label">Idade</label>
         <input
-          type="date"
-          name="birthDate"
-          placeholder="Data de Nascimento"
-          value={horse.birthDate}
-          onChange={handleChange}
+          type="number"
+          name="age"
+          placeholder="Idade"
+          value={horse.age}
+          onChange={(e) => setHorse({ ...horse, age: e.target.value })}
           required
         />
 
@@ -109,12 +113,26 @@ const EditHorse = () => {
           name="description"
           placeholder="Descrição"
           value={horse.description}
-          onChange={handleChange}
+          onChange={(e) => setHorse({ ...horse, description: e.target.value })}
           required
         />
 
-        <label className="edit-input-label">Imagem</label>
-        <input type="file" onChange={handleImageChange} />
+        <label className="edit-input-label">Imagens</label>
+        <input type="file" multiple onChange={handleImageChange} />
+
+        <div className="image-preview-container">
+          {horse.images.map((image, index) => (
+            <div key={index} className="image-preview">
+              <img src={image} alt="Imagem do cavalo" />
+              <button type="button" onClick={() => handleDeleteExistingImage(image)}>✕</button>
+            </div>
+          ))}
+          {newImages.map((image, index) => (
+            <div key={index} className="image-preview">
+              <img src={URL.createObjectURL(image)} alt="Nova imagem" />
+            </div>
+          ))}
+        </div>
 
         <button type="submit" className="edit-horse-submit-button">Atualizar Cavalo</button>
       </form>

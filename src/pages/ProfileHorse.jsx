@@ -1,13 +1,18 @@
 import React, { useState, useEffect } from 'react';
 import { useParams, useNavigate } from 'react-router-dom';
 import { FaEdit, FaTrash } from 'react-icons/fa';
+import Lightbox from "yet-another-react-lightbox";
+import "yet-another-react-lightbox/styles.css";
+import './ProfileHorse.css';
 
-function ProfileHorse() {
+const ProfileHorse = () => {
   const { id } = useParams();
-  const navigate = useNavigate();
   const [horse, setHorse] = useState(null);
+  const [selectedImage, setSelectedImage] = useState(null);
+  const [isOpen, setIsOpen] = useState(false);
   const [isLoading, setIsLoading] = useState(true);
   const [error, setError] = useState(null);
+  const navigate = useNavigate();
   const token = localStorage.getItem('authToken');
 
   useEffect(() => {
@@ -27,6 +32,7 @@ function ProfileHorse() {
 
         const data = await response.json();
         setHorse(data);
+        setSelectedImage(0); // Define o índice da primeira imagem como padrão
       } catch (error) {
         setError('Erro ao carregar perfil do cavalo');
       } finally {
@@ -56,9 +62,9 @@ function ProfileHorse() {
         throw new Error('Failed to delete horse');
       }
 
-      navigate('/');
+      navigate('/myhorses');
     } catch (error) {
-      setError('Erro ao excluir cavalo');
+      setError('Erro ao deletar cavalo');
     }
   };
 
@@ -66,27 +72,60 @@ function ProfileHorse() {
   if (error) return <p>{error}</p>;
 
   return (
-    <div>
-      <h1>Perfil do Cavalo</h1>
+    <div className="profile-container">
+      <div className="profile-header">
+        <h1>{horse.name}</h1>
+        <div className="profile-actions">
+          <FaEdit className="profile-icon" onClick={() => navigate(`/horses/${id}/edit`)} />
+          <FaTrash className="profile-icon" onClick={handleDelete} />
+        </div>
+      </div>
       {horse && (
-        <div>
-          <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center' }}>
-            <h2>{horse.name}</h2>
-            <div>
-              <FaEdit style={{ cursor: 'pointer', marginRight: '10px' }} onClick={() => navigate(`/horses/${id}/edit`)} />
-              <FaTrash style={{ cursor: 'pointer' }} onClick={handleDelete} />
+        <div className="profile-details">
+          {/* Imagem principal e miniaturas */}
+          <div className="profile-image-gallery">
+            <div className="profile-main-image" onClick={() => setIsOpen(true)}>
+              <img
+                src={horse.images[selectedImage]}
+                alt={`${horse.name} - principal`}
+                className="fixed-main-image"
+              />
+            </div>
+            <div className="profile-thumbnail-row">
+              {horse.images.slice(0, 5).map((image, index) => (
+                <div key={index} className="profile-thumbnail">
+                  <img
+                    src={image}
+                    alt={`${horse.name} ${index + 1}`}
+                    onClick={() => setSelectedImage(index)}
+                    className={selectedImage === index ? 'active-thumbnail' : ''}
+                  />
+                </div>
+              ))}
             </div>
           </div>
-          {horse.image_url && (
-            <img src={horse.image_url} alt={horse.name} style={{ width: '300px', height: '300px', objectFit: 'cover' }} />
+
+          {/* Lightbox de visualização em tela cheia */}
+          {isOpen && (
+            <Lightbox
+              open={isOpen}
+              close={() => setIsOpen(false)}
+              slides={horse.images.map((image) => ({ src: image }))}
+              currentIndex={selectedImage}
+              onIndexChange={(index) => setSelectedImage(index)}
+            />
           )}
-          <p><strong>Nome:</strong> {horse.name}</p>
-          <p><strong>Idade:</strong> {horse.age}</p>
-          <p><strong>Descrição:</strong> {horse.description}</p>
+
+          {/* Informações do cavalo */}
+          <div className="profile-info">
+            <p><strong>Nome:</strong> {horse.name}</p>
+            <p><strong>Idade:</strong> {horse.age}</p>
+            <p><strong>Descrição:</strong> {horse.description}</p>
+          </div>
         </div>
       )}
     </div>
   );
-}
+};
 
 export default ProfileHorse;

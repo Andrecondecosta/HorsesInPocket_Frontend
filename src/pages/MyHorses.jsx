@@ -3,7 +3,7 @@ import { Link } from 'react-router-dom';
 import './MyHorses.css'; // Importa o CSS externo
 
 const MyHorses = () => {
-  const [horses, setHorses] = useState([]);
+  const [horses, setHorses] = useState([]); // Inicializa como um array vazio
 
   useEffect(() => {
     const fetchHorses = async () => {
@@ -14,6 +14,7 @@ const MyHorses = () => {
         }
       });
       const data = await response.json();
+      console.log(data); // Adiciona um console log para verificar a resposta
       setHorses(data);
     };
 
@@ -29,11 +30,11 @@ const MyHorses = () => {
         </Link>
       </div>
       <div className="horses-grid">
-        {horses.map((horse) => (
+        {Array.isArray(horses) && horses.map((horse) => (
           <Link to={`/horses/${horse.id}`} key={horse.id} className="horse-link">
             <div className="horse-card">
-              {horse.image_url && (
-                <img src={horse.image_url} alt={horse.name} className="horse-image" />
+              {horse.images && horse.images.length > 0 && (
+                <img src={horse.images[0]} alt={horse.name} className="horse-image" />
               )}
               <div className="horse-info">
                 <h3 className="horse-name">{horse.name}</h3>

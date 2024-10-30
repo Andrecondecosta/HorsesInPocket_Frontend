@@ -43,7 +43,7 @@
 /* Grid de cavalos */
 .horses-grid {
   display: grid;
-  grid-template-columns: repeat(auto-fit, minmax(220px, 1fr));
+  grid-template-columns: repeat(3, 1fr); /* 3 colunas fixas */
   gap: 20px;
   padding: 20px;
   margin: auto;
@@ -59,7 +59,7 @@
   box-shadow: 0 4px 12px rgba(0, 0, 0, 0.1);
   transition: transform 0.2s, box-shadow 0.2s;
   background-color: white;
-  height: 340px;
+  height: 340px; /* Altura fixa */
   display: flex;
   flex-direction: column;
   justify-content: space-between;
