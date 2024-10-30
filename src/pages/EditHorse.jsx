@@ -8,10 +8,11 @@ const EditHorse = () => {
     name: '',
     age: '',
     description: '',
-    images: [], // URLs das imagens existentes
+    images: []
   });
-  const [newImages, setNewImages] = useState([]); // Novas imagens selecionadas
-  const [deletedImages, setDeletedImages] = useState([]); // Imagens a excluir
+  const [newImages, setNewImages] = useState([]);
+  const [deletedImages, setDeletedImages] = useState([]);
+  const [error, setError] = useState(null);
   const navigate = useNavigate();
   const token = localStorage.getItem('authToken');
 
@@ -30,10 +31,11 @@ const EditHorse = () => {
           const data = await response.json();
           setHorse(data);
         } else {
-          console.error('Erro ao carregar perfil do cavalo');
+          throw new Error('Erro ao carregar perfil do cavalo');
         }
       } catch (error) {
-        console.error('Erro ao carregar perfil do cavalo:', error);
+        console.error(error);
+        setError('Erro ao carregar perfil do cavalo');
       }
     };
 
@@ -53,6 +55,10 @@ const EditHorse = () => {
     setDeletedImages((prev) => [...prev, imageUrl]);
   };
 
+  const handleDeleteNewImage = (index) => {
+    setNewImages((prev) => prev.filter((_, i) => i !== index));
+  };
+
   const handleSubmit = async (e) => {
     e.preventDefault();
 
@@ -61,26 +67,34 @@ const EditHorse = () => {
     formData.append('horse[age]', horse.age);
     formData.append('horse[description]', horse.description);
 
+    // Adiciona novas imagens selecionadas
     newImages.forEach((image) => {
       formData.append('horse[images][]', image);
     });
 
+    // Adiciona URLs das imagens a serem excluídas
     deletedImages.forEach((imageUrl) => {
       formData.append('deleted_images[]', imageUrl);
     });
 
-    const response = await fetch(`http://localhost:3000/api/v1/horses/${id}`, {
-      method: 'PUT',
-      headers: {
-        'Authorization': `Bearer ${token}`,
-      },
-      body: formData,
-    });
+    try {
+      const response = await fetch(`http://localhost:3000/api/v1/horses/${id}`, {
+        method: 'PUT',
+        headers: {
+          'Authorization': `Bearer ${token}`,
+        },
+        body: formData,
+      });
 
-    if (response.ok) {
-      navigate(`/horses/${id}`);
-    } else {
-      console.error('Erro ao atualizar cavalo:', response.statusText);
+      if (response.ok) {
+        navigate(`/horses/${id}`);
+      } else {
+        setError('Erro ao atualizar cavalo');
+        console.error('Erro ao atualizar cavalo:', response.statusText);
+      }
+    } catch (err) {
+      setError('Erro ao atualizar cavalo');
+      console.error(err);
     }
   };
 
@@ -121,20 +135,38 @@ const EditHorse = () => {
         <input type="file" multiple onChange={handleImageChange} />
 
         <div className="image-preview-container">
+          {/* Mostra imagens existentes com opção de excluir */}
           {horse.images.map((image, index) => (
             <div key={index} className="image-preview">
               <img src={image} alt="Imagem do cavalo" />
-              <button type="button" onClick={() => handleDeleteExistingImage(image)}>✕</button>
+              <button
+                type="button"
+                className="remove-image-button"
+                onClick={() => handleDeleteExistingImage(image)}
+              >
+                ✕
+              </button>
             </div>
           ))}
+          {/* Mostra novas imagens selecionadas */}
           {newImages.map((image, index) => (
             <div key={index} className="image-preview">
               <img src={URL.createObjectURL(image)} alt="Nova imagem" />
+              <button
+                type="button"
+                className="remove-image-button"
+                onClick={() => handleDeleteNewImage(index)}
+              >
+                ✕
+              </button>
             </div>
           ))}
         </div>
 
-        <button type="submit" className="edit-horse-submit-button">Atualizar Cavalo</button>
+        {error && <p style={{ color: 'red' }}>{error}</p>}
+        <button type="submit" className="edit-horse-submit-button">
+          Atualizar Cavalo
+        </button>
       </form>
     </div>
   );

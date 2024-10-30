@@ -32,7 +32,7 @@ const ProfileHorse = () => {
 
         const data = await response.json();
         setHorse(data);
-        setSelectedImage(0); // Define o índice da primeira imagem como padrão
+        setSelectedImage(0);
       } catch (error) {
         setError('Erro ao carregar perfil do cavalo');
       } finally {
@@ -71,6 +71,8 @@ const ProfileHorse = () => {
   if (isLoading) return <p>Carregando...</p>;
   if (error) return <p>{error}</p>;
 
+  const heightInHH = (horse.height_cm / 0.1016).toFixed(1);
+
   return (
     <div className="profile-container">
       <div className="profile-header">
@@ -82,7 +84,7 @@ const ProfileHorse = () => {
       </div>
       {horse && (
         <div className="profile-details">
-          {/* Imagem principal e miniaturas */}
+          {/* Galeria de imagens */}
           <div className="profile-image-gallery">
             <div className="profile-main-image" onClick={() => setIsOpen(true)}>
               <img
@@ -105,7 +107,7 @@ const ProfileHorse = () => {
             </div>
           </div>
 
-          {/* Lightbox de visualização em tela cheia */}
+          {/* Lightbox */}
           {isOpen && (
             <Lightbox
               open={isOpen}
@@ -117,10 +119,18 @@ const ProfileHorse = () => {
           )}
 
           {/* Informações do cavalo */}
-          <div className="profile-info">
-            <p><strong>Nome:</strong> {horse.name}</p>
-            <p><strong>Idade:</strong> {horse.age}</p>
-            <p><strong>Descrição:</strong> {horse.description}</p>
+          <div className="profile-info-card">
+            <h2 className="info-card-title">Informações do Cavalo</h2>
+            <div className="profile-info-content">
+              <p><strong>Nome:</strong> {horse.name}</p>
+              <p><strong>Idade:</strong> {horse.age} anos</p>
+              <p><strong>Altura:</strong> {horse.height_cm} m ({heightInHH} hh)</p>
+              <p><strong>Gênero:</strong> {horse.gender}</p>
+              <p><strong>Cor:</strong> {horse.color}</p>
+              <p><strong>Nível de Treinamento:</strong> {horse.training_level}</p>
+              <p><strong>Piroplasmose:</strong> {horse.piroplasmosis ? 'Sim' : 'Não'}</p>
+              <p><strong>Descrição:</strong> {horse.description}</p>
+            </div>
           </div>
         </div>
       )}

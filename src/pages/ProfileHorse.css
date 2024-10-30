@@ -93,3 +93,43 @@
   font-size: 1.1em;
   margin: 8px 0;
 }
+
+.profile-info-card {
+  width: 40%;
+  background-color: #f9f9f9; /* cor clara para destaque */
+  border-radius: 8px;
+  padding: 16px;
+  box-shadow: 0 4px 8px rgba(0, 0, 0, 0.2);
+  margin-top: 16px;
+
+}
+
+.info-card-title {
+  font-size: 1.2rem;
+  margin-bottom: 12px;
+  color: #333;
+  font-weight: bold;
+}
+
+.profile-info-content p {
+  margin: 8px 0;
+  font-size: 1rem;
+}
+
+.profile-header {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  margin-bottom: 16px;
+}
+
+.profile-actions .profile-icon {
+  cursor: pointer;
+  margin-left: 8px;
+  color: #666;
+  transition: color 0.3s;
+}
+
+.profile-actions .profile-icon:hover {
+  color: #333;
+}

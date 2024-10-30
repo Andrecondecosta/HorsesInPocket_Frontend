@@ -1,123 +1,68 @@
-/* Container principal */
+/* Contêiner principal */
 .new-horse-container {
-  max-width: 600px;
-  margin: 20px auto;
+  max-width: 700px;
+  margin: auto;
   padding: 20px;
-  box-shadow: 0 4px 12px rgba(0, 0, 0, 0.1);
+  background-color: #f9f9f9;
   border-radius: 8px;
-  background-color: #ffffff;
+  box-shadow: 0 4px 12px rgba(0, 0, 0, 0.1);
 }
 
 /* Título */
 .new-horse-title {
   font-size: 1.8em;
-  font-weight: 700;
   color: #333;
   text-align: center;
-  font-family: 'Poppins', sans-serif;
   margin-bottom: 20px;
 }
 
-/* Label de entrada */
+/* Labels e formulário */
 .new-input-label {
-  font-size: 1em;
-  color: #666;
-  font-weight: 500;
-  margin-top: 10px;
-  display: block;
+  font-size: 1.1em;
+  color: #555;
+  margin-bottom: 6px;
 }
 
-/* Estilos de formulário */
-.new-horse-form input[type="text"],
-.new-horse-form input[type="date"],
-.new-horse-form textarea {
-  width: calc(100% - 20px);
-  padding: 10px;
-  margin: 5px 10px 15px 0;
-  font-size: 1em;
-  border: 1px solid #ddd;
-  border-radius: 5px;
-  box-sizing: border-box;
-}
-
-.new-horse-form input[type="date"] {
-  width: calc(50% - 20px);
-}
-
-.new-horse-form textarea {
-  height: 100px;
-  resize: vertical;
-}
-
-/* Botão de submissão */
-.new-horse-submit-button {
-  width: 100%;
-  padding: 12px;
-  font-size: 1em;
-  font-weight: bold;
-  color: #fff;
-  background-color: #4CAF50;
-  border: none;
-  border-radius: 5px;
-  cursor: pointer;
-  transition: background-color 0.3s ease;
-  margin-top: 15px;
-}
-
-.new-horse-submit-button:hover {
-  background-color: #45a049;
-}
-
-/* Container de visualização de imagens */
-.image-preview-container {
+.new-horse-form {
   display: flex;
-  flex-wrap: wrap;
-  gap: 10px;
-  margin-top: 10px;
+  flex-direction: column;
+  gap: 0px;
 }
 
-/* Estilo de miniaturas de imagem */
-.image-preview {
-  width: 80px;
-  height: 80px;
-  border: 1px solid #ddd;
-  border-radius: 5px;
-  overflow: hidden;
+/* Slider de altura */
+.height-slider-container {
+  display: flex;
+  flex-direction: column;
+  gap: 5px;
+  margin-bottom: 24px;
 }
 
-.image-preview img {
-  width: 100%;
-  height: 100%;
-  object-fit: cover;
-}
-/* Mensagem de erro */
-.error-message {
-  color: red;
-  font-size: 0.9em;
-  margin-top: 5px;
-}
-/* Botão de upload estilizado */
-.upload-button {
-  display: inline-block;
-  padding: 10px 20px;
+.height-values {
+  display: flex;
+  justify-content: space-between;
   font-size: 1em;
-  background-color: #6c757d;
-  color: white;
-  border: none;
-  border-radius: 8px;
-  cursor: pointer;
-  text-align: center;
-  transition: background-color 0.3s, transform 0.3s;
+  color: #333;
   font-weight: bold;
-  margin-bottom: 10px;
+}
+
+/* Botão de Upload */
+.upload-button {
+  width: 100px;
+  padding: 6px 10px;
+  background-color: #007bff; /* Azul claro */
+  color: white;
+  border-radius: 6px;
+  font-size: 0.85em;
+  text-align: center;
+  cursor: pointer;
+  transition: background-color 0.3s;
 }
 
 .upload-button:hover {
-  background-color: #5a6268;
-  transform: scale(1.05);
+  background-color: #0056b3; /* Azul mais escuro no hover */
 }
 
-/* Contêiner de pré-visualização das imagens */
+/* Contêiner de visualização de imagem */
 .image-preview-container {
   display: flex;
   gap: 10px;
@@ -127,37 +72,117 @@
 
 .image-preview {
   position: relative;
-  width: 80px;
-  height: 80px;
+  width: 70px;
+  height: 70px;
+  border-radius: 4px;
 }
 
 .image-preview img {
   width: 100%;
   height: 100%;
   object-fit: cover;
-  border-radius: 4px;
-  box-shadow: 0 2px 4px rgba(0, 0, 0, 0.2);
 }
 
-/* Botão de remover imagem */
 .remove-image-button {
   position: absolute;
-  top: -5px;
-  right: -5px;
-  background-color: #dc3545;
+  top: -6px;
+  right: -6px;
+  background: #dc3545; /* Vermelho */
   color: white;
+  font-size: 0.75em;
+  cursor: pointer;
   border: none;
   border-radius: 50%;
   width: 20px;
   height: 20px;
-  cursor: pointer;
-  font-size: 0.8em;
-  display: flex;
-  align-items: center;
-  justify-content: center;
-  transition: background-color 0.3s;
 }
 
-.remove-image-button:hover {
-  background-color: #c82333;
+/* Erro e botão de envio */
+.error-message {
+  color: red;
+  font-size: 0.9em;
+}
+
+.new-horse-submit-button {
+  padding: 12px;
+  background-color: #28a745; /* Verde suave */
+  color: white;
+  font-size: 1em;
+  border: none;
+  border-radius: 8px;
+  cursor: pointer;
+  margin-top: 18px;
+}
+
+.new-horse-submit-button:hover {
+  background-color: #218838;
+}
+
+/* Input geral */
+.new-horse-form input[type="text"],
+.new-horse-form input[type="number"],
+.new-horse-form select,
+.new-horse-form textarea {
+  width: 100%;
+  padding: 10px;
+  font-size: 1em;
+  border: 1px solid #ddd;
+  border-radius: 6px;
+  margin-top: 4px;
+  box-sizing: border-box;
+  margin-bottom: 20px;
+}
+
+/* Input específico para idade */
+.new-horse-form input[name="age"] {
+  width: 80px;
+  padding: 8px;
+}
+
+/* Cor do placeholder */
+.new-horse-form input::placeholder,
+.new-horse-form textarea::placeholder {
+  font-size: 0.9em;
+  font-style: italic;
+  color: #888;
+}
+
+/* Opções de cor */
+.color-options {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 10px;
+  margin-top: 10px;
+}
+
+.color-option {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  padding: 8px 10px;
+  border: 1px solid #ddd;
+  border-radius: 5px;
+  background-color: #e0e0e0;
+  font-size: 0.9em;
+  cursor: pointer;
+  transition: background-color 0.3s, border-color 0.3s;
+}
+
+.color-option.selected {
+  background-color: #007bff;
+  color: white;
+  border-color: #007bff;
+}
+
+.color-option input[type="radio"] {
+  display: none;
+}
+
+/* Checkbox para piroplasmosis */
+.new-input-label-piro {
+  font-size: 1.1em;
+  color: #555;
+  display: flex;
+  align-items: center;
+  gap: 8px;
 }
