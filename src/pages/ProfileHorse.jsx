@@ -4,6 +4,7 @@ import { FaEdit, FaTrash } from 'react-icons/fa';
 import Lightbox from "yet-another-react-lightbox";
 import "yet-another-react-lightbox/styles.css";
 import './ProfileHorse.css';
+import GenealogyTree from '../components/GenealogyTree';
 
 const ProfileHorse = () => {
   const { id } = useParams();
@@ -132,6 +133,7 @@ const ProfileHorse = () => {
               <p><strong>Descrição:</strong> {horse.description}</p>
             </div>
           </div>
+          <GenealogyTree horse={horse} />
         </div>
       )}
     </div>

@@ -1,6 +1,7 @@
 import React, { useState } from 'react';
 import { useNavigate } from 'react-router-dom';
 import './NewHorses.css';
+import GenealogyForm from '../components/GenealogyForm';
 
 const NewHorses = () => {
   const [newHorse, setNewHorse] = useState({
@@ -12,6 +13,14 @@ const NewHorses = () => {
     color: '',
     training_level: '',
     piroplasmosis: false,
+  });
+  const [ancestors, setAncestors] = useState({
+    father: {},
+    mother: {},
+    paternal_grandfather: {},
+    paternal_grandmother: {},
+    maternal_grandfather: {},
+    maternal_grandmother: {},
   });
   const [images, setImages] = useState([]);
   const [error, setError] = useState(null);
@@ -68,8 +77,6 @@ const NewHorses = () => {
     }
   };
 
-
-
   const removeImage = (indexToRemove) => {
     setImages((prevImages) => prevImages.filter((_, index) => index !== indexToRemove));
   };
@@ -78,9 +85,25 @@ const NewHorses = () => {
     e.preventDefault();
     const token = localStorage.getItem('authToken');
     const formData = new FormData();
-    Object.keys(newHorse).forEach((key) => {
-      formData.append(`horse[${key}]`, newHorse[key]);
+
+    formData.append('horse[name]', newHorse.name);
+    formData.append('horse[age]', newHorse.age);
+    formData.append('horse[height_cm]', newHorse.height_cm);
+    formData.append('horse[description]', newHorse.description);
+    formData.append('horse[gender]', newHorse.gender);
+    formData.append('horse[color]', newHorse.color);
+    formData.append('horse[training_level]', newHorse.training_level);
+    formData.append('horse[piroplasmosis]', newHorse.piroplasmosis);
+
+    // Reestruturando ancestors_attributes
+    Object.keys(ancestors).forEach((relation) => {
+      const ancestor = ancestors[relation];
+      formData.append(`horse[ancestors_attributes][][relation_type]`, relation);
+      formData.append(`horse[ancestors_attributes][][name]`, ancestor.name || '');
+      formData.append(`horse[ancestors_attributes][][breeder]`, ancestor.breeder || '');
+      formData.append(`horse[ancestors_attributes][][breed]`, ancestor.breed || '');
     });
+
     images.forEach((image) => {
       formData.append('horse[images][]', image);
     });
@@ -99,6 +122,7 @@ const NewHorses = () => {
       console.error('Erro ao criar cavalo:', response.statusText);
     }
   };
+
 
   const heightInHH = (newHorse.height_cm / 0.1016).toFixed(1);
 
@@ -144,7 +168,6 @@ const NewHorses = () => {
             className="slider"
           />
         </div>
-
 
         <label className="new-input-label">Gênero</label>
         <select name="gender" value={newHorse.gender} onChange={handleChange} required>
@@ -219,6 +242,9 @@ const NewHorses = () => {
             </div>
           ))}
         </div>
+
+        {/* Genealogia do cavalo */}
+        <GenealogyForm ancestors={ancestors} setAncestors={setAncestors} />
 
         <button type="submit" className="new-horse-submit-button">Criar Cavalo</button>
       </form>
