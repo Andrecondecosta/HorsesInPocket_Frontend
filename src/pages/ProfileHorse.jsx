@@ -118,19 +118,38 @@ const ProfileHorse = () => {
               onIndexChange={(index) => setSelectedImage(index)}
             />
           )}
-
-          {/* Informações do cavalo */}
-          <div className="profile-info-card">
-            <h2 className="info-card-title">Informações do Cavalo</h2>
-            <div className="profile-info-content">
-              <p><strong>Nome:</strong> {horse.name}</p>
-              <p><strong>Idade:</strong> {horse.age} anos</p>
-              <p><strong>Altura:</strong> {horse.height_cm} m ({heightInHH} hh)</p>
-              <p><strong>Gênero:</strong> {horse.gender}</p>
-              <p><strong>Cor:</strong> {horse.color}</p>
-              <p><strong>Nível de Treinamento:</strong> {horse.training_level}</p>
-              <p><strong>Piroplasmose:</strong> {horse.piroplasmosis ? 'Sim' : 'Não'}</p>
-              <p><strong>Descrição:</strong> {horse.description}</p>
+          <div className="profile-details">
+            <div className="info-and-videos">
+              {/* Informações do cavalo */}
+              <div className="profile-info-card">
+                <h2 className="info-card-title">Informações do Cavalo</h2>
+                <div className="profile-info-content">
+                  <p><strong>Nome:</strong> {horse.name}</p>
+                  <p><strong>Idade:</strong> {horse.age} anos</p>
+                  <p><strong>Altura:</strong> {horse.height_cm} m ({heightInHH} hh)</p>
+                  <p><strong>Gênero:</strong> {horse.gender}</p>
+                  <p><strong>Cor:</strong> {horse.color}</p>
+                  <p><strong>Nível de Treinamento:</strong> {horse.training_level}</p>
+                  <p><strong>Piroplasmose:</strong> {horse.piroplasmosis ? 'Sim' : 'Não'}</p>
+                  <p><strong>Descrição:</strong> {horse.description}</p>
+                </div>
+              </div>
+                {/* Vídeos do cavalo */}
+                <div className="profile-videos">
+                  <h2 className="videos-title">Vídeos</h2>
+                  {horse.videos && horse.videos.length > 0 ? (
+                    horse.videos.map((video, index) => (
+                      <div key={index} className="video-container">
+                        <video controls>
+                        <source src={video} type="video/mp4" /> {/* Use `video` diretamente, pois é o URL */}
+                          Seu navegador não suporta o elemento de vídeo.
+                        </video>
+                      </div>
+                    ))
+                  ) : (
+                    <p>Sem vídeos disponíveis.</p>
+                  )}
+                </div>
             </div>
           </div>
           <GenealogyTree horse={horse} />

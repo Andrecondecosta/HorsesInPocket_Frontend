@@ -134,3 +134,59 @@
 .profile-actions .profile-icon:hover {
   color: #333;
 }
+.info-and-videos {
+  display: flex;
+  justify-content: space-between;
+  align-items: flex-start;
+  gap: 20px;
+}
+
+.profile-info-card {
+  flex: 1;
+  background-color: #f9f9f9;
+  border-radius: 8px;
+  padding: 16px;
+  box-shadow: 0 4px 8px rgba(0, 0, 0, 0.2);
+}
+
+.profile-videos {
+  flex: 1;
+}
+
+.video-container {
+  width: 100%;
+  max-width: 400px; /* Tamanho máximo horizontal */
+  aspect-ratio: 16 / 9; /* Define proporção padrão (horizontal ou vertical será ajustado automaticamente) */
+  overflow: hidden; /* Garante que nada extrapole o contêiner */
+  margin: 0 auto; /* Centraliza o vídeo */
+  background: #000; /* Fundo preto para bordas */
+  border-radius: 8px; /* Opcional: bordas arredondadas */
+  box-shadow: 0 4px 8px rgba(0, 0, 0, 0.2); /* Sombras para estética */
+}
+
+.video-container video {
+  max-width: 100%; /* Garante que o vídeo não ultrapasse a largura do contêiner */
+  max-height: 100%; /* Garante que o vídeo não ultrapasse a altura do contêiner */
+  object-fit: contain; /* Exibe o vídeo proporcionalmente sem cortar */
+  border-radius: 8px;
+}
+
+video {
+  width: 100%;
+  height: auto;
+  border-radius: 8px;
+  box-shadow: 0 4px 8px rgba(0, 0, 0, 0.2);
+}
+
+/* Responsividade */
+@media (max-width: 768px) {
+  .info-and-videos {
+    flex-direction: column;
+    align-items: center;
+  }
+
+  .profile-info-card,
+  .profile-videos {
+    width: 100%;
+  }
+}

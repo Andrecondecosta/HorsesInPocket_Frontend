@@ -23,6 +23,7 @@ const NewHorses = () => {
     maternal_grandmother: {},
   });
   const [images, setImages] = useState([]);
+  const [videos, setVideos] = useState([]); // Estado para vídeos
   const [error, setError] = useState(null);
   const navigate = useNavigate();
 
@@ -77,6 +78,30 @@ const NewHorses = () => {
     }
   };
 
+  const handleVideoChange = (e) => {
+    const files = Array.from(e.target.files);
+    const maxSize = 50 * 1024 * 1024; // 50MB por vídeo
+
+    const oversizedFiles = files.filter(file => file.size > maxSize);
+    if (oversizedFiles.length > 0) {
+      setError('Cada vídeo deve ter no máximo 50MB.');
+      return;
+    }
+
+    const newVideos = files.filter(file =>
+      !videos.some(existingFile =>
+        existingFile.name === file.name && existingFile.size === file.size
+      )
+    );
+
+    if (videos.length + newVideos.length > 3) {
+      setError('Você pode fazer upload de no máximo 3 vídeos.');
+    } else {
+      setVideos(prevVideos => [...prevVideos, ...newVideos]);
+      setError(null);
+    }
+  };
+
   const removeImage = (indexToRemove) => {
     setImages((prevImages) => prevImages.filter((_, index) => index !== indexToRemove));
   };
@@ -106,6 +131,10 @@ const NewHorses = () => {
 
     images.forEach((image) => {
       formData.append('horse[images][]', image);
+    });
+
+    videos.forEach((video) => {
+      formData.append('horse[videos][]', video);
     });
 
     const response = await fetch('http://localhost:3000/api/v1/horses', {
@@ -242,6 +271,17 @@ const NewHorses = () => {
             </div>
           ))}
         </div>
+
+        <label className="new-input-label">Vídeos (até 3, máximo 50MB cada)</label>
+        <input
+          type="file"
+          accept="video/mp4,video/x-m4v,video/*"
+          multiple
+          onChange={handleVideoChange}
+        />
+        {videos.map((video, index) => (
+          <p key={index}>{video.name}</p>
+        ))}
 
         {/* Genealogia do cavalo */}
         <GenealogyForm ancestors={ancestors} setAncestors={setAncestors} />
