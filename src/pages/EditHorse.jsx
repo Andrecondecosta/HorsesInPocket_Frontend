@@ -1,28 +1,44 @@
 import React, { useState, useEffect } from 'react';
 import { useParams, useNavigate } from 'react-router-dom';
 import './EditHorse.css';
+import GenealogyForm from '../components/GenealogyForm';
 
 const EditHorse = () => {
   const { id } = useParams();
+  const navigate = useNavigate();
+  const token = localStorage.getItem('authToken');
+
   const [horse, setHorse] = useState({
     name: '',
     age: '',
+    height_cm: 1.5,
     description: '',
-    images: []
+    gender: '',
+    color: '',
+    training_level: '',
+    piroplasmosis: false,
+    images: [],
+    videos: [],
+  });
+  const [ancestors, setAncestors] = useState({
+    father: {},
+    mother: {},
+    paternal_grandfather: {},
+    paternal_grandmother: {},
+    maternal_grandfather: {},
+    maternal_grandmother: {},
   });
   const [newImages, setNewImages] = useState([]);
   const [deletedImages, setDeletedImages] = useState([]);
+  const [newVideos, setNewVideos] = useState([]);
+  const [deletedVideos, setDeletedVideos] = useState([]);
   const [error, setError] = useState(null);
-  const navigate = useNavigate();
-  const token = localStorage.getItem('authToken');
 
   useEffect(() => {
     const fetchHorse = async () => {
       try {
         const response = await fetch(`http://localhost:3000/api/v1/horses/${id}`, {
-          method: 'GET',
           headers: {
-            'Content-Type': 'application/json',
             'Authorization': `Bearer ${token}`,
           },
         });
@@ -30,21 +46,103 @@ const EditHorse = () => {
         if (response.ok) {
           const data = await response.json();
           setHorse(data);
+          const loadedAncestors = {};
+          data.ancestors.forEach((ancestor) => {
+            loadedAncestors[ancestor.relation_type] = ancestor;
+          });
+          setAncestors(loadedAncestors);
         } else {
-          throw new Error('Erro ao carregar perfil do cavalo');
+          throw new Error('Erro ao carregar cavalo.');
         }
       } catch (error) {
         console.error(error);
-        setError('Erro ao carregar perfil do cavalo');
+        setError('Erro ao carregar cavalo.');
       }
     };
 
     fetchHorse();
   }, [id, token]);
 
+  const handleChange = (e) => {
+    const { name, value, type, checked } = e.target;
+    setHorse((prevHorse) => ({
+      ...prevHorse,
+      [name]: type === 'checkbox' ? checked : value,
+    }));
+  };
+
+  const handleColorChange = (e) => {
+    setHorse((prevHorse) => ({
+      ...prevHorse,
+      color: e.target.value,
+    }));
+  };
+
+  const handleHeightChange = (e) => {
+    const valueInMeters = parseFloat(e.target.value);
+    setHorse((prevHorse) => ({
+      ...prevHorse,
+      height_cm: valueInMeters,
+    }));
+  };
+
   const handleImageChange = (e) => {
     const files = Array.from(e.target.files);
-    setNewImages((prev) => [...prev, ...files]);
+    const maxSize = 10 * 1024 * 1024; // 10MB
+
+
+    const oversizedFiles = files.filter(file => file.size > maxSize);
+    if (oversizedFiles.length > 0) {
+      setError('Cada imagem deve ter no máximo 10MB.');
+      return;
+    }
+
+    const newFiles = files.filter(file =>
+      !newImages.some(existingFile =>
+        existingFile.name === file.name && existingFile.size === file.size
+      )
+    );
+
+    if (newImages.length + newFiles.length > 5) {
+      setError('Você pode fazer upload de no máximo 5 imagens.');
+    } else {
+      setNewImages((prevImages) => [...prevImages, ...newFiles]);
+      setError(null);
+    }
+  };
+
+  const handleVideoChange = (e) => {
+    const files = Array.from(e.target.files); // Obtém os novos arquivos
+    const maxSize = 50 * 1024 * 1024; // Limite de 50MB por arquivo
+
+    // Verifica arquivos acima do limite
+    const oversizedFiles = files.filter(file => file.size > maxSize);
+    if (oversizedFiles.length > 0) {
+        setError('Cada vídeo deve ter no máximo 50MB.');
+        return;
+    }
+
+    // Evita duplicatas
+    const validNewVideos = files.filter(file =>
+        !newVideos.some(existingFile =>
+            existingFile.name === file.name && existingFile.size === file.size
+        )
+    );
+
+    if (newVideos.length + validNewVideos.length > 3) {
+        setError('Você pode fazer upload de no máximo 3 vídeos.');
+    } else {
+        setNewVideos(prevVideos => [...prevVideos, ...validNewVideos]);
+        setError(null);
+    }
+};
+
+  const removeImage = (indexToRemove) => {
+    setNewImages((prevImages) => prevImages.filter((_, index) => index !== indexToRemove));
+  };
+
+  const removeVideo = (indexToRemove) => {
+    setNewVideos((prevVideos) => prevVideos.filter((_, index) => index !== indexToRemove));
   };
 
   const handleDeleteExistingImage = (imageUrl) => {
@@ -55,8 +153,12 @@ const EditHorse = () => {
     setDeletedImages((prev) => [...prev, imageUrl]);
   };
 
-  const handleDeleteNewImage = (index) => {
-    setNewImages((prev) => prev.filter((_, i) => i !== index));
+  const handleDeleteExistingVideo = (videoUrl) => {
+    setHorse((prev) => ({
+      ...prev,
+      videos: prev.videos.filter((vid) => vid !== videoUrl),
+    }));
+    setDeletedVideos((prev) => [...prev, videoUrl]);
   };
 
   const handleSubmit = async (e) => {
@@ -65,16 +167,35 @@ const EditHorse = () => {
     const formData = new FormData();
     formData.append('horse[name]', horse.name);
     formData.append('horse[age]', horse.age);
+    formData.append('horse[height_cm]', horse.height_cm);
     formData.append('horse[description]', horse.description);
+    formData.append('horse[gender]', horse.gender);
+    formData.append('horse[color]', horse.color);
+    formData.append('horse[training_level]', horse.training_level);
+    formData.append('horse[piroplasmosis]', horse.piroplasmosis);
 
-    // Adiciona novas imagens selecionadas
+    Object.keys(ancestors).forEach((relation) => {
+      const ancestor = ancestors[relation];
+      formData.append(`horse[ancestors_attributes][][relation_type]`, relation);
+      formData.append(`horse[ancestors_attributes][][name]`, ancestor.name || '');
+      formData.append(`horse[ancestors_attributes][][breeder]`, ancestor.breeder || '');
+      formData.append(`horse[ancestors_attributes][][breed]`, ancestor.breed || '');
+    });
+
     newImages.forEach((image) => {
       formData.append('horse[images][]', image);
     });
 
-    // Adiciona URLs das imagens a serem excluídas
+    newVideos.forEach((video) => {
+      formData.append('horse[videos][]', video);
+    });
+
     deletedImages.forEach((imageUrl) => {
       formData.append('deleted_images[]', imageUrl);
+    });
+
+    deletedVideos.forEach((videoUrl) => {
+      formData.append('deleted_videos[]', videoUrl);
     });
 
     try {
@@ -89,14 +210,15 @@ const EditHorse = () => {
       if (response.ok) {
         navigate(`/horses/${id}`);
       } else {
-        setError('Erro ao atualizar cavalo');
-        console.error('Erro ao atualizar cavalo:', response.statusText);
+        throw new Error('Erro ao atualizar cavalo.');
       }
-    } catch (err) {
-      setError('Erro ao atualizar cavalo');
-      console.error(err);
+    } catch (error) {
+      console.error(error);
+      setError('Erro ao atualizar cavalo.');
     }
   };
+
+  const heightInHH = (horse.height_cm / 0.1016).toFixed(1);
 
   return (
     <div className="edit-horse-container">
@@ -106,9 +228,8 @@ const EditHorse = () => {
         <input
           type="text"
           name="name"
-          placeholder="Nome"
           value={horse.name}
-          onChange={(e) => setHorse({ ...horse, name: e.target.value })}
+          onChange={handleChange}
           required
         />
 
@@ -116,46 +237,104 @@ const EditHorse = () => {
         <input
           type="number"
           name="age"
-          placeholder="Idade"
           value={horse.age}
-          onChange={(e) => setHorse({ ...horse, age: e.target.value })}
+          onChange={handleChange}
+          required
+        />
+
+        {/* Altura */}
+        <label className="edit-input-label">Altura (m)</label>
+        <input
+          type="number"
+          name="height_cm"
+          step="0.01"
+          value={horse.height_cm}
+          onChange={handleHeightChange}
           required
         />
 
         <label className="edit-input-label">Descrição</label>
         <textarea
           name="description"
-          placeholder="Descrição"
           value={horse.description}
-          onChange={(e) => setHorse({ ...horse, description: e.target.value })}
+          onChange={handleChange}
           required
         />
 
-        <label className="edit-input-label">Imagens</label>
-        <input type="file" multiple onChange={handleImageChange} />
+        <label className="edit-input-label">Gênero</label>
+        <select name="gender" value={horse.gender} onChange={handleChange} required>
+          <option value="">Selecione</option>
+          <option value="gelding">Castrado</option>
+          <option value="mare">Égua</option>
+          <option value="stallion">Garanhão</option>
+        </select>
+
+        <label className="edit-input-label">Cor</label>
+        <div className="color-options">
+          {['Baio', 'Castanho', 'Alazão', 'Preto', 'Tordilho', 'Ruão', 'Palomino', 'Isabel', 'Ruço'].map((colorOption) => (
+            <label key={colorOption} className={`color-option ${horse.color === colorOption ? 'selected' : ''}`}>
+              <input
+                type="radio"
+                name="color"
+                value={colorOption}
+                checked={horse.color === colorOption}
+                onChange={handleColorChange}
+              />
+              {colorOption}
+            </label>
+          ))}
+        </div>
+
+        <label className="edit-input-label">Nível de Treinamento</label>
+        <input
+          type="text"
+          name="training_level"
+          placeholder="Ex: Preliminar, Grand Prix, 1.45m"
+          value={horse.training_level}
+          onChange={handleChange}
+        />
+
+        <label className="edit-input-label-piro">
+          Piroplasmose
+          <input
+            type="checkbox"
+            name="piroplasmosis"
+            checked={horse.piroplasmosis}
+            onChange={handleChange}
+          />
+        </label>
+
+        <label className="edit-input-label">Imagens (até 5, máximo 10MB cada)</label>
+        <div className="upload-button" onClick={() => document.getElementById('fileInput').click()}>
+          Selecionar Imagens
+        </div>
+        <input
+          type="file"
+          id="fileInput"
+          multiple
+          onChange={handleImageChange}
+          style={{ display: 'none' }}
+        />
+        {error && <p className="error-message">{error}</p>}
 
         <div className="image-preview-container">
-          {/* Mostra imagens existentes com opção de excluir */}
           {horse.images.map((image, index) => (
             <div key={index} className="image-preview">
-              <img src={image} alt="Imagem do cavalo" />
+              <img src={image} alt={`Imagem ${index}`} />
               <button
                 type="button"
-                className="remove-image-button"
                 onClick={() => handleDeleteExistingImage(image)}
               >
                 ✕
               </button>
             </div>
           ))}
-          {/* Mostra novas imagens selecionadas */}
           {newImages.map((image, index) => (
             <div key={index} className="image-preview">
               <img src={URL.createObjectURL(image)} alt="Nova imagem" />
               <button
                 type="button"
-                className="remove-image-button"
-                onClick={() => handleDeleteNewImage(index)}
+                onClick={() => removeImage(index)}
               >
                 ✕
               </button>
@@ -163,7 +342,46 @@ const EditHorse = () => {
           ))}
         </div>
 
-        {error && <p style={{ color: 'red' }}>{error}</p>}
+        <label className="edit-input-label">Vídeos (até 3, máximo 50MB cada)</label>
+        <input
+          type="file"
+          accept="video/mp4,video/x-m4v,video/*"
+          multiple
+          onChange={handleVideoChange}
+        />
+        {horse.videos.map((video, index) => (
+          <div key={index} className="video-preview">
+            <video controls width="200">
+              <source src={video} type="video/mp4" />
+              Seu navegador não suporta o elemento de vídeo.
+            </video>
+            <button
+              type="button"
+              onClick={() => handleDeleteExistingVideo(video)}
+            >
+              ✕
+            </button>
+          </div>
+        ))}
+        {newVideos.map((video, index) => (
+          <div key={index} className="video-preview">
+            <video controls width="200">
+              <source src={URL.createObjectURL(video)} type="video/mp4" />
+              Seu navegador não suporta o elemento de vídeo.
+            </video>
+            <button
+              type="button"
+              onClick={() => removeVideo(index)}
+            >
+              ✕
+            </button>
+          </div>
+        ))}
+
+        {/* Genealogia */}
+        <GenealogyForm ancestors={ancestors} setAncestors={setAncestors} />
+
+        {error && <p className="error-message">{error}</p>}
         <button type="submit" className="edit-horse-submit-button">
           Atualizar Cavalo
         </button>

@@ -1,20 +1,18 @@
 import React, { useState, useEffect } from 'react';
 import { Link } from 'react-router-dom';
-import './MyHorses.css'; // Importa o CSS externo
+import './MyHorses.css';
 
 const MyHorses = () => {
-  const [horses, setHorses] = useState([]); // Inicializa como um array vazio
+  const [horses, setHorses] = useState([]);
 
   useEffect(() => {
     const fetchHorses = async () => {
-      const token = localStorage.getItem('authToken');
       const response = await fetch('http://localhost:3000/api/v1/horses', {
         headers: {
-          'Authorization': `Bearer ${token}`
-        }
+          'Authorization': `Bearer ${localStorage.getItem('authToken')}`,
+        },
       });
       const data = await response.json();
-      console.log(data); // Adiciona um console log para verificar a resposta
       setHorses(data);
     };
 
@@ -22,7 +20,7 @@ const MyHorses = () => {
   }, []);
 
   return (
-    <div className="horses-container">
+    <div className="my-horses-container">
       <div className="header">
         <h1 className="title">Meus Cavalos</h1>
         <Link to="/newhorse">
