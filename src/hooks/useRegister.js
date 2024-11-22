@@ -10,7 +10,7 @@ export const useRegister = () => {
     setError(null);
 
     try {
-      const response = await fetch(`${process.env.REACT_APP_API_SERVER_URL}/signup`, {
+      const response = await fetch(`https://horsesinpocket-backend-2.onrender.com/api/v1/signup`, {
         method: 'POST',
         headers: {
           'Content-Type': 'application/json',
@@ -18,14 +18,13 @@ export const useRegister = () => {
         body: JSON.stringify({ user: userData }),  // Enviando os dados corretamente
       });
 
+      const data = await response.json();
+
       if (!response.ok) {
-        const errorData = await response.json();
-        throw new Error(errorData.errors || 'Falha ao registrar usuário');
+        throw new Error(data.errors || 'Falha ao registrar usuário');
       }
 
-      const data = await response.json();
       setToken(data.token);  // Supondo que o backend retorne um token JWT
-      localStorage.setItem('authToken', data.token);  // Armazenando o token no localStorage
     } catch (err) {
       setError(err.message);
     } finally {

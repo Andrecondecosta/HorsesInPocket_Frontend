@@ -10,7 +10,7 @@ export const useLogin = () => {
     setError(null);
 
     try {
-      const response = await fetch(`${process.env.REACT_APP_API_SERVER_URL}/login`, {
+      const response = await fetch(`https://horsesinpocket-backend-2.onrender.com/api/v1/login`, {
         method: 'POST',
         headers: {
           'Content-Type': 'application/json',
