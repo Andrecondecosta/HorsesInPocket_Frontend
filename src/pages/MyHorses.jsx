@@ -7,7 +7,7 @@ const MyHorses = () => {
 
   useEffect(() => {
     const fetchHorses = async () => {
-      const response = await fetch('http://localhost:3000/api/v1/horses', {
+      const response = await fetch(`${process.env.REACT_APP_API_SERVER_URL}/horses`, {
         headers: {
           'Authorization': `Bearer ${localStorage.getItem('authToken')}`,
         },

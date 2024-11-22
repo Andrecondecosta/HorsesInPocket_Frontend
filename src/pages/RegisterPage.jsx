@@ -1,5 +1,5 @@
 import React, { useState } from 'react';
-import { Link } from 'react-router-dom';
+import { useNavigate, Link } from 'react-router-dom';
 import { useRegister } from '../hooks/useRegister.js';
 import './RegisterPage.css'; // Importa o arquivo CSS
 
@@ -15,8 +15,9 @@ const RegisterPage = () => {
   const [gender, setGender] = useState('');
 
   const { register, token, loading, error } = useRegister();
+  const navigate = useNavigate();
 
-  const handleSubmit = (e) => {
+  const handleSubmit = async (e) => {
     e.preventDefault();
 
     const userData = {
@@ -32,7 +33,12 @@ const RegisterPage = () => {
     };
 
     // Passando todos os dados para o hook register
-    register(userData);
+    await register(userData);
+
+    // Navegar para a página "Meus Cavalos" após o registro bem-sucedido
+    if (token) {
+      navigate('/my-horses');
+    }
   };
 
   return (
@@ -106,7 +112,6 @@ const RegisterPage = () => {
         />
         <button type="submit" disabled={loading}>Register</button>
       </form>
-      {token && <p>Token: {token}</p>}
       <p className="login-message">
         Already have an account? <Link to="/login">Login here</Link>
       </p>

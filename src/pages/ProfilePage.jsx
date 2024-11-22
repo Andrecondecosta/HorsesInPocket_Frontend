@@ -10,7 +10,7 @@ const ProfilePage = () => {
   useEffect(() => {
     const fetchProfile = async () => {
       try {
-        const response = await fetch('http://localhost:3000/api/v1/profile', {
+        const response = await fetch(`${process.env.REACT_APP_API_SERVER_URL}/profile`, {
           method: 'GET',
           headers: {
             'Content-Type': 'application/json',
