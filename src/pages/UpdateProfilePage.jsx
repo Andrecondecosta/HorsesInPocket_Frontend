@@ -3,16 +3,12 @@ import { useNavigate } from 'react-router-dom';
 
 const UpdateProfilePage = () => {
   const [user, setUser] = useState({
-    first_name: '',
-    last_name: '',
+    name: '',
     email: '',
-    birthdate: '',
-    phone_number: '',
-    address: '',
-    gender: ''
+    // Adicione outros campos conforme necessário
   });
-  const [loading, setLoading] = useState(false);
   const [error, setError] = useState(null);
+  const [loading, setLoading] = useState(false);
   const token = localStorage.getItem('authToken'); // Use a mesma chave usada para armazenar o token
   const navigate = useNavigate();
 
@@ -59,20 +55,21 @@ const UpdateProfilePage = () => {
     setError(null);
 
     try {
-      const response = await fetch('http://localhost:3000/api/v1/update', { // Corrige a URL aqui
+      const response = await fetch(`${process.env.REACT_APP_API_SERVER_URL}/profile`, {
         method: 'PUT',
         headers: {
           'Content-Type': 'application/json',
           'Authorization': `Bearer ${token}`, // Inclui o token aqui
         },
-        body: JSON.stringify({ user }),
+        body: JSON.stringify(user),
       });
 
       if (!response.ok) {
-        throw new Error('Failed to update profile');
+        const errorData = await response.json();
+        throw new Error(errorData.errors || 'Failed to update profile');
       }
 
-      navigate('/profile'); // Redireciona para a página de perfil após a atualização
+      navigate('/profile');
     } catch (error) {
       setError('Erro ao atualizar perfil do usuário');
     } finally {
@@ -80,65 +77,35 @@ const UpdateProfilePage = () => {
     }
   };
 
-  if (error) return <p>{error}</p>;
-
   return (
-    <div>
+    <div className="update-profile-page-container">
       <h1>Atualizar Perfil</h1>
+      {error && <p className="error-message">{error}</p>}
       <form onSubmit={handleSubmit}>
-        <input
-          type="text"
-          name="first_name"
-          placeholder="Primeiro Nome"
-          value={user.first_name}
-          onChange={handleChange}
-        />
-        <input
-          type="text"
-          name="last_name"
-          placeholder="Último Nome"
-          value={user.last_name}
-          onChange={handleChange}
-        />
-        <input
-          type="email"
-          name="email"
-          placeholder="Email"
-          value={user.email}
-          onChange={handleChange}
-        />
-        <input
-          type="date"
-          name="birthdate"
-          placeholder="Data de Nascimento"
-          value={user.birthdate}
-          onChange={handleChange}
-        />
-        <input
-          type="text"
-          name="phone_number"
-          placeholder="Telefone"
-          value={user.phone_number}
-          onChange={handleChange}
-        />
-        <input
-          type="text"
-          name="address"
-          placeholder="Endereço"
-          value={user.address}
-          onChange={handleChange}
-        />
-        <select
-          name="gender"
-          value={user.gender}
-          onChange={handleChange}
-        >
-          <option value="">Selecione o Gênero</option>
-          <option value="male">Masculino</option>
-          <option value="female">Feminino</option>
-          <option value="other">Outro</option>
-        </select>
-        <button type="submit" disabled={loading}>Atualizar</button>
+        <label>
+          Nome:
+          <input
+            type="text"
+            name="name"
+            value={user.name}
+            onChange={handleChange}
+            required
+          />
+        </label>
+        <label>
+          Email:
+          <input
+            type="email"
+            name="email"
+            value={user.email}
+            onChange={handleChange}
+            required
+          />
+        </label>
+        {/* Adicione outros campos conforme necessário */}
+        <button type="submit" disabled={loading}>
+          {loading ? 'Atualizando...' : 'Atualizar Perfil'}
+        </button>
       </form>
     </div>
   );
