@@ -51,7 +51,7 @@ const ProfileHorse = () => {
 
   const handleDelete = async () => {
     try {
-      const response = await fetch(`https://horsesinpocket-backend-2.onrender.com/api/v1/horses/${id}`, {
+      const response = await fetch(`${process.env.REACT_APP_API_SERVER_URL}/horses/${id}`, {
         method: 'DELETE',
         headers: {
           'Content-Type': 'application/json',
