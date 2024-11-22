@@ -1,0 +1,92 @@
+/* Contêiner principal */
+.register-container {
+  max-width: 400px;
+  margin: 50px auto;
+  padding: 20px;
+  background-color: #ffffff;
+  border-radius: 8px;
+  box-shadow: 0 4px 12px rgba(0, 0, 0, 0.1);
+  text-align: center; /* Centraliza o conteúdo */
+}
+
+/* Logo */
+.register-logo {
+  max-width: 75%;
+  height: auto;
+  margin-bottom: 0px;
+}
+
+/* Título */
+.register-title {
+  font-size: 1.8em;
+  font-weight: 700;
+  color: #333;
+  text-align: center;
+  font-family: 'Poppins', sans-serif;
+  margin-bottom: 20px;
+}
+
+/* Formulário */
+.register-form {
+  display: flex;
+  flex-direction: column;
+  gap: 15px;
+}
+
+/* Campos de entrada */
+.register-form input[type="text"],
+.register-form input[type="email"],
+.register-form input[type="password"],
+.register-form input[type="date"],
+.register-form input[type="tel"],
+.register-form input[type="text"],
+.register-form select {
+  width: calc(100% - 20px);
+  padding: 10px;
+  font-size: 1em;
+  border: 1px solid #ddd;
+  border-radius: 5px;
+  box-sizing: border-box;
+  font-style: italic;
+}
+
+/* Botão de submissão */
+.register-form button[type="submit"] {
+  width: 100%;
+  padding: 12px;
+  font-size: 1em;
+  font-weight: bold;
+  color: #fff;
+  background-color: #4CAF50;
+  border: none;
+  border-radius: 5px;
+  cursor: pointer;
+  transition: background-color 0.3s ease;
+}
+
+.register-form button[type="submit"]:hover {
+  background-color: #45a049;
+}
+
+/* Mensagem de erro */
+.error-message {
+  color: red;
+  font-size: 0.9em;
+  text-align: center;
+}
+
+/* Mensagem de login */
+.login-message {
+  font-size: 0.9em;
+  text-align: center;
+  margin-top: 20px;
+}
+
+.login-message a {
+  color: #4CAF50;
+  text-decoration: none;
+}
+
+.login-message a:hover {
+  text-decoration: underline;
+}

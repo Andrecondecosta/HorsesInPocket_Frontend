@@ -1,6 +1,7 @@
 import React, { useState } from 'react';
-import { useNavigate } from 'react-router-dom';
+import { useNavigate, Link } from 'react-router-dom';
 import { useLogin } from '../hooks/useLogin';
+import './LoginPage.css'; // Importa o arquivo CSS
 
 const LoginPage = ({ setIsLoggedIn }) => {
   const [email, setEmail] = useState('');
@@ -19,24 +20,30 @@ const LoginPage = ({ setIsLoggedIn }) => {
   };
 
   return (
-    <div>
-      <h2>Login</h2>
-      <form onSubmit={handleSubmit}>
+    <div className="login-container">
+      <img src="https://res.cloudinary.com/dcvtrregd/image/upload/v1732230611/HorsesInPocket/Captura_de_ecr%C3%A3_2024-11-21_230152-removebg-preview_gcggjp.png" alt="HorsesInPocket Logo" className="login-logo" />
+      <h2 className="login-title">Login</h2>
+      <form className="login-form" onSubmit={handleSubmit}>
         <input
           type="email"
           placeholder="Email"
           value={email}
           onChange={e => setEmail(e.target.value)}
+          required
         />
         <input
           type="password"
-          placeholder="Senha"
+          placeholder="Password"
           value={password}
           onChange={e => setPassword(e.target.value)}
+          required
         />
         <button type="submit" disabled={loading}>Login</button>
-        {error && <p>{error}</p>}
+        {error && <p className="error-message">{error}</p>}
       </form>
+      <p className="register-message">
+        Don't have an account? <Link to="/register">Register here</Link>
+      </p>
     </div>
   );
 };

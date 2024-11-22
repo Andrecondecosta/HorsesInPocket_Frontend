@@ -1,10 +1,24 @@
 .Menu {
   display: flex;
   align-items: center; /* Centraliza os itens verticalmente */
-  justify-content: center; /* Centraliza os itens horizontalmente */
+  justify-content: space-around; /* Espaça os itens horizontalmente */
   background-color: #000000;
   height: 60px;
   color: #ffffff;
+  position: relative;
+  padding: 0 20px; /* Adiciona mais espaço à esquerda e à direita */
+}
+
+.menu-logo {
+  height: 40px; /* Define a altura do logo */
+}
+
+.menu-toggle {
+  display: none;
+  font-size: 2em;
+  cursor: pointer;
+  position: absolute;
+  right: 20px; /* Move o botão de alternância para a direita */
 }
 
 .Menu ul {
@@ -15,15 +29,59 @@
 }
 
 .Menu li {
-  margin: 0 20px; /* Espaçamento entre os itens */
+  margin: 0 10px; /* Espaçamento entre os itens */
 }
 
 .Menu a {
-  color:#ffffff; /* Define a cor branca para os links */
+  color: #ffffff; /* Define a cor branca para os links */
   text-decoration: none; /* Remove o sublinhado dos links */
   transition: color 0.3s ease; /* Adiciona uma transição suave */
+  max-width: 200px; /* Define o limite de largura */
+  white-space: nowrap; /* Impede a quebra de linha */
+  overflow: hidden; /* Oculta o texto que ultrapassar o limite */
+  text-overflow: ellipsis; /* Adiciona reticências ao texto que ultrapassar o limite */
 }
 
 .Menu a:hover {
-  color: #aaa; /* Adiciona uma cor mais escura ao passar o mouse */
+  color: #4CAF50; /* Adiciona uma cor mais escura ao passar o mouse */
+}
+
+/* Estilos responsivos */
+@media (max-width: 1200px) {
+  .Menu a {
+    max-width: 150px; /* Define o limite de largura para laptop */
+  }
+}
+
+@media (max-width: 768px) {
+  .menu-toggle {
+    display: block;
+  }
+
+  .Menu ul {
+    display: none;
+    flex-direction: column;
+    gap: 10px;
+    position: absolute;
+    top: 100%;
+    right: 0;
+    background-color: #cccccc; /* Define a cor cinzenta para a barra de navegação */
+    padding: 10px;
+    box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
+    width: auto; /* Ajusta a largura da barra de navegação */
+    z-index: 1000; /* Garante que a barra de navegação se sobreponha a tudo */
+  }
+
+  .Menu ul.menu-open {
+    display: flex;
+  }
+
+  .Menu li {
+    margin: 10px 0; /* Espaçamento entre os itens no menu responsivo */
+  }
+
+  .Menu a {
+    color: #000000; /* Define a cor preta para os links no menu toggle */
+    max-width: 90%; /* Define o limite de largura para tablet e smartphones */
+  }
 }

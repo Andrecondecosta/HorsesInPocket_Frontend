@@ -98,3 +98,52 @@
   text-decoration: none;
   color: inherit;
 }
+
+/* Estilos responsivos */
+@media (max-width: 1200px) {
+  .horses-grid {
+    grid-template-columns: repeat(2, 1fr); /* 2 colunas para telas menores */
+  }
+}
+
+@media (max-width: 768px) {
+  .header {
+    flex-direction: row; /* Alinha os itens em linha */
+    justify-content: space-between; /* Espaça os itens horizontalmente */
+    align-items: center;
+    width: 100%;
+  }
+
+  .title {
+    font-size: 1.5em;
+    margin-bottom: 0;
+  }
+
+  .create-button {
+    font-size: 1em;
+    padding: 6px 12px;
+    margin-left: 10px; /* Adiciona margem à esquerda para mover o botão mais para dentro */
+  }
+
+  .horses-grid {
+    grid-template-columns: 1fr; /* 1 coluna para telas menores */
+    gap: 15px;
+    padding: 10px;
+  }
+
+  .horse-card {
+    height: auto; /* Ajusta a altura automaticamente */
+  }
+
+  .horse-image {
+    height: 250px; /* Ajusta a altura da imagem */
+  }
+
+  .horse-info {
+    padding: 10px;
+  }
+
+  .horse-name {
+    font-size: 16px;
+  }
+}

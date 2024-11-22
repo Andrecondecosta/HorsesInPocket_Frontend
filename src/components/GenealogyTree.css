@@ -1,104 +1,101 @@
+.genealogy-tree-container {
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  padding: 20px;
+  overflow-x: auto; /* Permite rolagem horizontal */
+}
+
 .genealogy-tree {
   display: flex;
   flex-direction: column;
   align-items: center;
-  width: 100%;
-  position: relative;
+  gap: 20px;
 }
 
 .genealogy-container {
-  position: relative;
-  width: 100%;
-  height: 100vh; /* A altura será relativa ao tamanho da tela */
+  display: flex;
+  flex-direction: column; /* Alinha as gerações verticalmente */
+  align-items: center;
+  gap: 20px;
+  position: relative; /* Necessário para posicionar as linhas */
+}
+
+.generation {
+  display: flex;
+  justify-content: center;
+  gap: 20px;
+  position: relative; /* Necessário para posicionar as linhas */
 }
 
 .ancestor-box {
-  text-align: center;
-  border: 1px solid #ccc;
-  padding: 29px;
-  width: 26%; /* Ajuste proporcional ao tamanho da tela */
-  background-color: #f8f8f8;
+  flex: 1 1 auto;
+  border: 1px solid #ddd;
+  padding: 10px;
   border-radius: 8px;
-  position: absolute;
+  background-color: #f8f8f8;
+  text-align: center;
+  position: relative; /* Necessário para posicionar as linhas */
 }
-.ancestor-box p {
-  margin: 0;
-}
+
 .ancestor-label {
+  font-weight: bold;
+  margin-bottom: 5px;
+}
+
+.ancestor-box p {
+  margin: 5px 0;
+}
+
+
+.generation::before {
+  top: 0;
+  bottom: 50%;
+  left: 50%;
+  transform: translateX(-50%);
+}
+
+.generation::after {
+  top: 50%;
+  bottom: 0;
+  left: 50%;
+  transform: translateX(-50%);
+}
+
+.ancestor-box::before,
+.ancestor-box::after {
+  content: '';
   position: absolute;
-  top: 5px;
-  right: 5px;
-  background-color: #fff;
-  padding: 2px 5px;
-  font-size: 0.8em;
-  border: 1px solid #ccc;
-  border-radius: 4px;
+  width: 2px;
+  height: 20px;
+  background-color: #000;
 }
 
-.father {
-  top: 23%;
-  left: 16%; /* Ajustado para ser relativo à largura */
-  transform: translate(-50%, -50%);
+.ancestor-box::before {
+  top: 0;
+  left: 50%;
+  transform: translateX(-50%);
 }
 
-.mother {
-  top: 75%;
-  right: 84%; /* Ajustado para ser relativo à largura */
-  transform: translate(50%, -50%);
+.ancestor-box::after {
+  bottom: 0;
+  left: 50%;
+  transform: translateX(-50%);
 }
 
-.paternal_grandfather {
-  top: 10%;
-  left: 83%;
-  transform: translate(-50%, -50%);
-}
+/* Estilos responsivos */
+@media (max-width: 768px) {
+  .ancestor-box {
+    flex: 1 1 100%;
+  }
 
-.paternal_grandmother {
-  top: 34%;
-  right: 17%;
-  transform: translate(50%, -50%);
-}
+  .genealogy-container {
+    flex-direction: column; /* Alinha as gerações verticalmente em telas menores */
+    gap: 10px;
+  }
 
-.maternal_grandfather {
-  bottom: 37%;
-  left: 83%;
-  transform: translate(-50%, 50%);
-}
-
-.maternal_grandmother {
-  bottom: 13%;
-  right: 17%;
-  transform: translate(50%, 50%);
-}
-
-.genealogy-image {
-  width: 26%;
-  display: flex;
-  justify-content: center;
-  align-items: center;
-  position: absolute;
-  left: 49%; /* Centralizado horizontalmente */
-  top: 31%; /* Centralizado verticalmente */
-  transform: translate(-50%, -50%);
-}
-
-.genealogy-image img {
-  max-width: 100%;
-  height: auto;
-}
-
-.genealogy-image-2 {
-  width: 26%;
-  display: flex;
-  justify-content: center;
-  align-items: center;
-  position: absolute;
-  left: 49%; /* Centralizado horizontalmente */
-  bottom: 22%; /* Ajustado para ficar na parte inferior */
-  transform: translate(-50%, 50%);
-}
-
-.genealogy-image-2 img {
-  max-width: 100%;
-  height: auto;
+  .generation {
+    flex-direction: row; /* Alinha os ancestrais horizontalmente dentro de cada geração em telas menores */
+    gap: 10px;
+  }
 }

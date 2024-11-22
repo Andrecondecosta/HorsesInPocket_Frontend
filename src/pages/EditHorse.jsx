@@ -90,7 +90,6 @@ const EditHorse = () => {
     const files = Array.from(e.target.files);
     const maxSize = 10 * 1024 * 1024; // 10MB
 
-
     const oversizedFiles = files.filter(file => file.size > maxSize);
     if (oversizedFiles.length > 0) {
       setError('Cada imagem deve ter no máximo 10MB.');
@@ -112,30 +111,28 @@ const EditHorse = () => {
   };
 
   const handleVideoChange = (e) => {
-    const files = Array.from(e.target.files); // Obtém os novos arquivos
-    const maxSize = 50 * 1024 * 1024; // Limite de 50MB por arquivo
+    const files = Array.from(e.target.files);
+    const maxSize = 50 * 1024 * 1024; // 50MB por vídeo
 
-    // Verifica arquivos acima do limite
     const oversizedFiles = files.filter(file => file.size > maxSize);
     if (oversizedFiles.length > 0) {
-        setError('Cada vídeo deve ter no máximo 50MB.');
-        return;
+      setError('Cada vídeo deve ter no máximo 50MB.');
+      return;
     }
 
-    // Evita duplicatas
-    const validNewVideos = files.filter(file =>
-        !newVideos.some(existingFile =>
-            existingFile.name === file.name && existingFile.size === file.size
-        )
+    const newVideos = files.filter(file =>
+      !newVideos.some(existingFile =>
+        existingFile.name === file.name && existingFile.size === file.size
+      )
     );
 
-    if (newVideos.length + validNewVideos.length > 3) {
-        setError('Você pode fazer upload de no máximo 3 vídeos.');
+    if (newVideos.length + newVideos.length > 3) {
+      setError('Você pode fazer upload de no máximo 3 vídeos.');
     } else {
-        setNewVideos(prevVideos => [...prevVideos, ...validNewVideos]);
-        setError(null);
+      setNewVideos((prevVideos) => [...prevVideos, ...newVideos]);
+      setError(null);
     }
-};
+  };
 
   const removeImage = (indexToRemove) => {
     setNewImages((prevImages) => prevImages.filter((_, index) => index !== indexToRemove));
@@ -218,7 +215,8 @@ const EditHorse = () => {
     }
   };
 
-  const heightInHH = (horse.height_cm / 0.1016).toFixed(1);
+  // Remover a definição da variável heightInHH se não for necessária
+  // const heightInHH = (horse.height_cm / 0.1016).toFixed(1);
 
   return (
     <div className="edit-horse-container">

@@ -27,26 +27,19 @@ const GenealogyTree = ({ horse }) => {
       <div className="genealogy-tree">
         <h2>Genealogia</h2>
         <div className="genealogy-container">
-          {renderAncestor('father', 'Pai')}
-          {renderAncestor('mother', 'Mãe')}
-          {renderAncestor('paternal_grandfather', 'Avô Paterno')}
-          {renderAncestor('paternal_grandmother', 'Avó Paterna')}
-          {renderAncestor('maternal_grandfather', 'Avô Materno')}
-          {renderAncestor('maternal_grandmother', 'Avó Materna')}
-        </div>
-        <div className="genealogy-image">
-          <img
-            src="https://res.cloudinary.com/dcvtrregd/image/upload/v1731449253/HorsesInPocket/Arvore_geneologica_no7srp.png"
-            alt="Genealogia"
-          />
-
-        </div>
-          <div className="genealogy-image-2">
-          <img
-            src="https://res.cloudinary.com/dcvtrregd/image/upload/v1731449253/HorsesInPocket/Arvore_geneologica_no7srp.png"
-            alt="Genealogia"
-          />
+          <div className="generation">
+            {renderAncestor('paternal_grandfather', 'Avô Paterno')}
+            {renderAncestor('paternal_grandmother', 'Avó Paterna')}
           </div>
+          <div className="generation">
+            {renderAncestor('father', 'Pai')}
+            {renderAncestor('mother', 'Mãe')}
+          </div>
+          <div className="generation">
+            {renderAncestor('maternal_grandfather', 'Avô Materno')}
+            {renderAncestor('maternal_grandmother', 'Avó Materna')}
+          </div>
+        </div>
       </div>
     </div>
   );

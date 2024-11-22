@@ -1,7 +1,6 @@
 /* Contêiner principal */
 .profile-container {
-  max-width: 900px;
-  margin: 0 auto;
+  max-width: 1200px; /* Aumenta a largura máxima */
   padding: 20px;
   background-color: #f9f9f9;
   border-radius: 8px;
@@ -102,7 +101,6 @@
   box-shadow: 0 4px 8px rgba(0, 0, 0, 0.2);
   margin-top: 16px;
   margin-bottom: 20px;
-
 }
 
 .info-card-title {
@@ -134,6 +132,7 @@
 .profile-actions .profile-icon:hover {
   color: #333;
 }
+
 .info-and-videos {
   display: flex;
   justify-content: space-between;
@@ -147,15 +146,18 @@
   border-radius: 8px;
   padding: 16px;
   box-shadow: 0 4px 8px rgba(0, 0, 0, 0.2);
+
 }
 
 .profile-videos {
-  flex: 1;
+  margin-top: 17px;
+  margin-left: 10px;
+  flex: 2 1;
 }
 
 .video-container {
   width: 100%;
-  max-width: 400px; /* Tamanho máximo horizontal */
+  max-width: 600px; /* Tamanho máximo horizontal */
   aspect-ratio: 16 / 9; /* Define proporção padrão (horizontal ou vertical será ajustado automaticamente) */
   overflow: hidden; /* Garante que nada extrapole o contêiner */
   margin: 0 auto; /* Centraliza o vídeo */
@@ -188,5 +190,31 @@ video {
   .profile-info-card,
   .profile-videos {
     width: 100%;
+  }
+
+  .profile-header h1 {
+    font-size: 1.5em;
+  }
+
+  .profile-info-content p {
+    font-size: 0.9em;
+  }
+
+  .info-card-title {
+    font-size: 1em;
+  }
+
+  .video-container {
+    width: 100%;
+    margin-bottom: 20px;
+  }
+
+  .video-container video {
+    height: auto;
+  }
+
+  .profile-thumbnail img {
+    width: 60px;
+    height: 60px;
   }
 }

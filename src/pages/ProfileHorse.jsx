@@ -136,7 +136,6 @@ const ProfileHorse = () => {
               </div>
                 {/* Vídeos do cavalo */}
                 <div className="profile-videos">
-                  <h2 className="videos-title">Vídeos</h2>
                   {horse.videos && horse.videos.length > 0 ? (
                     horse.videos.map((video, index) => (
                       <div key={index} className="video-container">

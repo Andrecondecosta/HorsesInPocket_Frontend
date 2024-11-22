@@ -1,5 +1,7 @@
 import React, { useState } from 'react';
+import { Link } from 'react-router-dom';
 import { useRegister } from '../hooks/useRegister.js';
+import './RegisterPage.css'; // Importa o arquivo CSS
 
 const RegisterPage = () => {
   const [firstName, setFirstName] = useState('');
@@ -34,21 +36,22 @@ const RegisterPage = () => {
   };
 
   return (
-    <div>
-      <h2>Registro</h2>
+    <div className="register-container">
+      <img src="https://res.cloudinary.com/dcvtrregd/image/upload/v1732230611/HorsesInPocket/Captura_de_ecr%C3%A3_2024-11-21_230152-removebg-preview_gcggjp.png" alt="HorsesInPocket Logo" className="register-logo" />
+      <h2 className="register-title">Register</h2>
       {loading && <p>Carregando...</p>}
-      {error && <p style={{ color: 'red' }}>{error}</p>}
-      <form onSubmit={handleSubmit}>
+      {error && <p className="error-message">{error}</p>}
+      <form className="register-form" onSubmit={handleSubmit}>
         <input
           type="text"
-          placeholder="Nome"
+          placeholder="First Name"
           value={firstName}
           onChange={e => setFirstName(e.target.value)}
           required
         />
         <input
           type="text"
-          placeholder="Sobrenome"
+          placeholder="Last Name"
           value={lastName}
           onChange={e => setLastName(e.target.value)}
           required
@@ -57,33 +60,26 @@ const RegisterPage = () => {
           value={gender}
           onChange={e => setGender(e.target.value)}
         >
-          <option value="">Selecionar Gênero</option>
-          <option value="male">Masculino</option>
-          <option value="female">Feminino</option>
-          <option value="other">Outro</option>
+          <option value="">Select Gender</option>
+          <option value="male">Male</option>
+          <option value="female">Female</option>
+          <option value="other">Other</option>
         </select>
         <input
-          type="password"
-          placeholder="Confirmação de Senha"
-          value={passwordConfirmation}
-          onChange={e => setPasswordConfirmation(e.target.value)}
-          required
-        />
-        <input
           type="date"
-          placeholder="Data de Nascimento"
+          placeholder="Birthdate"
           value={birthdate}
           onChange={e => setBirthdate(e.target.value)}
         />
         <input
-          type="text"
-          placeholder="Telefone"
+          type="tel"
+          placeholder="Phone Number"
           value={phoneNumber}
           onChange={e => setPhoneNumber(e.target.value)}
         />
         <input
           type="text"
-          placeholder="Endereço"
+          placeholder="Address"
           value={address}
           onChange={e => setAddress(e.target.value)}
         />
@@ -96,14 +92,24 @@ const RegisterPage = () => {
         />
         <input
           type="password"
-          placeholder="Senha"
+          placeholder="Password"
           value={password}
           onChange={e => setPassword(e.target.value)}
           required
         />
-        <button type="submit" disabled={loading}>Registrar</button>
+        <input
+          type="password"
+          placeholder="Confirm Password"
+          value={passwordConfirmation}
+          onChange={e => setPasswordConfirmation(e.target.value)}
+          required
+        />
+        <button type="submit" disabled={loading}>Register</button>
       </form>
       {token && <p>Token: {token}</p>}
+      <p className="login-message">
+        Already have an account? <Link to="/login">Login here</Link>
+      </p>
     </div>
   );
 };

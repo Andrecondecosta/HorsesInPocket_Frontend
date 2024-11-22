@@ -1,16 +1,16 @@
 import React from 'react';
 import { Routes, Route } from 'react-router-dom';
-import './Content.css';
 import LoginPage from '../pages/LoginPage';
 import RegisterPage from '../pages/RegisterPage';
 import DashboardPage from '../pages/DashboardPage';
 import ProfilePage from '../pages/ProfilePage';
 import UpdateProfilePage from '../pages/UpdateProfilePage';
 import ProtectedRoute from './ProtectedRoute';
-import Myhorses from '../pages/MyHorses';
+import MyHorses from '../pages/MyHorses';
 import NewHorses from '../pages/NewHorses';
 import ProfileHorse from '../pages/ProfileHorse';
 import EditHorse from '../pages/EditHorse';
+import './Content.css'; // Importa o arquivo CSS
 
 function Content({ setIsLoggedIn }) { // Recebe setIsLoggedIn como prop
   return (
@@ -18,14 +18,14 @@ function Content({ setIsLoggedIn }) { // Recebe setIsLoggedIn como prop
       <Routes>
         <Route path="/login" element={<LoginPage setIsLoggedIn={setIsLoggedIn} />} />
         <Route path="/register" element={<RegisterPage />} />
-        <Route path="/dashboard" element={<ProtectedRoute element={<DashboardPage />} />} />
+        <Route path="/" element={<DashboardPage />} />
         <Route path="/profile" element={<ProtectedRoute element={<ProfilePage />} />} />
         <Route path="/update-profile" element={<ProtectedRoute element={<UpdateProfilePage />} />} />
-        <Route path= "/myhorses" element={<ProtectedRoute element={<Myhorses />} />} />
-        <Route path= "/newhorse" element={<ProtectedRoute element={<NewHorses />} />} />
-        <Route path= "/horses/:id" element={<ProtectedRoute element={<ProfileHorse />} />} />
+        <Route path="/myhorses" element={<ProtectedRoute element={<MyHorses />} />} />
+        <Route path="/newhorse" element={<ProtectedRoute element={<NewHorses />} />} />
+        <Route path="/horses/:id" element={<ProtectedRoute element={<ProfileHorse />} />} />
         <Route path="/horses/:id/edit" element={<ProtectedRoute element={<EditHorse />} />} />
-        <Route path="/" element={
+        <Route path="/dashboard" element={
           <div>
             <h1>Bem-vindo ao sistema de autenticação!</h1>
             <p>Use o menu acima para acessar as páginas de Login, Registro ou Dashboard.</p>
