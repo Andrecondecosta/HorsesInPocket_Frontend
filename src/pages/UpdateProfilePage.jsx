@@ -1,16 +1,11 @@
 import React, { useState, useEffect } from 'react';
-import { useNavigate } from 'react-router-dom';
+import { Link } from 'react-router-dom';
 
-const UpdateProfilePage = () => {
-  const [user, setUser] = useState({
-    name: '',
-    email: '',
-    // Adicione outros campos conforme necessário
-  });
+const ProfilePage = () => {
+  const [user, setUser] = useState({});
+  const [isLoading, setIsLoading] = useState(true);
   const [error, setError] = useState(null);
-  const [loading, setLoading] = useState(false);
   const token = localStorage.getItem('authToken'); // Use a mesma chave usada para armazenar o token
-  const navigate = useNavigate();
 
   useEffect(() => {
     const fetchProfile = async () => {
@@ -31,6 +26,8 @@ const UpdateProfilePage = () => {
         setUser(data);
       } catch (error) {
         setError('Erro ao carregar perfil do usuário');
+      } finally {
+        setIsLoading(false);
       }
     };
 
@@ -38,77 +35,28 @@ const UpdateProfilePage = () => {
       fetchProfile();
     } else {
       setError('Token não encontrado');
+      setIsLoading(false);
     }
   }, [token]);
 
-  const handleChange = (e) => {
-    const { name, value } = e.target;
-    setUser((prevUser) => ({
-      ...prevUser,
-      [name]: value,
-    }));
-  };
+  if (isLoading) {
+    return <p>Carregando...</p>;
+  }
 
-  const handleSubmit = async (e) => {
-    e.preventDefault();
-    setLoading(true);
-    setError(null);
-
-    try {
-      const response = await fetch(`${process.env.REACT_APP_API_SERVER_URL}/profile`, {
-        method: 'PUT',
-        headers: {
-          'Content-Type': 'application/json',
-          'Authorization': `Bearer ${token}`, // Inclui o token aqui
-        },
-        body: JSON.stringify(user),
-      });
-
-      if (!response.ok) {
-        const errorData = await response.json();
-        throw new Error(errorData.errors || 'Failed to update profile');
-      }
-
-      navigate('/profile');
-    } catch (error) {
-      setError('Erro ao atualizar perfil do usuário');
-    } finally {
-      setLoading(false);
-    }
-  };
+  if (error) {
+    return <p>{error}</p>;
+  }
 
   return (
-    <div className="update-profile-page-container">
-      <h1>Atualizar Perfil</h1>
-      {error && <p className="error-message">{error}</p>}
-      <form onSubmit={handleSubmit}>
-        <label>
-          Nome:
-          <input
-            type="text"
-            name="name"
-            value={user.name}
-            onChange={handleChange}
-            required
-          />
-        </label>
-        <label>
-          Email:
-          <input
-            type="email"
-            name="email"
-            value={user.email}
-            onChange={handleChange}
-            required
-          />
-        </label>
-        {/* Adicione outros campos conforme necessário */}
-        <button type="submit" disabled={loading}>
-          {loading ? 'Atualizando...' : 'Atualizar Perfil'}
-        </button>
-      </form>
+    <div className="profile-page-container">
+      <h1>Perfil do Usuário</h1>
+      <p>Nome: {user.name}</p>
+      <p>Email: {user.email}</p>
+      <Link to="/editprofile">
+        <button>Editar Perfil</button>
+      </Link>
     </div>
   );
 };
 
-export default UpdateProfilePage;
+export default ProfilePage;

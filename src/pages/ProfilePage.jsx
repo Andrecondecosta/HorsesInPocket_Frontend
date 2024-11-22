@@ -39,21 +39,21 @@ const ProfilePage = () => {
     }
   }, [token]);
 
-  if (isLoading) {
-    return <p>Carregando...</p>;
-  }
-
-  if (error) {
-    return <p>{error}</p>;
-  }
+  if (isLoading) return <p>Carregando...</p>;
+  if (error) return <p>{error}</p>;
 
   return (
-    <div className="profile-page-container">
+    <div>
       <h1>Perfil do Usuário</h1>
-      <p>Nome: {user.name}</p>
-      <p>Email: {user.email}</p>
-      <Link to="/editprofile">
-        <button>Editar Perfil</button>
+      <p><strong>Nome:</strong> {user.first_name} {user.last_name}</p>
+      <p><strong>Email:</strong> {user.email}</p>
+      <p><strong>Data de Nascimento:</strong> {user.birthdate}</p>
+      <p><strong>Telefone:</strong> {user.phone_number}</p>
+      <p><strong>Endereço:</strong> {user.address}</p>
+      <p><strong>Gênero:</strong> {user.gender}</p>
+
+      <Link to="/update-profile">
+        <button>Atualizar Perfil</button>
       </Link>
     </div>
   );
