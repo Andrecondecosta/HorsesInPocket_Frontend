@@ -37,7 +37,7 @@ const EditHorse = () => {
   useEffect(() => {
     const fetchHorse = async () => {
       try {
-        const response = await fetch(`http://localhost:3000/api/v1/horses/${id}`, {
+        const response = await fetch(`${process.env.REACT_APP_API_SERVER_URL}/horses/${id}`, {
           headers: {
             'Authorization': `Bearer ${token}`,
           },
