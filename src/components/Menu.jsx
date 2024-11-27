@@ -40,11 +40,12 @@ function Menu({ isLoggedIn, setIsLoggedIn }) {
         {isAuthenticated && (
           <>
             <li><Link to="/myhorses" onClick={handleLinkClick}>Meus Cavalos</Link></li>
+            <li><Link to ="/received" onClick={handleLinkClick}>Cavalos Recebidos</Link></li>
             <li><Link to="/dashboard" onClick={handleLinkClick}>Dashboard</Link></li>
             <li><Link to="/profile" onClick={handleLinkClick}>Perfil</Link></li>
           </>
         )}
-        {!isLoggedIn && <li><Link to="/register" onClick={handleLinkClick}>Registrar</Link></li>}
+        {!isLoggedIn && <li><Link to="/register" onClick={handleLinkClick}>Registar</Link></li>}
         {isLoggedIn ? (
           <li><Logout setIsLoggedIn={setIsLoggedIn} /></li>
         ) : (

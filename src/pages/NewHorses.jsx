@@ -111,6 +111,7 @@ const NewHorses = () => {
     const token = localStorage.getItem('authToken');
     const formData = new FormData();
 
+    // Dados do cavalo
     formData.append('horse[name]', newHorse.name);
     formData.append('horse[age]', newHorse.age);
     formData.append('horse[height_cm]', newHorse.height_cm);
@@ -120,7 +121,7 @@ const NewHorses = () => {
     formData.append('horse[training_level]', newHorse.training_level);
     formData.append('horse[piroplasmosis]', newHorse.piroplasmosis);
 
-    // Reestruturando ancestors_attributes
+    // Dados de ancestors
     Object.keys(ancestors).forEach((relation) => {
       const ancestor = ancestors[relation];
       formData.append(`horse[ancestors_attributes][][relation_type]`, relation);
@@ -129,13 +130,15 @@ const NewHorses = () => {
       formData.append(`horse[ancestors_attributes][][breed]`, ancestor.breed || '');
     });
 
+    // Arquivos
     images.forEach((image) => {
       formData.append('horse[images][]', image);
     });
-
     videos.forEach((video) => {
       formData.append('horse[videos][]', video);
     });
+
+    console.log(...formData); // Verificar conteúdo do FormData
 
     const response = await fetch(`${process.env.REACT_APP_API_SERVER_URL}/horses`, {
       method: 'POST',

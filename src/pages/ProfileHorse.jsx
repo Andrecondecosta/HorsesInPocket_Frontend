@@ -1,5 +1,5 @@
 import React, { useState, useEffect } from 'react';
-import { useParams, useNavigate } from 'react-router-dom';
+import { useParams, useNavigate, useLocation } from 'react-router-dom';
 import { FaEdit, FaTrash, FaShareAlt } from 'react-icons/fa';
 import Lightbox from "yet-another-react-lightbox";
 import "yet-another-react-lightbox/styles.css";
@@ -8,17 +8,23 @@ import GenealogyTree from '../components/GenealogyTree';
 
 const ProfileHorse = () => {
   const { id } = useParams();
+  const location = useLocation();
   const [horse, setHorse] = useState(null);
   const [selectedImage, setSelectedImage] = useState(null);
   const [isOpen, setIsOpen] = useState(false);
   const [isLoading, setIsLoading] = useState(true);
   const [error, setError] = useState(null);
+  const [readonly, setReadonly] = useState(false);
   const [shareEmail, setShareEmail] = useState('');
   const [showShareModal, setShowShareModal] = useState(false);
   const navigate = useNavigate();
   const token = localStorage.getItem('authToken');
 
   useEffect(() => {
+    // Verifica se o parâmetro de consulta readonly está presente
+    const queryParams = new URLSearchParams(location.search);
+    setReadonly(queryParams.get('readonly') === 'true');
+
     const fetchHorse = async () => {
       try {
         const response = await fetch(`${process.env.REACT_APP_API_SERVER_URL}/horses/${id}`, {
@@ -49,7 +55,7 @@ const ProfileHorse = () => {
       setError('Token não encontrado');
       setIsLoading(false);
     }
-  }, [id, token]);
+  }, [id, location.search, token]);
 
   const handleShare = async () => {
     try {
@@ -104,7 +110,7 @@ const ProfileHorse = () => {
       <div className="profile-header">
         <h1>{horse.name}</h1>
         <div className="profile-actions">
-          <FaEdit className="profile-icon" onClick={() => navigate(`/horses/${id}/edit`)} />
+          {!readonly && (<FaEdit className="profile-icon" onClick={() => navigate(`/horses/${id}/edit`)} />)}
           <FaShareAlt className="profile-icon" onClick={() => setShowShareModal(true)} />
           <FaTrash className="profile-icon" onClick={handleDelete} />
         </div>

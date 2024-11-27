@@ -10,6 +10,7 @@ import MyHorses from '../pages/MyHorses';
 import NewHorses from '../pages/NewHorses';
 import ProfileHorse from '../pages/ProfileHorse';
 import EditHorse from '../pages/EditHorse';
+import ReceivedHorses from '../pages/ReceivedHorses';
 import './Content.css'; // Importa o arquivo CSS
 
 function Content({ setIsLoggedIn }) { // Recebe setIsLoggedIn como prop
@@ -25,6 +26,7 @@ function Content({ setIsLoggedIn }) { // Recebe setIsLoggedIn como prop
         <Route path="/newhorse" element={<ProtectedRoute element={<NewHorses />} />} />
         <Route path="/horses/:id" element={<ProtectedRoute element={<ProfileHorse />} />} />
         <Route path="/horses/:id/edit" element={<ProtectedRoute element={<EditHorse />} />} />
+        <Route path="/received" element={<ProtectedRoute element={<ReceivedHorses />} />} />
         <Route path="/dashboard" element={
           <div>
             <h1>Bem-vindo ao sistema de autenticação!</h1>
