@@ -37,7 +37,7 @@ const RegisterPage = () => {
 
     // Navegar para a página "Meus Cavalos" após o registro bem-sucedido
     if (token) {
-      navigate('/my-horses');
+      navigate('/login');
     }
   };
 

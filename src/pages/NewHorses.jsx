@@ -106,12 +106,15 @@ const NewHorses = () => {
     setImages((prevImages) => prevImages.filter((_, index) => index !== indexToRemove));
   };
 
+  const removeVideo = (indexToRemove) => {
+    setVideos((prevVideos) => prevVideos.filter((_, index) => index !== indexToRemove));
+  };
+
   const handleSubmit = async (e) => {
     e.preventDefault();
     const token = localStorage.getItem('authToken');
     const formData = new FormData();
 
-    // Dados do cavalo
     formData.append('horse[name]', newHorse.name);
     formData.append('horse[age]', newHorse.age);
     formData.append('horse[height_cm]', newHorse.height_cm);
@@ -121,7 +124,7 @@ const NewHorses = () => {
     formData.append('horse[training_level]', newHorse.training_level);
     formData.append('horse[piroplasmosis]', newHorse.piroplasmosis);
 
-    // Dados de ancestors
+    // Reestruturando ancestors_attributes
     Object.keys(ancestors).forEach((relation) => {
       const ancestor = ancestors[relation];
       formData.append(`horse[ancestors_attributes][][relation_type]`, relation);
@@ -130,15 +133,13 @@ const NewHorses = () => {
       formData.append(`horse[ancestors_attributes][][breed]`, ancestor.breed || '');
     });
 
-    // Arquivos
     images.forEach((image) => {
       formData.append('horse[images][]', image);
     });
+
     videos.forEach((video) => {
       formData.append('horse[videos][]', video);
     });
-
-    console.log(...formData); // Verificar conteúdo do FormData
 
     const response = await fetch(`${process.env.REACT_APP_API_SERVER_URL}/horses`, {
       method: 'POST',
@@ -154,7 +155,6 @@ const NewHorses = () => {
       console.error('Erro ao criar cavalo:', response.statusText);
     }
   };
-
 
   const heightInHH = (newHorse.height_cm / 0.1016).toFixed(1);
 
