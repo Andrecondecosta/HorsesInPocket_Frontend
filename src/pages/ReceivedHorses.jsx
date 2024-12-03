@@ -50,7 +50,7 @@ const ReceivedHorses = () => {
       <div className="horses-grid">
         {horses.map((horse) => (
           <div key={horse.id} className="horse-card">
-            src={horse.images?.[0] || "/placeholder.jpg"}
+            <img src={horse.images?.[0] || "/placeholder.jpg"} alt={horse.name} />
             <div className="horse-info">
               <h2 className="horse-name">{horse.name}</h2>
               <p className="horse-sender">Enviado por: {horse.sender_name}</p>

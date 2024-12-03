@@ -191,7 +191,7 @@ const ProfileHorse = () => {
           <h2>Compartilhar Cavalo</h2>
           <input
             type="email"
-            placeholder="Email do usuário"
+            placeholder="Digite o e-mail do destinatário"
             value={shareEmail}
             onChange={(e) => setShareEmail(e.target.value)}
           />

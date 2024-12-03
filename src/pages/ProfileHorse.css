@@ -230,6 +230,8 @@ video {
   border-radius: 8px;
   box-shadow: 0 4px 12px rgba(0, 0, 0, 0.1);
   z-index: 1000;
+  width: 90%;
+  max-width: 400px;
 }
 
 .share-modal h2 {
@@ -237,7 +239,7 @@ video {
 }
 
 .share-modal input {
-  width: 100%;
+  width: 94%;
   padding: 10px;
   margin-bottom: 10px;
   border: 1px solid #ddd;
@@ -260,4 +262,20 @@ video {
 .share-modal button:last-of-type {
   background-color: #f44336;
   color: white;
+}
+
+@media (max-width: 600px) {
+  .share-modal {
+    width: 85%;
+    padding: 10px;
+  }
+
+  .share-modal button {
+    width: 100%;
+    margin-bottom: 10px;
+  }
+
+  .share-modal button:last-of-type {
+    margin-right: 0;
+  }
 }
