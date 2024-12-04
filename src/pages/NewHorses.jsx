@@ -106,9 +106,6 @@ const NewHorses = () => {
     setImages((prevImages) => prevImages.filter((_, index) => index !== indexToRemove));
   };
 
-  const removeVideo = (indexToRemove) => {
-    setVideos((prevVideos) => prevVideos.filter((_, index) => index !== indexToRemove));
-  };
 
   const handleSubmit = async (e) => {
     e.preventDefault();
