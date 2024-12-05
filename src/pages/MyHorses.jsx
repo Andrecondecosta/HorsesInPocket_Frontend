@@ -7,6 +7,8 @@ const MyHorses = () => {
   const [loading, setLoading] = useState(true); // Adicionado para feedback de carregamento
   const [error, setError] = useState(null); // Adicionado para tratar erros
 
+  console.log('API URL:', process.env.REACT_APP_API_SERVER_URL);
+
   useEffect(() => {
     const fetchHorses = async () => {
       try {
