@@ -1,0 +1,20 @@
+.dashboard-actions {
+  display: flex;
+  justify-content: flex-end;
+  gap: 10px;
+  margin: 20px 0;
+}
+
+.filter-button, .export-button {
+  padding: 10px 20px;
+  border: none;
+  border-radius: 8px;
+  background-color: #47663B;
+  color: #fff;
+  cursor: pointer;
+  transition: background-color 0.3s ease;
+}
+
+.filter-button:hover, .export-button:hover {
+  background-color: #8EB486;
+}

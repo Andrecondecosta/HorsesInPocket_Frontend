@@ -1,7 +1,7 @@
 import React, { useState } from 'react';
 import { useNavigate, Link } from 'react-router-dom';
 import { useRegister } from '../hooks/useRegister.js';
-import './RegisterPage.css'; // Importa o arquivo CSS
+import './RegisterPage.css';
 
 const RegisterPage = () => {
   const [firstName, setFirstName] = useState('');
@@ -32,89 +32,110 @@ const RegisterPage = () => {
       gender,
     };
 
-    // Passando todos os dados para o hook register
     await register(userData);
 
-    // Navegar para a página "Meus Cavalos" após o registro bem-sucedido
     if (token) {
       navigate('/login');
     }
   };
 
   return (
-    <div className="register-container">
-      <img src="https://res.cloudinary.com/dcvtrregd/image/upload/v1732230611/HorsesInPocket/Captura_de_ecr%C3%A3_2024-11-21_230152-removebg-preview_gcggjp.png" alt="HorsesInPocket Logo" className="register-logo" />
-      <h2 className="register-title">Register</h2>
-      {loading && <p>Carregando...</p>}
-      {error && <p className="error-message">{error}</p>}
-      <form className="register-form" onSubmit={handleSubmit}>
-        <input
-          type="text"
-          placeholder="First Name"
-          value={firstName}
-          onChange={e => setFirstName(e.target.value)}
-          required
-        />
-        <input
-          type="text"
-          placeholder="Last Name"
-          value={lastName}
-          onChange={e => setLastName(e.target.value)}
-          required
-        />
-        <select
-          value={gender}
-          onChange={e => setGender(e.target.value)}
-        >
-          <option value="">Select Gender</option>
-          <option value="male">Male</option>
-          <option value="female">Female</option>
-          <option value="other">Other</option>
-        </select>
-        <input
-          type="date"
-          placeholder="Birthdate"
-          value={birthdate}
-          onChange={e => setBirthdate(e.target.value)}
-        />
-        <input
-          type="tel"
-          placeholder="Phone Number"
-          value={phoneNumber}
-          onChange={e => setPhoneNumber(e.target.value)}
-        />
-        <input
-          type="text"
-          placeholder="Address"
-          value={address}
-          onChange={e => setAddress(e.target.value)}
-        />
-        <input
-          type="email"
-          placeholder="Email"
-          value={email}
-          onChange={e => setEmail(e.target.value)}
-          required
-        />
-        <input
-          type="password"
-          placeholder="Password"
-          value={password}
-          onChange={e => setPassword(e.target.value)}
-          required
-        />
-        <input
-          type="password"
-          placeholder="Confirm Password"
-          value={passwordConfirmation}
-          onChange={e => setPasswordConfirmation(e.target.value)}
-          required
-        />
-        <button type="submit" disabled={loading}>Register</button>
-      </form>
-      <p className="login-message">
-        Already have an account? <Link to="/login">Login here</Link>
-      </p>
+    <div className="register-page">
+      {/* Lado esquerdo com a imagem */}
+      <div className="register-image"></div>
+
+      {/* Lado direito com o formulário */}
+      <div className="register-container">
+        <div className="register-header">
+          <div className="register-logo">LOGO</div>
+          <h2>Registo</h2>
+        </div>
+
+        {error && <p className="error-message">{error}</p>}
+
+        <form className="register-form" onSubmit={handleSubmit}>
+          <input
+            className="half-width"
+            type="text"
+            placeholder="Nome"
+            value={firstName}
+            onChange={(e) => setFirstName(e.target.value)}
+            required
+          />
+          <input
+            className="half-width"
+            type="text"
+            placeholder="Apelido"
+            value={lastName}
+            onChange={(e) => setLastName(e.target.value)}
+            required
+          />
+          <select
+            className="half-width"
+            value={gender}
+            onChange={(e) => setGender(e.target.value)}
+            required
+          >
+            <option value="">Género</option>
+            <option value="male">Masculino</option>
+            <option value="female">Feminino</option>
+            <option value="other">Outro</option>
+          </select>
+          <input
+            className="half-width"
+            type="date"
+            placeholder="Data de Nascimento"
+            value={birthdate}
+            onChange={(e) => setBirthdate(e.target.value)}
+            required
+          />
+          <input
+            className="half-width"
+            type="tel"
+            placeholder="Telefone"
+            value={phoneNumber}
+            onChange={(e) => setPhoneNumber(e.target.value)}
+          />
+          <input
+            className="half-width"
+            type="text"
+            placeholder="Endereço"
+            value={address}
+            onChange={(e) => setAddress(e.target.value)}
+          />
+          <input
+            className="full-width"
+            type="email"
+            placeholder="Email"
+            value={email}
+            onChange={(e) => setEmail(e.target.value)}
+            required
+          />
+          <input
+            className="half-width"
+            type="password"
+            placeholder="Password"
+            value={password}
+            onChange={(e) => setPassword(e.target.value)}
+            required
+          />
+          <input
+            className="half-width"
+            type="password"
+            placeholder="Confirmar Password"
+            value={passwordConfirmation}
+            onChange={(e) => setPasswordConfirmation(e.target.value)}
+            required
+          />
+          <button type="submit" className="register-button" disabled={loading}>
+            {loading ? 'A Registar...' : 'Registar'}
+          </button>
+        </form>
+
+        <p className="login-message">
+          Já tem Conta? <Link to="/login">Efetue o Login</Link>.
+        </p>
+      </div>
     </div>
   );
 };

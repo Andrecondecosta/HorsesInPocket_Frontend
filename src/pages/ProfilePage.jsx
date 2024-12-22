@@ -1,5 +1,6 @@
 import React, { useState, useEffect } from 'react';
 import { Link } from 'react-router-dom';
+import Layout from '../components/Layout';
 
 const ProfilePage = () => {
   const [user, setUser] = useState({});
@@ -43,6 +44,7 @@ const ProfilePage = () => {
   if (error) return <p>{error}</p>;
 
   return (
+    <Layout>
     <div>
       <h1>Perfil do Usuário</h1>
       <p><strong>Nome:</strong> {user.first_name} {user.last_name}</p>
@@ -56,6 +58,7 @@ const ProfilePage = () => {
         <button>Atualizar Perfil</button>
       </Link>
     </div>
+    </Layout>
   );
 };
 

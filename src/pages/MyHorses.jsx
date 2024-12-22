@@ -1,9 +1,11 @@
 import React, { useState, useEffect } from 'react';
 import { Link } from 'react-router-dom';
 import './MyHorses.css';
+import Layout from '../components/Layout';
 
 const MyHorses = () => {
   const [horses, setHorses] = useState([]);
+  console.log('API URL:', process.env.REACT_APP_API_SERVER_URL);
 
   useEffect(() => {
     const fetchHorses = async () => {
@@ -20,6 +22,7 @@ const MyHorses = () => {
   }, []);
 
   return (
+    <Layout>
     <div className="my-horses-container">
       <div className="header">
         <h1 className="title">Meus Cavalos</h1>
@@ -42,6 +45,7 @@ const MyHorses = () => {
         ))}
       </div>
     </div>
+    </Layout>
   );
 };
 

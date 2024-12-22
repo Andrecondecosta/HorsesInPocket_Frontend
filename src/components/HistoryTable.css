@@ -1,0 +1,78 @@
+.history-title{
+  font-size: 24px;
+  color: rgb(51, 51, 51);
+  font-weight: bold;
+  margin-bottom: 30px;
+}
+/* Contêiner para o histórico com rolagem */
+.history-table-container {
+  max-height: 300px; /* Defina a altura máxima para a área visível */
+  overflow-y: auto; /* Ativa a rolagem vertical */
+  border: 1px solid #ddd; /* Borda para delimitar a área */
+  border-radius: 5px; /* Bordas arredondadas */
+  box-shadow: 0 2px 5px rgba(0, 0, 0, 0.1); /* Sombra para estilo */
+  background-color: #fff; /* Fundo branco */
+}
+
+/* Estilo geral da tabela */
+.history-table table {
+  width: 100%;
+  border-collapse: collapse;
+  font-family: 'Inter', sans-serif;
+}
+
+/* Cabeçalhos da tabela */
+.history-table th {
+  background-color: #E2E1E1; /* Cor de fundo cinza claro */
+  color: #333; /* Cor do texto verde escuro */
+  font-weight: bold;
+  font-size: 18px; /* Tamanho das legendas */
+  padding: 10px;
+  text-align: left;
+  position: sticky; /* Cabeçalhos fixos no topo ao rolar */
+  top: 0;
+  z-index: 1; /* Garante que o cabeçalho fique acima do conteúdo */
+}
+
+/* Células da tabela */
+.history-table td {
+  padding: 10px;
+  border-bottom: 1px solid #ddd;
+  font-size: 16px;
+}
+
+/* Botões para os estados */
+.status-tag {
+  padding: 5px 10px;
+  border-radius: 15px;
+  font-size: 14px;
+  text-align: center;
+  display: inline-block;
+}
+
+/* Cores específicas dos estados */
+.status-received {
+  background-color: #ECC62F; /* Amarelo */
+  color: white  ;
+}
+
+.status-pending {
+  background-color: #E2E1E1; /* Cinza claro */
+  color: black;
+}
+
+.status-shared {
+  background-color: #25A5CC; /* Azul claro */
+  color: white;
+}
+
+.status-deleted {
+  background-color: #E64949; /* Vermelho */
+  color: white;
+}
+
+.status-default {
+  background-color: #8EB486; /* Verde claro */
+  color: white;
+
+}

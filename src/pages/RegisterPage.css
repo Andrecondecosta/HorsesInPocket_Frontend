@@ -1,90 +1,140 @@
-/* Contêiner principal */
+:root {
+  --green-dark: #47663B; /* Cor do botão */
+  --green-light: #E8ECD7; /* Fundo do campo de password */
+  --white: #FFFFFF;
+  --gray-border: #8EB486;
+  --text-dark: #333333;
+}
+
+* {
+  margin: 0;
+  padding: 0;
+  box-sizing: border-box;
+}
+
+body, html {
+  height: 100%;
+  font-family: 'Inter', sans-serif;
+}
+
+.register-page {
+  display: flex;
+  height: 100vh;
+  width: 100vw;
+  overflow: hidden;
+}
+
+/* Imagem do lado esquerdo */
+.register-image {
+  flex: 1;
+  background-image: url('https://images.unsplash.com/photo-1550785330-003a9afa3bd9?q=80&w=2070&auto=format&fit=crop&ixlib=rb-4.0.3&ixid=M3wxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8fA%3D%3D');
+  background-size: cover;
+  background-position: center;
+}
+
+/* Contêiner do formulário */
 .register-container {
-  max-width: 400px;
-  margin: 50px auto;
-  padding: 20px;
-  background-color: #ffffff;
-  border-radius: 8px;
-  box-shadow: 0 4px 12px rgba(0, 0, 0, 0.1);
-  text-align: center; /* Centraliza o conteúdo */
+  flex: 1;
+  display: flex;
+  flex-direction: column;
+  justify-content: center;
+  align-items: center;
+  background-color: var(--white);
+  padding: 40px;
+  border-top-left-radius: 50px;
+  border-bottom-left-radius: 50px;
+  position: relative;
+  margin-left: -50px; /* Sobreposição */
+  box-shadow: -10px 0 15px rgba(0, 0, 0, 0.2);
 }
 
-/* Logo */
-.register-logo {
-  max-width: 75%;
-  height: auto;
-  margin-bottom: 0px;
-}
-
-/* Título */
-.register-title {
-  font-size: 1.8em;
-  font-weight: 700;
-  color: #333;
+.register-header {
   text-align: center;
-  font-family: 'Poppins', sans-serif;
   margin-bottom: 20px;
+}
+
+.register-header h2 {
+  font-size: 28px;
+  color: var(--text-dark);
+  font-weight: bold;
+  margin-bottom: 30px;
+}
+
+.register-logo {
+  width: 80px;
+  height: 80px;
+  border: 2px solid var(--gray-border);
+  border-radius: 50%;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  margin-bottom: 10px;
 }
 
 /* Formulário */
 .register-form {
+  width: 100%;
+  max-width: 450px;
   display: flex;
-  flex-direction: column;
-  gap: 15px;
+  flex-wrap: wrap;
+  gap: 20px;
 }
 
-/* Campos de entrada */
-.register-form input[type="text"],
-.register-form input[type="email"],
-.register-form input[type="password"],
-.register-form input[type="date"],
-.register-form input[type="tel"],
-.register-form input[type="text"],
+/* Campos lado a lado */
+.register-form .half-width {
+  flex: 1 1 calc(50% - 10px);
+}
+
+.register-form .full-width {
+  flex: 1 1 100%;
+}
+
+/* Inputs e Selects */
+.register-form input,
 .register-form select {
-  width: calc(100% - 20px);
-  padding: 10px;
-  font-size: 1em;
-  border: 1px solid #ddd;
-  border-radius: 5px;
-  box-sizing: border-box;
-  font-style: italic;
-}
-
-/* Botão de submissão */
-.register-form button[type="submit"] {
   width: 100%;
   padding: 12px;
-  font-size: 1em;
+  font-size: 16px;
+  border: 2px solid #8EB486;
+  border-radius: 8px;
+  background-color: var(--white);
+  outline: none;
+}
+
+.register-form input:focus,
+.register-form select:focus {
+  border-color: #47663B;
+}
+
+/* Botão Registrar */
+.register-button {
+  width: 100%;
+  padding: 14px;
+  font-size: 18px;
   font-weight: bold;
-  color: #fff;
-  background-color: #4CAF50;
+  color: var(--white);
+  background-color: #47663B;
   border: none;
-  border-radius: 5px;
+  border-radius: 50px;
   cursor: pointer;
   transition: background-color 0.3s ease;
 }
 
-.register-form button[type="submit"]:hover {
-  background-color: #45a049;
-}
-
-/* Mensagem de erro */
-.error-message {
-  color: red;
-  font-size: 0.9em;
-  text-align: center;
+.register-button:hover {
+  background-color: #8EB486;
 }
 
 /* Mensagem de login */
 .login-message {
-  font-size: 0.9em;
   text-align: center;
   margin-top: 20px;
+  font-size: 14px;
 }
 
 .login-message a {
-  color: #4CAF50;
+  color: var(--green-dark);
   text-decoration: none;
+  font-weight: bold;
 }
 
 .login-message a:hover {

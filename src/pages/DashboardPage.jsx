@@ -1,13 +1,19 @@
 import React from 'react';
+import Layout from '../components/Layout';
+import CardSection from '../components/CardSection';
+import HistoryTable from '../components/HistoryTable';
+import DashboardActions from '../components/DashboardActions';
 import './DashboardPage.css';
-import { Link } from 'react-router-dom';
 
-const DashboardPage = () => {
+const DashboardPage = ({ setIsLoggedIn }) => {
   return (
-    <div className='Dashboard'>
-      <h1>HorsesInPocket</h1>
-      <p>Bem-vindo ao <Link to="/login" className="highlight-link">HorsesInPocket!</Link></p>
-    </div>
+    <Layout setIsLoggedIn={setIsLoggedIn}>
+      <div className="dashboard-container">
+      <h2 className="dashboard-title">Dashboard</h2>
+        <CardSection />
+        <HistoryTable />
+      </div>
+    </Layout>
   );
 };
 

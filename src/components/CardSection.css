@@ -1,0 +1,59 @@
+/* Container da seção de cards */
+.card-section {
+  display: flex;
+  justify-content: flex-start;
+  gap: 140px;
+  margin: 50px 165px;
+}
+
+/* Estilos gerais dos cards */
+.card {
+  background-color: #a6c397;
+  border-radius: 12px;
+  box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1);
+  padding: 15px 0px 80px 20px;
+  display: flex
+;
+  align-items: center;
+  gap: 35px;
+  width: 300px;
+  position: relative;
+  transition: transform 0.2s ease, box-shadow 0.2s ease;
+  text-decoration: none;
+  color: #333;
+}
+.card:hover {
+  transform: translateY(-5px);
+  box-shadow: 0 6px 12px rgba(0, 0, 0, 0.2);
+}
+
+/* Imagem do card */
+.card img {
+  width: 60px;
+  height: 60px;
+  border-radius: 50%;
+}
+
+/* Conteúdo do card */
+.card-content {
+  display: flex;
+  flex-direction: column;
+  justify-content: center;
+}
+
+/* Título do card */
+.card h3 {
+  font-size: 18px;
+  margin: 0;
+  color: #fff;
+  font-weight: normal; /* Remove o bold */
+}
+
+/* Texto do link */
+.card p {
+  font-size: 14px;
+  color: #47663B;
+  margin: 5px 0 0;
+  font-weight: normal; /* Remove o bold */
+  text-decoration: none; /* Remove sublinhado */
+}
