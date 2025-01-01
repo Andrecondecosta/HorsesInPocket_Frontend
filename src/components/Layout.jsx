@@ -9,9 +9,11 @@ const Layout = ({ setIsLoggedIn, children }) => {
   const navigate = useNavigate();
 
   const handleLogout = () => {
-    localStorage.removeItem('authToken');
-    setIsLoggedIn(false); // Atualiza o estado global
-    navigate('/login'); // Redireciona para login
+    if (localStorage.getItem('authToken')) {
+      localStorage.removeItem('authToken');
+    }
+    setIsLoggedIn(false);
+    navigate('/login');
   };
 
   const handleClickOutside = (event) => {
