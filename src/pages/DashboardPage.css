@@ -10,3 +10,28 @@
   font-weight: bold;
   color: #333; /* Cor do texto */
 }
+/* Responsividade: Ajustes para dispositivos menores */
+@media (max-width: 768px) {
+  .dashboard-container {
+    padding: 15px; /* Reduz o espaçamento interno */
+  }
+
+  .dashboard-title {
+    margin-top: 30px; /* Ajusta o espaçamento superior */
+    font-size: 20px; /* Reduz o tamanho da fonte */
+    margin-bottom: 66px;
+  }
+}
+
+/* Responsividade: Ajustes para telas muito pequenas */
+@media (max-width: 480px) {
+  .dashboard-container {
+    padding: 10px; /* Reduz ainda mais o espaçamento interno */
+  }
+
+  .dashboard-title {
+    margin-top: 20px; /* Reduz o espaçamento superior */
+    font-size: 18px; /* Reduz ainda mais o tamanho da fonte */
+    margin-bottom: 66px;
+  }
+}

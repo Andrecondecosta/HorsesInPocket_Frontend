@@ -151,3 +151,86 @@ button:hover {
 .register-message a:hover {
   text-decoration: underline;
 }
+/* Responsividade */
+@media (max-width: 768px) {
+  .login-logo {
+    width: 100px;
+    height: 100px;
+    border: 2px solid var(--gray-border);
+    border-radius: 50%;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    font-weight: bold;
+    color: var(--text-dark);
+    margin-bottom: 20px;
+    margin-left: 96px;
+}
+
+  .login-form {
+    width: 100%;
+    max-width: 450px;
+    display: flex;
+    flex-direction: column;
+    gap: 25px;
+    margin-left: 46px;
+}
+  .login-image {
+    display: none  /* Garante que a imagem não será exibida */
+  }
+  .login-container {
+    padding: 20px; /* Reduz o padding para telas menores */
+    border-radius: 12px;
+  }
+
+  .login-header h2 {
+    font-size: 22px; /* Reduz o tamanho da fonte */
+    margin-left: 61px;
+  }
+
+  .input-group input {
+    font-size: 14px; /* Ajusta o tamanho da fonte dos inputs */
+  }
+
+  button {
+    font-size: 14px;
+    padding: 10px; /* Ajusta o padding do botão */
+  }
+  .register-message {
+    margin-top: 30px;
+    font-size: 14px;
+    text-align: center;
+    color: var(--text-dark);
+    margin-left: 60px;
+}
+}
+
+@media (max-width: 480px) {
+  .login-image {
+    display: none; /* Garante que a imagem não será exibida */
+  }
+  .login-container {
+    padding: 15px;
+  }
+
+  .login-header h2 {
+    font-size: 20px;
+  }
+
+  .input-group input {
+    font-size: 13px;
+  }
+
+  button {
+    font-size: 13px;
+    padding: 8px;
+  }
+  .login-form {
+    width: 75%;
+    max-width: 450px;
+    display: flex;
+    flex-direction: column;
+    gap: 25px;
+    margin-left: 54px;
+}
+}

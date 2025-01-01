@@ -1,9 +1,10 @@
+@import url('https://fonts.googleapis.com/css2?family=Inter:wght@700&display=swap');
 /* Estilos Gerais */
 body, html {
   margin: 0;
   padding: 0;
   box-sizing: border-box;
-  font-family: 'Poppins', sans-serif;
+  font-family: 'inter', sans-serif;
   background-color: #d3d3d3; /* Cinzento claro */
   height: 100%;
 }
@@ -27,6 +28,7 @@ body, html {
   width: 100%;
   height: 60px; /* Define altura fixa para navbar */
   z-index: 10;
+  position: absolute; /* Fixa a navbar no topo da janela */
 }
 .logo-link {
   text-decoration: none; /* Remove o sublinhado */
@@ -109,7 +111,7 @@ body, html {
   margin: 80px 63px 42px 58px;
   padding: 17px;
   width: 94%;
-  /* max-width: 1200px; */
+
   border-radius: 12px;
   box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
   flex: 1 1;
@@ -119,9 +121,74 @@ body, html {
 
 
 /* Responsividade */
-@media (max-width: 768px) {
+@media (max-width: 1024px) {
+  .navbar {
+    padding: 15px 30px; /* Reduz espaço nas laterais */
+  }
+
+  .dropdown-menu {
+    right: 20px; /* Ajusta posição do dropdown */
+  }
+
   .content-wrapper {
     width: 95%;
-    margin: 70px auto 20px; /* Ajusta a margem superior */
+    margin: 80px auto 20px;
+  }
+}
+
+@media (max-width: 768px) {
+  .navbar {
+    flex-direction: row;
+    padding: 28px; /* Padding ainda menor */
+    position: absolute; /* Fixa a navbar no topo da janela */
+    margin-top: -18px;
+  }
+
+  .user-text {
+    font-size: 14px; /* Fonte menor para texto do usuário */
+    margin-top: 5px; /* Reduz espaço entre elementos */
+  }
+
+  .dropdown-menu {
+    width: 24%;
+    min-width: 0px;
+    left: 556px;
+    right: 0;
+    top: 50px;
+  }
+
+  .content-wrapper {
+      margin: 40px 48px 61px;
+      padding: 5px;
+      border-radius: 4px;
+      width: 90%;
+  }
+}
+
+@media (max-width: 480px) {
+  .navbar {
+    flex-direction: row;
+    padding: 20px; /* Padding ainda menor */
+    position: absolute; /* Fixa a navbar no topo da janela */
+    margin-top: -18px;
+  }
+
+  .user-text {
+    font-size: 12px; /* Fonte ainda menor */
+  }
+
+  .dropdown-menu {
+    width: 24%;
+    min-width: 0px;
+    left: 310px;
+    right: 0;
+    top: 31px;
+  }
+
+  .content-wrapper {
+    margin: 40px 17px 26px;
+    padding: 5px;
+    border-radius: 4px;
+    width: 91%;
   }
 }

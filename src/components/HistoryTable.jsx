@@ -56,7 +56,7 @@ const HistoryTable = () => {
 
   return (
     <div className="history-table">
-      <h2 classeName="history-title">Histórico</h2>
+      <h2 className="history-titles">Histórico</h2>
       <div className="history-table-container">
         <table>
           <thead>

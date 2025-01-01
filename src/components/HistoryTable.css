@@ -1,8 +1,9 @@
-.history-title{
+.history-titles{
   font-size: 24px;
   color: rgb(51, 51, 51);
   font-weight: bold;
   margin-bottom: 30px;
+  margin-top: 60px;
 }
 /* Contêiner para o histórico com rolagem */
 .history-table-container {
@@ -18,14 +19,12 @@
 .history-table table {
   width: 100%;
   border-collapse: collapse;
-  font-family: 'Inter', sans-serif;
 }
 
 /* Cabeçalhos da tabela */
 .history-table th {
   background-color: #E2E1E1; /* Cor de fundo cinza claro */
   color: #333; /* Cor do texto verde escuro */
-  font-weight: bold;
   font-size: 18px; /* Tamanho das legendas */
   padding: 10px;
   text-align: left;
@@ -75,4 +74,59 @@
   background-color: #8EB486; /* Verde claro */
   color: white;
 
+}
+@media (max-width: 768px) {
+  .history-titles {
+    font-size: 18px;
+    margin-top: 100px;
+    margin-bottom: 43px;
+  }
+
+  .history-table-container {
+    max-height: 350px; /* Reduz a altura máxima */
+    margin: 0 5px; /* Reduz o espaço lateral */
+  }
+
+  .history-table th {
+    font-size: 12px; /* Reduz o tamanho do texto do cabeçalho */
+    padding: 8px;
+  }
+
+  .history-table td {
+    font-size: 9px; /* Reduz o tamanho do texto das células */
+    padding: 8px;
+  }
+
+  .status-tag {
+    font-size: 9px; /* Reduz o tamanho do texto dos botões */
+    padding: 4px 8px;
+  }
+}
+/* Responsividade: Ajustes para telas muito pequenas */
+@media (max-width: 480px) {
+  .history-titles {
+    font-size: 18px;
+    margin-top: 100px;
+    margin-bottom: 43px;
+  }
+
+  .history-table-container {
+    max-height: 350px; /* Reduz ainda mais a altura máxima */
+  }
+
+  .history-table th {
+    font-size: 14px; /* Ajusta o tamanho do texto do cabeçalho */
+    padding: 6px;
+  }
+
+  .history-table td {
+    font-size: 7px;
+    padding: 6px;
+
+  }
+
+  .status-tag {
+    font-size: 10px; /* Ajusta o tamanho do texto dos botões */
+    padding: 3px 6px;
+  }
 }

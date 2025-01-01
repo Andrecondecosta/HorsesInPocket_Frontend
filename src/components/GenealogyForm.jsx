@@ -1,7 +1,9 @@
-import React from 'react';
+import React, { useState } from 'react';
 import './GenealogyForm.css';
 
 const GenealogyForm = ({ ancestors, setAncestors }) => {
+  const [activeTab, setActiveTab] = useState('father');
+
   const handleAncestorChange = (relation, field, value) => {
     setAncestors((prevAncestors) => ({
       ...prevAncestors,
@@ -12,52 +14,56 @@ const GenealogyForm = ({ ancestors, setAncestors }) => {
     }));
   };
 
-  const renderAncestorInput = (relation, label) => {
-    const hasError = !ancestors[relation]?.name;
-
-    return (
-      <div className={`ancestor-input ${hasError ? 'has-error' : ''}`}>
-        <h3>{label}</h3>
-        <input
-          type="text"
-          placeholder="Nome"
-          value={ancestors[relation]?.name || ''}
-          onChange={(e) => handleAncestorChange(relation, 'name', e.target.value)}
-        />
-        <input
-          type="text"
-          placeholder="Criador"
-          value={ancestors[relation]?.breeder || ''}
-          onChange={(e) => handleAncestorChange(relation, 'breeder', e.target.value)}
-        />
-        <input
-          type="text"
-          placeholder="Raça"
-          value={ancestors[relation]?.breed || ''}
-          onChange={(e) => handleAncestorChange(relation, 'breed', e.target.value)}
-        />
-      </div>
-    );
+  const ancestorLabels = {
+    father: 'Pai',
+    mother: 'Mãe',
+    paternal_grandfather: 'Avô Paterno',
+    paternal_grandmother: 'Avó Paterna',
+    maternal_grandfather: 'Avô Materno',
+    maternal_grandmother: 'Avó Materna',
   };
 
-
-  const ancestorFields = [
-    { relation: 'father', label: 'Pai' },
-    { relation: 'mother', label: 'Mãe' },
-    { relation: 'paternal_grandfather', label: 'Avô Paterno' },
-    { relation: 'paternal_grandmother', label: 'Avó Paterna' },
-    { relation: 'maternal_grandfather', label: 'Avô Materno' },
-    { relation: 'maternal_grandmother', label: 'Avó Materna' },
-  ];
+  const renderFields = () => (
+    <div className="genealogy-fields">
+      <input
+        type="text"
+        placeholder="Nome"
+        value={ancestors[activeTab]?.name || ''}
+        onChange={(e) => handleAncestorChange(activeTab, 'name', e.target.value)}
+      />
+      <input
+        type="text"
+        placeholder="Criador"
+        value={ancestors[activeTab]?.breeder || ''}
+        onChange={(e) => handleAncestorChange(activeTab, 'breeder', e.target.value)}
+      />
+      <input
+        type="text"
+        placeholder="Raça"
+        value={ancestors[activeTab]?.breed || ''}
+        onChange={(e) => handleAncestorChange(activeTab, 'breed', e.target.value)}
+      />
+    </div>
+  );
 
   return (
     <div className="genealogy-form">
-      <h2>Genealogia</h2>
-      <div className="genealogy-inputs">
-        {ancestorFields.map(({ relation, label }) =>
-          renderAncestorInput(relation, label)
-        )}
+      {/* Tabs */}
+      <div className="genealogy-tabs">
+        {Object.keys(ancestorLabels).map((relation) => (
+          <div
+            key={relation}
+            className={`genealogy-tab ${activeTab === relation ? 'active' : ''}`}
+            onClick={() => setActiveTab(relation)}
+          >
+            {ancestorLabels[relation]}
+          </div>
+        ))}
       </div>
+
+      {/* Fields */}
+      {renderFields()}
+
     </div>
   );
 };

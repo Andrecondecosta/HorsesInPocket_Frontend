@@ -1,188 +1,536 @@
-/* Contêiner principal */
-.new-horse-container {
-  max-width: 700px;
-  margin: auto;
-  padding: 20px;
-  background-color: #f9f9f9;
+
+/* Breadcrumbs (barra de navegação com links) */
+.breadcrumbs {
+  display: flex;
+  align-items: center;
+  gap: 5px; /* Espaço entre os links */
+  font-size: 0.9rem;
+  color: #6e6e6e;
+  background-color: #f5f5f5;
+  padding: 10px 15px;
+  margin-bottom: 40px; /* Mais espaço abaixo */
   border-radius: 8px;
-  box-shadow: 0 4px 12px rgba(0, 0, 0, 0.1);
+  width: 90%; /* Alinhado ao conteúdo */
+  margin-left: auto;
+  margin-right: auto;
 }
 
-/* Título */
-.new-horse-title {
-  font-size: 1.8em;
+.breadcrumbs a {
+  text-decoration: none;
+  color: #6e6e6e;
+}
+
+.breadcrumbs a:hover {
+  text-decoration: underline;
+  color: #6e6e6e;
+}
+
+.breadcrumbs span {
+  font-weight: bold;
   color: #333;
-  text-align: center;
-  margin-bottom: 20px;
 }
 
-/* Labels e formulário */
-.new-input-label {
-  font-size: 1.1em;
-  color: #555;
-  margin-bottom: 6px;
+/* Título da página */
+.page-title {
+  font-size: 1.8rem;
+  font-weight: bold;
+  color: #333;
+  margin-bottom: 30px; /* Espaçamento maior abaixo */
+  text-align: left;
+  width: 90%;
+  margin-left: auto;
+  margin-right: auto;
+  margin-top: 40px;
 }
 
-.new-horse-form {
-  display: flex;
-  flex-direction: column;
-  gap: 0px;
-}
-
-/* Slider de altura */
-.height-slider-container {
-  display: flex;
-  flex-direction: column;
-  gap: 5px;
-  margin-bottom: 24px;
-}
-
-.height-values {
+/* Barra de navegação dos passos */
+.steps-navigation {
   display: flex;
   justify-content: space-between;
-  font-size: 1em;
+  align-items: center;
+  margin-bottom: 50px; /* Espaço maior entre a barra e o formulário */
+  position: relative;
+  width: 80%;
+  margin: 0 auto;
+  margin-bottom: 50px;
+}
+
+.steps-line {
+  position: absolute;
+  top: 51%;
+  left: 21%;
+  right: 56%;
+  height: 2px;
+  background-color: #8eb486;
+  z-index: 0;
+}
+.steps-line-2 {
+  position: absolute;
+  top: 51%;
+  left: 63%;
+  right: 14%;
+  height: 2px;
+  background-color: #8eb486;
+  z-index: 0;
+}
+.step {
+  display: flex;
+  align-items: center;
+  gap: 10px;
+}
+
+.step-circle {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  width: 50px;
+  height: 50px;
+  border: 2px solid #8eb486;
+  border-radius: 50%;
+  font-size: 14px;
+  font-weight: bold;
+  color: #333;
+  background-color: #E8ECD7;
+}
+
+.step-circle.active {
+  color: #333;
+  box-shadow: 0 4px 6px rgba(0, 0, 0, 0.4);
+}
+
+.step-title {
+  font-size: 1rem;
   color: #333;
   font-weight: bold;
+  white-space: nowrap; /* Evita quebra de linha */
 }
 
-/* Botão de Upload */
-.upload-button {
-  width: 100px;
-  padding: 6px 10px;
-  background-color: #007bff; /* Azul claro */
-  color: white;
+/* Formulário principal */
+.new-horse-form {
+  display: grid;
+  grid-template-columns: repeat(4, 1fr);
+  gap: 30px; /* Mais espaço entre os campos */
+  width: 80%;
+  margin: auto;
+}
+
+input[type='text'],
+input[type='number'],
+select,
+textarea {
+  width: 100%;
+  padding: 10px 15px;
+  font-size: 0.9rem;
+  border: 2px solid #47663b;
   border-radius: 6px;
-  font-size: 0.85em;
-  text-align: center;
-  cursor: pointer;
-  transition: background-color 0.3s;
+  box-sizing: border-box;
+  grid-column: span 1; /* Cada entrada ocupa uma célula */
 }
 
-.upload-button:hover {
-  background-color: #0056b3; /* Azul mais escuro no hover */
+textarea {
+  grid-column: span 4; /* Descrição ocupa toda a largura */
+  height: 120px; /* Altura maior para texto */
 }
 
-/* Contêiner de visualização de imagem */
-.image-preview-container {
+
+/* Botão Próximo */
+.step-buttons {
+  grid-column: span 4; /* O botão ocupa a largura total */
   display: flex;
-  gap: 10px;
-  flex-wrap: wrap;
-  margin-top: 10px;
+  justify-content: flex-end; /* Alinha à direita */
+  margin-top: 20px; /* Espaçamento entre o formulário e o botão */
+  width: 90%;
 }
 
-.image-preview {
-  position: relative;
-  width: 70px;
-  height: 70px;
+.step-button {
+  padding: 10px 20px;
+  font-size: 0.9rem;
+  background-color: #8eb486;
+  color: white;
+  border: none;
+  border-radius: 6px;
+  cursor: pointer;
+  margin-left: 20px;
+}
+
+.step-button:hover {
+  background-color: #6e9469;
+}
+
+.height-and-piroplasmosis input[type="text"] {
+  grid-column: span 1;
+  padding: 10px;
+  border: 1px solid #8eb486;
   border-radius: 4px;
 }
 
-.image-preview img {
-  width: 100%;
-  height: 100%;
-  object-fit: cover;
+.piroplasmosis-label {
+  display: flex; /* Alinha checkbox e texto lado a lado */
+  align-items: center; /* Centraliza verticalmente */
+  gap: 10px; /* Espaço entre checkbox e texto */
 }
 
-.remove-image-button {
-  position: absolute;
-  top: -6px;
-  right: -6px;
-  background: #dc3545; /* Vermelho */
-  color: white;
-  font-size: 0.75em;
-  cursor: pointer;
-  border: none;
+.piroplasmosis-label label {
+  font-size: 0.9rem; /* Ajuste do tamanho do texto */
+  color: #333; /* Cor do texto */
+}
+
+.piroplasmosis-label input[type="checkbox"] {
+  width: 20px; /* Largura maior */
+  height: 20px; /* Altura maior */
+  accent-color: #47663b; /* Cor personalizada */
+  cursor: pointer; /* Alteração para ponteiro ao passar o mouse */
+  margin: 0; /* Remove margens extras */
+}
+
+.height-slider-container {
+  display: flex; /* Alinha os itens horizontalmente */
+  align-items: flex-start; /* Centraliza verticalmente */
+  justify-content: space-between; /* Cria espaçamento adequado */
+  flex-direction: column; /* Alinha os itens verticalmente */
+  margin-top: 15px;
+  width: 100%;
+  grid-column: span 2;
+}
+
+.height-slider-container span {
+  font-size: 0.9rem;
+  color: #47663b;
+}
+
+.height-slider-container input[type="range"] {
+  width: 100%; /* Garante que o slider ocupe toda a largura */
+  appearance: none;
+  background-color: #8eb486;
+  height: 2px;
+  border-radius: 2px;
+  margin: 10px 0; /* Espaçamento entre o slider e os textos */
+}
+
+.height-slider-container input[type="range"]::-webkit-slider-thumb {
+  appearance: none;
+  width: 14px;
+  height: 14px;
+  background: #47663b;
   border-radius: 50%;
-  width: 20px;
-  height: 20px;
-}
-
-/* Erro e botão de envio */
-.error-message {
-  color: red;
-  font-size: 0.9em;
-}
-
-.new-horse-submit-button {
-  padding: 12px;
-  background-color: #28a745; /* Verde suave */
-  color: white;
-  font-size: 1em;
-  border: none;
-  border-radius: 8px;
   cursor: pointer;
-  margin-top: 18px;
 }
 
-.new-horse-submit-button:hover {
-  background-color: #218838;
+.height-slider-container input[type="range"]::-moz-range-thumb {
+  width: 14px;
+  height: 14px;
+  background: #47663b;
+  border-radius: 50%;
+  cursor: pointer;
 }
 
-/* Input geral */
-.new-horse-form input[type="text"],
-.new-horse-form input[type="number"],
-.new-horse-form select,
-.new-horse-form textarea {
-  width: 100%;
-  padding: 10px;
-  font-size: 1em;
-  border: 1px solid #ddd;
-  border-radius: 6px;
-  margin-top: 4px;
-  box-sizing: border-box;
+.height-slider-label {
+  font-size: 1rem;
+  color: #333;
+  margin-bottom: 5px; /* Espaço abaixo do título */
+}
+
+.upload-container {
+  display: flex;
+  justify-content: space-between;
+  align-items: flex-start;
+  margin: 90px auto;
+  width: 80%; /* Alinhado ao formulário */
+}
+
+.upload-block {
+  flex: 1;
+  margin: 0 20px;
+}
+
+.upload-block h2 {
+  font-size: 1.2rem;
+  color: #333;
+  margin-bottom: 10px;
+}
+
+.upload-block p {
+  font-size: 0.9rem;
+  color: #666;
   margin-bottom: 20px;
 }
 
-/* Input específico para idade */
-.new-horse-form input[name="age"] {
-  width: 80px;
-  padding: 8px;
-}
-
-/* Cor do placeholder */
-.new-horse-form input::placeholder,
-.new-horse-form textarea::placeholder {
-  font-size: 0.9em;
-  font-style: italic;
-  color: #888;
-}
-
-/* Opções de cor */
-.color-options {
-  display: flex;
-  flex-wrap: wrap;
-  gap: 10px;
-  margin-top: 10px;
-}
-
-.color-option {
-  display: inline-flex;
-  align-items: center;
-  justify-content: center;
-  padding: 8px 10px;
-  border: 1px solid #ddd;
-  border-radius: 5px;
-  background-color: #e0e0e0;
-  font-size: 0.9em;
+.upload-button {
+  padding: 6px 59px;
+  font-size: 1rem;
+  background-color: white;
+  color: #333;
+  border: 2px solid #47663b;
+  border-radius: 8px;
   cursor: pointer;
-  transition: background-color 0.3s, border-color 0.3s;
+  transition: background-color 0.3s;
+  box-shadow: 0 4px 6px rgba(0, 0, 0, 0.4);
 }
 
-.color-option.selected {
-  background-color: #007bff;
-  color: white;
-  border-color: #007bff;
+.upload-button:hover {
+  background-color: #6e9469;
+}
+/* Container de imagens carregadas */
+/* Lista de arquivos carregados */
+.image-upload-list {
+  max-height: 120px; /* Limita a altura total */
+  overflow-y: auto; /* Adiciona rolagem vertical */
+  padding: 5px;
+  margin-top: 10px;
+  font-size: 12px; /* Texto menor */
+  line-height: 1.4;
 }
 
-.color-option input[type="radio"] {
-  display: none;
-}
-
-/* Checkbox para piroplasmosis */
-.new-input-label-piro {
-  font-size: 1.1em;
-  color: #555;
+/* Item individual da lista */
+.image-upload-item {
   display: flex;
-  align-items: center;
-  gap: 8px;
+  justify-content: space-between; /* Nome e botão alinhados nas extremidades */
+  align-items: center; /* Centraliza verticalmente */
+  padding: 5px 0;
+  border-bottom: 1px solid #ddd; /* Linha divisória entre os itens */
+  word-break: break-word; /* Permite quebra para nomes longos */
+}
+
+/* Último item sem borda */
+.image-upload-item:last-child {
+  border-bottom: none;
+}
+
+/* Nome da imagem */
+.image-name {
+  font-size: 12px; /* Fonte menor para parecer informativa */
+  color: #666; /* Cor cinza para menos destaque */
+  overflow: hidden; /* Esconde texto extra */
+  text-overflow: ellipsis; /* Adiciona "..." para nomes longos */
+  white-space: nowrap; /* Evita quebra de linha */
+  flex: 1; /* O nome ocupa o espaço restante */
+}
+
+/* Botão para remover a imagem */
+.remove-upload-button {
+  background-color: #f44336;
+  color: white;
+  border: none;
+  padding: 2px 6px; /* Tamanho reduzido */
+  font-size: 10px; /* Fonte menor */
+  border-radius: 4px;
+  cursor: pointer;
+  margin-left: 5px; /* Menor espaço entre o nome e o botão */
+}
+
+.remove-upload-button:hover {
+  background-color: #d32f2f;
+}
+/* Lista de arquivos carregados - Vídeos */
+.video-upload-list {
+  max-height: 120px; /* Limita a altura total */
+  overflow-y: auto; /* Adiciona rolagem vertical */
+  padding: 5px;
+  margin-top: 10px;
+  font-size: 12px; /* Texto menor */
+  line-height: 1.4;
+}
+
+/* Item individual da lista */
+.video-upload-item {
+  display: flex;
+  justify-content: space-between; /* Nome e botão alinhados nas extremidades */
+  align-items: center; /* Centraliza verticalmente */
+  padding: 5px 0;
+  border-bottom: 1px solid #ddd; /* Linha divisória entre os itens */
+  word-break: break-word; /* Permite quebra para nomes longos */
+}
+
+/* Último item sem borda */
+.video-upload-item:last-child {
+  border-bottom: none;
+}
+
+/* Nome do vídeo */
+.video-name {
+  font-size: 12px; /* Fonte menor para parecer informativa */
+  color: #666; /* Cor cinza para menos destaque */
+  overflow: hidden; /* Esconde texto extra */
+  text-overflow: ellipsis; /* Adiciona "..." para nomes longos */
+  white-space: nowrap; /* Evita quebra de linha */
+  flex: 1; /* O nome ocupa o espaço restante */
+}
+
+/* Botão para remover o vídeo */
+.remove-video-button {
+  background-color: #f44336;
+  color: white;
+  border: none;
+  padding: 2px 6px; /* Tamanho reduzido */
+  font-size: 10px; /* Fonte menor */
+  border-radius: 4px;
+  cursor: pointer;
+  margin-left: 5px; /* Menor espaço entre o nome e o botão */
+}
+
+.remove-video-button:hover {
+  background-color: #d32f2f;
+}
+
+/* Responsividade */
+
+@media (max-width: 1500px) {
+.steps-line {
+  display: none; /* Remove os traços */
+}
+.steps-line-2 {
+  display: none; /* Remove os traços */
+}
+}
+
+@media (max-width: 1024px) {
+
+
+
+  .new-horse-form {
+    grid-template-columns: repeat(2, 1fr);
+  }
+  .steps-line {
+    display: none; /* Remove os traços */
+  }
+  .steps-line-2 {
+    display: none; /* Remove os traços */
+  }
+}
+
+/* Estilos gerais para dispositivos móveis */
+/* Mobile Layout para telas menores que 768px */
+/* Formulário no Mobile */
+@media (max-width: 768px) {
+
+  .new-horse-form {
+    display: grid;
+    grid-template-columns: 1fr 1fr 1fr 1fr; /* Quatro colunas de largura igual */
+    gap: 8px; /* Espaçamento uniforme entre os campos */
+    width: 100%;
+    margin: 0 auto; /* Centraliza o formulário */
+  }
+
+
+  input[type="text"],
+  input[type="number"],
+  select {
+    width: 100%; /* Garante que o campo ocupe toda a célula */
+    padding: 8px; /* Espaçamento interno */
+    font-size: 0.9rem; /* Ajusta o tamanho da fonte */
+    border: 1px solid #47663b; /* Borda uniforme */
+    border-radius: 4px; /* Bordas arredondadas */
+    box-sizing: border-box; /* Garante que padding não afeta o tamanho */
+  }
+
+  textarea {
+    grid-column: span 4; /* Descrição ocupa todas as colunas */
+    height: 100px; /* Ajusta altura do textarea */
+  }
+
+  .height-slider-container {
+    grid-column: span 4; /* Slider ocupa duas colunas */
+    display: flex;
+    flex-direction: column;
+    gap: 5px; /* Espaçamento entre elementos */
+    margin-top: 30px;
+    margin-bottom: 55px;
+  }
+
+  .piroplasmosis-label {
+    grid-column: span 2; /* Checkbox ocupa duas colunas */
+    display: flex;
+    align-items: center;
+    gap: 8px; /* Espaço entre checkbox e texto */
+  }
+
+  .step-buttons {
+    position: fixed; /* Fixa os botões na parte inferior */
+    bottom: 0; /* Alinha com o fundo da tela */
+    left: 0;
+    width: 96%; /* Ocupa toda a largura */
+    padding: 10px 0; /* Espaçamento interno */
+    display: flex;
+    justify-content: space-around; /* Espaça os botões uniformemente */
+    z-index: 100; /* Garante que fique acima do conteúdo */
+    margin-bottom: 31px;
+  }
+
+  .step-button {
+    font-size: 0.9rem; /* Texto menor para telemóveis */
+    padding: 10px 15px; /* Ajusta o tamanho dos botões */
+    border-radius: 6px; /* Bordas arredondadas */
+  }
+  .steps-navigation {
+    display: flex;
+    flex-direction: row; /* Alinha na horizontal */
+    justify-content: space-around; /* Espaça os passos igualmente */
+    align-items: center;
+    width: 100%; /* Ocupa toda a largura */
+    margin-bottom: 60px;
+  }
+
+  .step {
+    display: flex;
+    flex-direction: column; /* Mantém o círculo e o texto empilhados */
+    align-items: center;
+    width: 25%; /* Cada passo ocupa o mesmo espaço */
+  }
+
+  .step-circle {
+    width: 30px;
+    height: 30px;
+    font-size: 0.8rem;
+  }
+
+  .step-title {
+    font-size: 0.7rem;
+    text-align: center;
+    word-break: break-word; /* Permite quebra de linha */
+    margin-top: 5px; /* Espaço entre o círculo e o texto */
+    white-space: normal; /* Permite quebra no mobile */
+  }
+
+
+  .steps-line {
+    display: none; /* Remove os traços */
+  }
+  .steps-line-2 {
+    display: none; /* Remove os traços */
+  }
+
+  /* Remove os traços no mobile */
+  .steps-line,
+  .steps-line-2 {
+    display: none;
+  }
+
+    .upload-container {
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      gap: 20px; /* Espaço entre os blocos */
+      width: 100%;
+      margin: 0 auto;
+      margin-bottom: 20px;
+    }
+
+    .upload-block {
+      width: 90%; /* Ocupa 90% da largura no mobile */
+      padding: 15px;
+    }
+
+    .upload-block h2 {
+      font-size: 1rem; /* Reduz o tamanho da fonte */
+    }
+
+    .upload-block p {
+      font-size: 0.8rem; /* Texto menor para descrições */
+    }
+
+    .upload-button {
+      font-size: 0.9rem; /* Botão menor */
+      padding: 8px 16px; /* Reduz padding interno */
+    }
+
 }

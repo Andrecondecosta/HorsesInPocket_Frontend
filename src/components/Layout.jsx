@@ -51,7 +51,7 @@ const Layout = ({ setIsLoggedIn, children }) => {
         <Link to="/" className="logo-link">HorsesInPocket</Link>
         <div className="user-info" ref={menuRef}>
           <span className="user-text" onClick={() => setMenuOpen(!menuOpen)}>
-            Olá, {userName} ⚙️
+            <strong>Olá</strong>, {userName} ⚙️
           </span>
           {menuOpen && (
             <div className="dropdown-menu">

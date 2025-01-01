@@ -1,13 +1,15 @@
 import React, { useState } from 'react';
 import { useNavigate } from 'react-router-dom';
 import './NewHorses.css';
+import Layout from '../components/Layout';
 import GenealogyForm from '../components/GenealogyForm';
 
-const NewHorses = () => {
+const NewHorses = ({ setIsLoggedIn }) => {
+  const [currentStep, setCurrentStep] = useState(1);
   const [newHorse, setNewHorse] = useState({
     name: '',
     age: '',
-    height_cm: 1.5, // Default value in meters
+    height_cm: 1.5,
     description: '',
     gender: '',
     color: '',
@@ -23,9 +25,17 @@ const NewHorses = () => {
     maternal_grandmother: {},
   });
   const [images, setImages] = useState([]);
-  const [videos, setVideos] = useState([]); // Estado para vídeos
+  const [videos, setVideos] = useState([]);
   const [error, setError] = useState(null);
   const navigate = useNavigate();
+
+  const handleNextStep = () => {
+    if (currentStep < 3) setCurrentStep(currentStep + 1);
+  };
+
+  const handlePreviousStep = () => {
+    if (currentStep > 1) setCurrentStep(currentStep - 1);
+  };
 
   const handleChange = (e) => {
     const { name, value, type, checked } = e.target;
@@ -35,6 +45,15 @@ const NewHorses = () => {
     }));
   };
 
+  const handleHeightChange = (e) => {
+    const valueInMeters = parseFloat(e.target.value);
+    setNewHorse((prevHorse) => ({
+      ...prevHorse,
+      height_cm: valueInMeters,
+    }));
+  };
+
+
   const handleColorChange = (e) => {
     setNewHorse((prevHorse) => ({
       ...prevHorse,
@@ -42,13 +61,6 @@ const NewHorses = () => {
     }));
   };
 
-  const handleHeightChange = (e) => {
-    const valueInMeters = parseFloat(e.target.value); // Mantém o valor em metros
-    setNewHorse((prevHorse) => ({
-      ...prevHorse,
-      height_cm: valueInMeters,
-    }));
-  };
 
   const handleImageChange = (e) => {
     const files = Array.from(e.target.files);
@@ -106,6 +118,7 @@ const NewHorses = () => {
     setImages((prevImages) => prevImages.filter((_, index) => index !== indexToRemove));
   };
 
+  const heightInHH = (newHorse.height_cm / 0.1016).toFixed(1);
 
   const handleSubmit = async (e) => {
     e.preventDefault();
@@ -121,7 +134,6 @@ const NewHorses = () => {
     formData.append('horse[training_level]', newHorse.training_level);
     formData.append('horse[piroplasmosis]', newHorse.piroplasmosis);
 
-    // Reestruturando ancestors_attributes
     Object.keys(ancestors).forEach((relation) => {
       const ancestor = ancestors[relation];
       formData.append(`horse[ancestors_attributes][][relation_type]`, relation);
@@ -141,7 +153,7 @@ const NewHorses = () => {
     const response = await fetch(`${process.env.REACT_APP_API_SERVER_URL}/horses`, {
       method: 'POST',
       headers: {
-        'Authorization': `Bearer ${token}`,
+        Authorization: `Bearer ${token}`,
       },
       body: formData,
     });
@@ -153,142 +165,230 @@ const NewHorses = () => {
     }
   };
 
-  const heightInHH = (newHorse.height_cm / 0.1016).toFixed(1);
-
   return (
-    <div className="new-horse-container">
-      <h1 className="new-horse-title">Criar Novo Cavalo</h1>
-      <form className="new-horse-form" onSubmit={handleSubmit}>
-        <label className="new-input-label">Nome</label>
-        <input
-          type="text"
-          name="name"
-          placeholder="Nome"
-          value={newHorse.name}
-          onChange={handleChange}
-          required
-        />
+    <Layout setIsLoggedIn={setIsLoggedIn}>
+      <div className="new-horse-container">
 
-        <label className="new-input-label">Idade</label>
-        <input
-          type="number"
-          name="age"
-          placeholder="Idade"
-          value={newHorse.age}
-          onChange={handleChange}
-          required
-        />
+      {/* Título */}
+      <h1 className="page-title">Criar Cavalo</h1>
 
-        {/* Altura com slider para metros e conversão para hh */}
-        <label className="new-input-label">Altura</label>
-        <div className="height-slider-container">
-          <div className="height-values">
-            <span>{newHorse.height_cm} m</span>
-            <span>({heightInHH} hh)</span>
-          </div>
-          <input
-            type="range"
-            name="height_m"
-            min="0.5"
-            max="2.5"
-            step="0.01"
-            value={newHorse.height_cm}
-            onChange={handleHeightChange}
-            className="slider"
-          />
+      {/* Breadcrumbs */}
+      <div className="breadcrumbs">
+        <a href="/dashboard">Dashboard /</a>
+        <a href="/myhorses">Meus Cavalos /</a>
+        <span>Criar Cavalo</span>
+      </div>
+
+
+        <div className="steps-navigation">
+          <div className="steps-line"></div>
+
+          <div className="step">
+            <div className={`step-circle ${currentStep === 1 ? 'active' : ''}`}>1</div>
+                <span className="step-title">
+                  Informação Específica {currentStep === 1 && <span></span>}
+                </span>
+              </div>
+
+              <div className="step">
+                <div className={`step-circle ${currentStep === 2 ? 'active' : ''}`}>2</div>
+                <span className="step-title">
+                  Imagens e Vídeos {currentStep === 2 && <span></span>}
+                </span>
+              </div>
+              <div className="steps-line-2"></div>
+
+              <div className="step">
+                <div className={`step-circle ${currentStep === 3 ? 'active' : ''}`}>3</div>
+                <span className="step-title">
+                  Genealogia {currentStep === 3 && <span></span>}
+                </span>
+              </div>
         </div>
 
-        <label className="new-input-label">Gênero</label>
-        <select name="gender" value={newHorse.gender} onChange={handleChange} required>
-          <option value="">Selecione</option>
-          <option value="gelding">Castrado</option>
-          <option value="mare">Égua</option>
-          <option value="stallion">Garanhão</option>
-        </select>
+          {/* Formulário passo 1 */}
 
-        <label className="new-input-label">Cor</label>
-        <div className="color-options">
-          {['Baio', 'Castanho', 'Alazão', 'Preto', 'Tordilho', 'Ruão', 'Palomino', 'Isabel', 'Ruço'].map((colorOption) => (
-            <label key={colorOption} className={`color-option ${newHorse.color === colorOption ? 'selected' : ''}`}>
-              <input
-                type="radio"
-                name="color"
-                value={colorOption}
-                checked={newHorse.color === colorOption}
-                onChange={handleColorChange}
-              />
-              {colorOption}
-            </label>
-          ))}
-        </div>
-
-        <label className="new-input-label">Nível de Treinamento</label>
-        <input
-          type="text"
-          name="training_level"
-          placeholder="Ex: Preliminar, Grand Prix, 1.45m"
-          value={newHorse.training_level}
-          onChange={handleChange}
-        />
-
-        <label className="new-input-label-piro">
-          Piroplasmose
+        {currentStep === 1 && (
+        <form className="new-horse-form">
+          {/* Primeira linha com 4 campos */}
           <input
-            type="checkbox"
-            name="piroplasmosis"
-            checked={newHorse.piroplasmosis}
+            type="text"
+            name="name"
+            placeholder="Nome"
+            value={newHorse.name}
             onChange={handleChange}
+            required
           />
-        </label>
+          <input
+            type="number"
+            name="age"
+            placeholder="Idade"
+            value={newHorse.age}
+            onChange={handleChange}
+            required
+          />
+          <select name="gender" value={newHorse.gender} onChange={handleChange} require>
+            <option value="">Gênero</option>
+            <option value="gelding">Castrado</option>
+            <option value="mare">Égua</option>
+            <option value="stallion">Garanhão</option>
+          </select>
+          <select name="color" value={newHorse.color} onChange={handleColorChange}>
+            <option value="">Cor</option>
+            <option value="Baio">Baio</option>
+            <option value="Castanho">Castanho</option>
+            <option value="Alazão">Alazão</option>
+            <option value="Preto">Preto</option>
+            <option value="Tordilho">Tordilho</option>
+            <option value="Ruão">Ruão</option>
+            <option value="Palomino">Palomino</option>
+            <option value="Isabel">Isabel</option>
+            <option value="Ruço">Ruço</option>
+          </select>
 
-        <label className="new-input-label">Descrição</label>
-        <textarea
-          name="description"
-          placeholder="Descrição"
-          value={newHorse.description}
-          onChange={handleChange}
-          required
-        />
+            {/* Segunda linha: Slider de altura e Piroplasmose */}
+              {/* Campo de texto */}
+              <input
+                type="text"
+                name="training_level"
+                placeholder="training_level"
+                value={newHorse.training_level}
+                onChange={handleChange}
+              />
 
-        <label className="new-input-label">Imagens (até 5, máximo 10MB cada)</label>
-        <div className="upload-button" onClick={() => document.getElementById('fileInput').click()}>
-          Selecionar Imagens
-        </div>
-        <input
-          type="file"
-          id="fileInput"
-          multiple
-          onChange={handleImageChange}
-          style={{ display: 'none' }}
-        />
-        {error && <p className="error-message">{error}</p>}
+              {/* Checkbox com Label */}
+              <div className="piroplasmosis-label">
+                <label>Piroplasmosis</label>
+                <input
+                  type="checkbox"
+                  name="piroplasmosis"
+                  checked={newHorse.piroplasmosis}
+                  onChange={handleChange}
+                />
+              </div>
 
-        <div className="image-preview-container">
-          {images.map((image, index) => (
-            <div key={index} className="image-preview">
-              <img src={URL.createObjectURL(image)} alt={`Preview ${index}`} />
-              <button className="remove-image-button" onClick={() => removeImage(index)}>X</button>
+              {/* Slider de Altura */}
+              <div className="height-slider-container">
+              <div className="height-slider-label">Altura</div>
+              <div style={{ display: 'flex', justifyContent: 'space-between', width: '100%' }}>
+                <span>{`${newHorse.height_cm}m`}</span>
+                <span>{`(${heightInHH}hh)`}</span>
+              </div>
+              <input
+                type="range"
+                name="height_cm"
+                min="0.5"
+                max="2.5"
+                step="0.01"
+                value={newHorse.height_cm}
+                onChange={handleHeightChange}
+              />
             </div>
-          ))}
+
+            {/* Terceira linha: Descrição */}
+            <textarea
+              name="description"
+              placeholder="Descrição do cavalo"
+              value={newHorse.description}
+              onChange={handleChange}
+            />
+        </form>
+
+          )}
+
+      {/* Passo 2 */}
+      {currentStep === 2 && (
+        <div className="upload-container">
+          {/* Imagem */}
+          <div className="upload-block">
+            <h2>Imagem</h2>
+            <p>Máximo de 5 imagens, até 10 MB cada.</p>
+            <button
+              className="upload-button"
+              onClick={() => document.getElementById('imageUpload').click()}
+            >
+              Escolher Imagem
+            </button>
+            <input
+              type="file"
+              id="imageUpload"
+              multiple
+              onChange={handleImageChange}
+              style={{ display: 'none' }}
+            />
+            {error && <p className="error-message">{error}</p>} {/* Exibe o erro */}
+            {/* Mostrar Imagens Carregadas */}
+            <div className="image-upload-list">
+              {images.map((image, index) => (
+                <div key={index} className="image-upload-item">
+                  <span className="image-name">{image.name}</span>
+                  <button
+                    type="button"
+                    onClick={() => removeImage(index)}
+                    className="remove-upload-button"
+                  >
+                    X
+                  </button>
+                </div>
+              ))}
+            </div>
+          </div>
+
+          {/* Vídeo */}
+          <div className="upload-block">
+            <h2>Vídeo</h2>
+            <p>Máximo de 3 vídeos, até 50 MB cada.</p>
+            <button
+              className="upload-button"
+              onClick={() => document.getElementById('videoUpload').click()}
+            >
+              Escolher Vídeo
+            </button>
+            <input
+              type="file"
+              id="videoUpload"
+              multiple
+              accept="video/*"
+              onChange={handleVideoChange}
+              style={{ display: 'none' }}
+            />
+            {error && <p className="error-message">{error}</p>} {/* Exibe o erro */}
+            {/* Mostrar Vídeos Carregados */}
+            <div className="video-upload-list">
+              {videos.map((video, index) => (
+                <div key={index} className="video-upload-item">
+                  <span className="video-name">{video.name}</span>
+                  <button
+                    type="button"
+                    onClick={() => setVideos((prevVideos) => prevVideos.filter((_, i) => i !== index))}
+                    className="remove-video-button"
+                  >
+                    X
+                  </button>
+                </div>
+              ))}
+            </div>
+          </div>
         </div>
+      )}
 
-        <label className="new-input-label">Vídeos (até 3, máximo 50MB cada)</label>
-        <input
-          type="file"
-          accept="video/mp4,video/x-m4v,video/*"
-          multiple
-          onChange={handleVideoChange}
-        />
-        {videos.map((video, index) => (
-          <p key={index}>{video.name}</p>
-        ))}
+        {/* Passo 3 */}
+        {currentStep === 3 && (
+          <div className="step-content">
+            <GenealogyForm ancestors={ancestors} setAncestors={setAncestors} />
+          </div>
+        )}
 
-        {/* Genealogia do cavalo */}
-        <GenealogyForm ancestors={ancestors} setAncestors={setAncestors} />
-
-        <button type="submit" className="new-horse-submit-button">Criar Cavalo</button>
-      </form>
-    </div>
+        {/* Botões */}
+        <div className="step-buttons">
+          {currentStep > 1 && <button className="step-button" onClick={handlePreviousStep}>Voltar</button>}
+          {currentStep < 3 && <button className="step-button" onClick={handleNextStep}>Próximo</button>}
+          {currentStep === 3 && <button type="submit" onClick={handleSubmit} className="step-button">
+          Criar Cavalo
+          </button>}
+        </div>
+      </div>
+    </Layout>
   );
 };
 

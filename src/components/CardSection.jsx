@@ -1,5 +1,6 @@
 import React from 'react';
 import { Link } from 'react-router-dom';
+import { ArrowRightCircleIcon } from '@heroicons/react/24/outline';
 import './CardSection.css';
 
 const CardSection = () => {
@@ -8,10 +9,10 @@ const CardSection = () => {
       {/* Card Meus Cavalos */}
       <Link to="/myhorses" className="card-link">
         <div className="card">
-          <img src="/icons/horses-icon.png" alt="Meus Cavalos" />
-          <div className="card-content">
-            <h3>Meus Cavalos</h3>
-            <p>Ver Mais</p>
+          <h3 className="card-title">Meus Cavalos</h3>
+          <div className="card-action">
+            <span>Ver Mais</span>
+            <ArrowRightCircleIcon className="arrow-icon" />
           </div>
         </div>
       </Link>
@@ -19,10 +20,10 @@ const CardSection = () => {
       {/* Card Cavalos Recebidos */}
       <Link to="/received" className="card-link">
         <div className="card">
-          <img src="/icons/received-icon.png" alt="Cavalos Recebidos" />
-          <div className="card-content">
-            <h3>Cavalos Recebidos</h3>
-            <p>Ver Mais</p>
+          <h3 className="card-title">Cavalos Recebidos</h3>
+          <div className="card-action">
+            <span>Ver Mais</span>
+            <ArrowRightCircleIcon className="arrow-icon" />
           </div>
         </div>
       </Link>

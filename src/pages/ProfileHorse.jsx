@@ -1,12 +1,14 @@
-import React, { useState, useEffect } from 'react';
+import React, { useState, useEffect, useRef } from 'react';
 import { useParams, useNavigate, useLocation } from 'react-router-dom';
 import { FaEdit, FaTrash, FaShareAlt } from 'react-icons/fa';
 import Lightbox from "yet-another-react-lightbox";
 import "yet-another-react-lightbox/styles.css";
 import './ProfileHorse.css';
 import GenealogyTree from '../components/GenealogyTree';
+import Layout from '../components/Layout';
+import ProfileMedia from '../components/ProfileMedia';
 
-const ProfileHorse = () => {
+const ProfileHorse = ({ setIsLoggedIn }) => {
   const { id } = useParams();
   const location = useLocation();
   const [horse, setHorse] = useState(null);
@@ -17,6 +19,11 @@ const ProfileHorse = () => {
   const [readonly, setReadonly] = useState(false);
   const [shareEmail, setShareEmail] = useState('');
   const [showShareModal, setShowShareModal] = useState(false);
+  const [showMenu, setShowMenu] = useState(false);
+  const menuRef = useRef(null);
+  const [isMenuOpen, setIsMenuOpen] = useState(false); // Adiciona o estado do menu
+
+
   const navigate = useNavigate();
   const token = localStorage.getItem('authToken');
 
@@ -79,6 +86,19 @@ const ProfileHorse = () => {
       setError('Erro ao compartilhar cavalo');
     }
   };
+  const handleClickOutside = (event) => {
+    if (menuRef.current && !menuRef.current.contains(event.target)) {
+      setIsMenuOpen(false); // Fecha o menu se clicar fora
+    }
+  };
+
+  useEffect(() => {
+    document.addEventListener('mousedown', handleClickOutside);
+    return () => {
+      document.removeEventListener('mousedown', handleClickOutside);
+    };
+  }, []);
+
 
   const handleDelete = async () => {
     try {
@@ -106,86 +126,98 @@ const ProfileHorse = () => {
   const heightInHH = (horse.height_cm / 0.1016).toFixed(1);
 
   return (
+  <Layout setIsLoggedIn={setIsLoggedIn}>
     <div className="profile-container">
+      {/* Cabeçalho com título e botões */}
       <div className="profile-header">
-        <h1>{horse.name}</h1>
-        <div className="profile-actions">
-          {!readonly && (<FaEdit className="profile-icon" onClick={() => navigate(`/horses/${id}/edit`)} />)}
-          <FaShareAlt className="profile-icon" onClick={() => setShowShareModal(true)} />
-          <FaTrash className="profile-icon" onClick={handleDelete} />
+      {/* Breadcrumbs */}
+      <div className="breadcrumbs">
+        <a href="/dashboard">Dashboard</a> / <a href="/myhorses">Meus Cavalos</a> /{" "}
+        <span>Informação do Cavalo</span>
+      </div>
+
+      {/* Botões para Desktop */}
+      <div className="profile-actions desktop-only">
+        <button className="edit-button" onClick={() => navigate(`/horses/${id}/edit`)}>
+          <FaEdit /> Editar
+        </button>
+        <button className="delete-button" onClick={handleDelete}>
+          <FaTrash /> Eliminar
+        </button>
+        <button className="share-button" onClick={() => setShowShareModal(true)}>
+          <FaShareAlt /> Partilhar
+        </button>
+      </div>
+
+      {/* Menu de três pontos para Mobile */}
+      <div className="mobile-menu mobile-only" ref={menuRef}>
+      <button className="edit-button" onClick={() => navigate(`/horses/${id}/edit`)}>
+          <FaEdit />
+        </button>
+        <button className="delete-button" onClick={handleDelete}>
+          <FaTrash />
+        </button>
+        <button className="share-button" onClick={() => setShowShareModal(true)}>
+          <FaShareAlt />
+        </button>
+      </div>
+    </div>
+
+
+      <div className="horse-info-section">
+      <h2 className="section-title">Informação Específica</h2>
+      <div className="info-grid">
+        <div className="info-item">
+          <strong>Nome do Cavalo</strong>
+          <p>{horse.name}</p>
+        </div>
+        <div className="info-item">
+          <strong>Idade</strong>
+          <p>{horse.age} anos</p>
+        </div>
+        <div className="info-item">
+          <strong>Gênero</strong>
+          <p>{horse.gender}</p>
+        </div>
+        <div className="info-item">
+          <strong>Cor</strong>
+          <p>{horse.color}</p>
+        </div>
+        <div className="info-item">
+          <strong>Altura</strong>
+          <p>{horse.height_cm} m ({heightInHH} hh)</p>
+        </div>
+        <div className="info-item">
+          <strong>Nível de Treinamento</strong>
+          <p>{horse.training_level}</p>
+        </div>
+        <div className="info-item">
+          <strong>Piroplasmosis</strong>
+          <p>{horse.piroplasmosis ? 'Sim' : 'Não'}</p>
         </div>
       </div>
-      {horse && (
-        <div className="profile-details">
-          {/* Galeria de imagens */}
-          <div className="profile-image-gallery">
-            <div className="profile-main-image" onClick={() => setIsOpen(true)}>
-              <img
-                src={horse.images[selectedImage]}
-                alt={`${horse.name} - principal`}
-                className="fixed-main-image"
-              />
-            </div>
-            <div className="profile-thumbnail-row">
-              {horse.images.slice(0, 5).map((image, index) => (
-                <div key={index} className="profile-thumbnail">
-                  <img
-                    src={image}
-                    alt={`${horse.name} ${index + 1}`}
-                    onClick={() => setSelectedImage(index)}
-                    className={selectedImage === index ? 'active-thumbnail' : ''}
-                  />
-                </div>
-              ))}
-            </div>
-          </div>
 
-          {/* Lightbox */}
-          {isOpen && (
-            <Lightbox
-              open={isOpen}
-              close={() => setIsOpen(false)}
-              slides={horse.images.map((image) => ({ src: image }))}
-              currentIndex={selectedImage}
-              onIndexChange={(index) => setSelectedImage(index)}
-            />
-          )}
-          <div className="profile-details">
-            <div className="info-and-videos">
-              {/* Informações do cavalo */}
-              <div className="profile-info-card">
-                <h2 className="info-card-title">Informações do Cavalo</h2>
-                <div className="profile-info-content">
-                  <p><strong>Nome:</strong> {horse.name}</p>
-                  <p><strong>Idade:</strong> {horse.age} anos</p>
-                  <p><strong>Altura:</strong> {horse.height_cm} m ({heightInHH} hh)</p>
-                  <p><strong>Gênero:</strong> {horse.gender}</p>
-                  <p><strong>Cor:</strong> {horse.color}</p>
-                  <p><strong>Nível de Treinamento:</strong> {horse.training_level}</p>
-                  <p><strong>Piroplasmose:</strong> {horse.piroplasmosis ? 'Sim' : 'Não'}</p>
-                  <p><strong>Descrição:</strong> {horse.description}</p>
-                </div>
-              </div>
-                {/* Vídeos do cavalo */}
-                <div className="profile-videos">
-                  {horse.videos && horse.videos.length > 0 ? (
-                    horse.videos.map((video, index) => (
-                      <div key={index} className="video-container">
-                        <video controls>
-                        <source src={video} type="video/mp4" /> {/* Use `video` diretamente, pois é o URL */}
-                          Seu navegador não suporta o elemento de vídeo.
-                        </video>
-                      </div>
-                    ))
-                  ) : (
-                    <p>Sem vídeos disponíveis.</p>
-                  )}
-                </div>
-            </div>
-          </div>
-          <GenealogyTree horse={horse} />
-        </div>
-      )}
+      {/* Descrição */}
+      <div className="description-section">
+        <strong>Descrição</strong>
+        <p>{horse.description}</p>
+      </div>
+    </div>
+
+
+      {/* Imagens e Vídeos */}
+      <div className="profile-gallery">
+        <h2 className="section-title">Imagens e Vídeos</h2>
+        <ProfileMedia images={horse.images} videos={horse.videos} />
+      </div>
+
+      {/* Genealogia */}
+      <div className="genealogy-section">
+        <h2 className="section-title">Genealogia</h2>
+        <GenealogyTree horse={horse} />
+      </div>
+
+      {/* Modal de Compartilhar */}
       {showShareModal && (
         <div className="share-modal">
           <h2>Compartilhar Cavalo</h2>
@@ -199,8 +231,21 @@ const ProfileHorse = () => {
           <button onClick={() => setShowShareModal(false)}>Cancelar</button>
         </div>
       )}
+
+      {/* Lightbox para visualização de imagens */}
+      {isOpen && (
+        <Lightbox
+          open={isOpen}
+          close={() => setIsOpen(false)}
+          slides={horse.images.map((image) => ({ src: image }))}
+          currentIndex={selectedImage}
+          onIndexChange={(index) => setSelectedImage(index)}
+        />
+      )}
     </div>
-  );
+  </Layout>
+);
+
 };
 
 export default ProfileHorse;
