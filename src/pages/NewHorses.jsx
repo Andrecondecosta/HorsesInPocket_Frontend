@@ -4,7 +4,7 @@ import './NewHorses.css';
 import Layout from '../components/Layout';
 import GenealogyForm from '../components/GenealogyForm';
 
-const NewHorses = ({ setIsLoggedIn }) => {
+const NewHorses = () => {
   const [currentStep, setCurrentStep] = useState(1);
   const [newHorse, setNewHorse] = useState({
     name: '',
@@ -166,7 +166,7 @@ const NewHorses = ({ setIsLoggedIn }) => {
   };
 
   return (
-    <Layout setIsLoggedIn={setIsLoggedIn}>
+    <Layout>
       <div className="new-horse-container">
 
       {/* Título */}
