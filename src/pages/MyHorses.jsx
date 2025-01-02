@@ -3,7 +3,7 @@ import { Link } from 'react-router-dom';
 import './MyHorses.css';
 import Layout from '../components/Layout';
 
-const MyHorses = () => {
+const MyHorses = ({ setIsLoggedIn }) => {
   const [horses, setHorses] = useState([]);
   console.log('API URL:', process.env.REACT_APP_API_SERVER_URL);
 
@@ -22,7 +22,7 @@ const MyHorses = () => {
   }, []);
 
   return (
-    <Layout>
+    <Layout setIsLoggedIn={setIsLoggedIn}>
     <div className="my-horses-container">
       <div className="header">
         <h1 className="title">Meus Cavalos</h1>

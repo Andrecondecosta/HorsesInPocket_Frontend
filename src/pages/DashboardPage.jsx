@@ -4,9 +4,9 @@ import CardSection from '../components/CardSection';
 import HistoryTable from '../components/HistoryTable';
 import './DashboardPage.css';
 
-const DashboardPage = ( ) => {
+const DashboardPage = ({ setIsLoggedIn }) => {
   return (
-    <Layout>
+    <Layout setIsLoggedIn={setIsLoggedIn}>
       <div className="dashboard-container">
       <h2 className="dashboard-title">Dashboard</h2>
         <CardSection />
