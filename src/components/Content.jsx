@@ -12,6 +12,7 @@ import ProfileHorse from '../pages/ProfileHorse';
 import EditHorse from '../pages/EditHorse';
 import ReceivedHorses from '../pages/ReceivedHorses';
 import './Content.css';
+import HomePage from '../pages/HomePage';
 
 
 function Content({ setIsLoggedIn }) {
@@ -20,7 +21,7 @@ function Content({ setIsLoggedIn }) {
       <Routes>
         <Route path="/login" element={<LoginPage setIsLoggedIn={setIsLoggedIn} />} />
         <Route path="/register" element={<RegisterPage />} />
-        <Route path="/" element={<DashboardPage setIsLoggedIn={setIsLoggedIn} />} />
+        <Route path="/" element={<HomePage />} />
         <Route path="/profile" element={<ProtectedRoute element={<ProfilePage setIsLoggedIn={setIsLoggedIn}/>} />} />
         <Route path="/update-profile" element={<ProtectedRoute element={<UpdateProfilePage setIsLoggedIn={setIsLoggedIn}/>} />} />
         <Route path="/myhorses" element={<ProtectedRoute element={<MyHorses setIsLoggedIn={setIsLoggedIn}/>} />} />

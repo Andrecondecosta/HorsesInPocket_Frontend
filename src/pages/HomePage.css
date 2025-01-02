@@ -1,0 +1,102 @@
+
+.homepage {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  text-align: center;
+}
+
+/* Cabeçalho */
+.header {
+  width: 100%;
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  padding: 20px;
+  background-color: #47663B;
+  color: #fff;
+}
+
+.logo {
+  font-size: 24px;
+  font-weight: bold;
+}
+
+.nav a {
+  margin: 0 15px;
+  text-decoration: none;
+  color: #fff;
+  transition: color 0.3s;
+}
+
+.nav a:hover {
+  color: #8EB486;
+}
+
+/* Hero Section */
+.hero {
+  width: 100%;
+  padding: 50px;
+  background: #E8ECD7;
+}
+
+.hero h1 {
+  font-size: 36px;
+  margin-bottom: 20px;
+}
+
+.cta-button {
+  padding: 10px 20px;
+  background: #47663B;
+  color: #fff;
+  border: none;
+  border-radius: 5px;
+  cursor: pointer;
+  transition: background 0.3s;
+}
+
+.cta-button:hover {
+  background: #8EB486;
+}
+
+/* Seções */
+.section {
+  width: 100%;
+  padding: 50px 20px;
+}
+
+.section h2 {
+  font-size: 28px;
+  margin-bottom: 20px;
+}
+
+.services {
+  display: flex;
+  justify-content: center;
+  gap: 20px;
+}
+
+.service-card {
+  padding: 20px;
+  background: #E8ECD7;
+  border: 1px solid #ccc;
+  border-radius: 10px;
+}
+
+/* Rodapé */
+.footer {
+  width: 100%;
+  padding: 20px;
+  background: #333;
+  color: #fff;
+  text-align: center;
+}
+
+.footer a {
+  color: #8EB486;
+  text-decoration: none;
+}
+
+.footer a:hover {
+  text-decoration: underline;
+}
