@@ -168,6 +168,7 @@ const NewHorses = ({ setIsLoggedIn }) => {
       console.error('Erro ao enviar os dados:', error);
     }
   };
+
   return (
     <Layout setIsLoggedIn={setIsLoggedIn}>
       <div className="new-horse-container">
