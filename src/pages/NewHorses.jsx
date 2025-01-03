@@ -123,9 +123,10 @@ const NewHorses = ({ setIsLoggedIn }) => {
   const handleSubmit = async (e) => {
     e.preventDefault();
     const token = localStorage.getItem('authToken');
+    console.log('Token:', token);
     const formData = new FormData();
 
-    // Preencha os dados do cavalo
+    // Adiciona os dados básicos do cavalo
     formData.append('horse[name]', newHorse.name);
     formData.append('horse[age]', newHorse.age);
     formData.append('horse[height_cm]', newHorse.height_cm);
@@ -135,7 +136,7 @@ const NewHorses = ({ setIsLoggedIn }) => {
     formData.append('horse[training_level]', newHorse.training_level);
     formData.append('horse[piroplasmosis]', newHorse.piroplasmosis);
 
-    // Preencha os ancestrais
+    // Adiciona ancestrais
     Object.keys(ancestors).forEach((relation) => {
       const ancestor = ancestors[relation];
       formData.append(`horse[ancestors_attributes][][relation_type]`, relation);
@@ -144,7 +145,7 @@ const NewHorses = ({ setIsLoggedIn }) => {
       formData.append(`horse[ancestors_attributes][][breed]`, ancestor.breed || '');
     });
 
-    // Preencha imagens e vídeos
+    // Adiciona imagens e vídeos
     images.forEach((image) => formData.append('horse[images][]', image));
     videos.forEach((video) => formData.append('horse[videos][]', video));
 
@@ -172,6 +173,7 @@ const NewHorses = ({ setIsLoggedIn }) => {
       setError('Erro ao conectar com o servidor. Tente novamente mais tarde.');
     }
   };
+
 
   return (
     <Layout setIsLoggedIn={setIsLoggedIn}>
