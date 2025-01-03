@@ -150,21 +150,24 @@ const NewHorses = ({ setIsLoggedIn }) => {
       formData.append('horse[videos][]', video);
     });
 
-    const response = await fetch(`${process.env.REACT_APP_API_SERVER_URL}/horses`, {
-      method: 'POST',
-      headers: {
-        Authorization: `Bearer ${token}`,
-      },
-      body: formData,
-    });
+    try {
+      const response = await fetch(`${process.env.REACT_APP_API_SERVER_URL}/horses`, {
+        method: 'POST',
+        headers: {
+          Authorization: `Bearer ${token}`,
+        },
+        body: formData,
+      });
 
-    if (response.ok) {
-      navigate('/myhorses');
-    } else {
-      console.error('Erro ao criar cavalo:', response.statusText);
+      if (response.ok) {
+        navigate('/myhorses');
+      } else {
+        console.error('Erro ao criar cavalo:', response.statusText);
+      }
+    } catch (error) {
+      console.error('Erro ao enviar os dados:', error);
     }
   };
-
   return (
     <Layout setIsLoggedIn={setIsLoggedIn}>
       <div className="new-horse-container">
