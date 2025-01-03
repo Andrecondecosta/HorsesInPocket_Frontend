@@ -123,32 +123,31 @@ const NewHorses = ({ setIsLoggedIn }) => {
   const handleSubmit = async (e) => {
     e.preventDefault();
     const token = localStorage.getItem('authToken');
+
+    if (!token) {
+      setError('Token ausente. Por favor, faça login novamente.');
+      navigate('/login');
+      return;
+    }
+
     const formData = new FormData();
 
-    formData.append('horse[name]', newHorse.name);
-    formData.append('horse[age]', newHorse.age);
-    formData.append('horse[height_cm]', newHorse.height_cm);
-    formData.append('horse[description]', newHorse.description);
-    formData.append('horse[gender]', newHorse.gender);
-    formData.append('horse[color]', newHorse.color);
-    formData.append('horse[training_level]', newHorse.training_level);
-    formData.append('horse[piroplasmosis]', newHorse.piroplasmosis);
-
-    Object.keys(ancestors).forEach((relation) => {
-      const ancestor = ancestors[relation];
-      formData.append(`horse[ancestors_attributes][][relation_type]`, relation);
-      formData.append(`horse[ancestors_attributes][][name]`, ancestor.name || '');
-      formData.append(`horse[ancestors_attributes][][breeder]`, ancestor.breeder || '');
-      formData.append(`horse[ancestors_attributes][][breed]`, ancestor.breed || '');
+    // Adicionar campos de cavalo ao FormData
+    Object.keys(newHorse).forEach((key) => {
+      formData.append(`horse[${key}]`, newHorse[key]);
     });
 
-    images.forEach((image) => {
-      formData.append('horse[images][]', image);
+    // Adicionar ancestrais ao FormData
+    Object.entries(ancestors).forEach(([relation, ancestor]) => {
+      formData.append('horse[ancestors_attributes][][relation_type]', relation);
+      formData.append('horse[ancestors_attributes][][name]', ancestor.name || '');
+      formData.append('horse[ancestors_attributes][][breeder]', ancestor.breeder || '');
+      formData.append('horse[ancestors_attributes][][breed]', ancestor.breed || '');
     });
 
-    videos.forEach((video) => {
-      formData.append('horse[videos][]', video);
-    });
+    // Adicionar imagens e vídeos ao FormData
+    images.forEach((image) => formData.append('horse[images][]', image));
+    videos.forEach((video) => formData.append('horse[videos][]', video));
 
     try {
       const response = await fetch(`${process.env.REACT_APP_API_SERVER_URL}/horses`, {
@@ -159,13 +158,23 @@ const NewHorses = ({ setIsLoggedIn }) => {
         body: formData,
       });
 
-      if (response.ok) {
-        navigate('/myhorses');
-      } else {
-        console.error('Erro ao criar cavalo:', response.statusText);
+      if (!response.ok) {
+        if (response.status === 401) {
+          setError('Token inválido. Por favor, faça login novamente.');
+          localStorage.removeItem('authToken');
+          navigate('/login');
+        } else {
+          const errorData = await response.json();
+          setError(`Erro ao criar cavalo: ${errorData.message || 'Erro desconhecido'}`);
+        }
+        return;
       }
-    } catch (error) {
-      console.error('Erro ao enviar os dados:', error);
+
+      // Redirecionar após sucesso
+      navigate('/myhorses');
+    } catch (err) {
+      console.error('Erro ao enviar os dados:', err);
+      setError('Erro ao conectar com o servidor. Tente novamente mais tarde.');
     }
   };
 
