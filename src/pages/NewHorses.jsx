@@ -64,6 +64,7 @@ const NewHorses = ({ setIsLoggedIn }) => {
 
   const handleImageChange = (e) => {
     const files = Array.from(e.target.files);
+    setImages(files); //
     const maxSize = 10 * 1024 * 1024; // 10MB
 
     // Arquivos excedendo o tamanho permitido
@@ -92,6 +93,7 @@ const NewHorses = ({ setIsLoggedIn }) => {
 
   const handleVideoChange = (e) => {
     const files = Array.from(e.target.files);
+    setVideos(files); //
     const maxSize = 50 * 1024 * 1024; // 50MB por vídeo
 
     const oversizedFiles = files.filter(file => file.size > maxSize);
@@ -174,6 +176,9 @@ const NewHorses = ({ setIsLoggedIn }) => {
       console.error('Erro ao enviar os dados:', error);
       setError('Erro ao conectar com o servidor. Tente novamente mais tarde.');
     }
+    console.log('Conteúdo do FormData:');
+for (let [key, value] of formData.entries()) {
+  console.log(`${key}:`, value);}
   };
 
 
