@@ -161,29 +161,30 @@ const NewHorses = ({ setIsLoggedIn }) => {
     console.log('Conteúdo do FormData:');
   for (let [key, value] of formData.entries()) {
   console.log(`${key}:`, value);}
-    try {
-      const response = await fetch(`${process.env.REACT_APP_API_SERVER_URL}/horses`, {
-        method: 'POST',
-        headers: {
-          Authorization: `Bearer ${token}`,
-        },
-        body: formData,
-      });
+  try {
+    const response = await fetch(`${process.env.REACT_APP_API_SERVER_URL}/horses`, {
+      method: 'POST',
+      headers: {
+        Authorization: `Bearer ${token}`,
+      },
+      body: formData,
+    });
 
-      if (!response.ok) {
-        const errorData = await response.json().catch(() => null);
-        console.error('Erro ao criar cavalo:', errorData || response.statusText);
-        setError(
-          errorData?.errors?.join(', ') || 'Erro desconhecido ao criar cavalo.'
-        );
-        return;
-      }
+    const result = await response.json();
+    console.log('Resposta do backend:', result); // Adicione este log para inspecionar a resposta
 
-      navigate('/myhorses');
-    } catch (error) {
-      console.error('Erro ao enviar os dados:', error);
-      setError('Erro ao conectar com o servidor. Tente novamente mais tarde.');
+    if (!response.ok) {
+      console.error('Erro ao criar cavalo:', result.logs || result.error || 'Erro desconhecido');
+      setError(result.logs ? result.logs.join('\n') : result.error || 'Erro desconhecido ao criar cavalo.');
+      return;
     }
+
+    navigate('/myhorses');
+  } catch (error) {
+    console.error('Erro ao enviar os dados:', error);
+    setError('Erro ao conectar com o servidor. Tente novamente mais tarde.');
+  }
+
   };
 
 
