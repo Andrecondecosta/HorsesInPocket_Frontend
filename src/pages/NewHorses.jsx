@@ -176,11 +176,11 @@ const NewHorses = ({ setIsLoggedIn }) => {
       console.error('Erro ao enviar os dados:', error);
       setError('Erro ao conectar com o servidor. Tente novamente mais tarde.');
     }
-    console.log('Conteúdo do FormData:');
-for (let [key, value] of formData.entries()) {
-  console.log(`${key}:`, value);}
   };
 
+  console.log('Conteúdo do FormData:');
+for (let [key, value] of formData.entries()) {
+console.log(`${key}:`, value);}
 
   return (
     <Layout setIsLoggedIn={setIsLoggedIn}>
