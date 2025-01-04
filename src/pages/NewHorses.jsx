@@ -170,14 +170,17 @@ const NewHorses = ({ setIsLoggedIn }) => {
       body: formData,
     });
 
-    const result = await response.json();
-    console.log('Resposta do backend:', result); // Adicione este log para inspecionar a resposta
+    console.log('Resposta bruta do backend:', response);
 
     if (!response.ok) {
-      console.error('Erro ao criar cavalo:', result.logs || result.error || 'Erro desconhecido');
-      setError(result.logs ? result.logs.join('\n') : result.error || 'Erro desconhecido ao criar cavalo.');
+      const result = await response.text(); // Captura o texto bruto
+      console.error('Erro ao criar cavalo:', result);
+      setError(result || 'Erro desconhecido ao criar cavalo.');
       return;
     }
+
+    const result = await response.json(); // Só faz JSON se o `response.ok` for true
+    console.log('Resposta JSON do backend:', result);
 
     navigate('/myhorses');
   } catch (error) {
