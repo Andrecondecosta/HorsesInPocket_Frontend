@@ -146,8 +146,19 @@ const NewHorses = ({ setIsLoggedIn }) => {
     });
 
     // Adiciona imagens e vídeos
-    images.forEach((image) => formData.append('horse[images][]', image));
-    videos.forEach((video) => formData.append('horse[videos][]', video));
+    formData.append('horse[name]', newHorse.name);
+    formData.append('horse[age]', newHorse.age);
+
+    // Adiciona imagens
+    images.forEach((image) => {
+      formData.append('horse[images][]', image);
+    });
+
+    // Adiciona vídeos
+    videos.forEach((video) => {
+      formData.append('horse[videos][]', video);
+    });
+
 
     try {
       const response = await fetch(`${process.env.REACT_APP_API_SERVER_URL}/horses`, {
