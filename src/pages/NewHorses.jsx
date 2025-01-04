@@ -64,57 +64,62 @@ const NewHorses = ({ setIsLoggedIn }) => {
 
   const handleImageChange = (e) => {
     const files = Array.from(e.target.files);
-    setImages(files); //
     const maxSize = 10 * 1024 * 1024; // 10MB
 
-    // Arquivos excedendo o tamanho permitido
+    // Verifica tamanho dos ficheiros
     const oversizedFiles = files.filter(file => file.size > maxSize);
     if (oversizedFiles.length > 0) {
       setError('Cada imagem deve ter no máximo 10MB.');
       return;
     }
 
-    // Checar se já existem arquivos no estado `images`
+    // Verifica se já existem ficheiros duplicados
     const newFiles = files.filter(file =>
       !images.some(existingFile =>
         existingFile.name === file.name && existingFile.size === file.size
       )
     );
 
-    // Verificar o limite de quantidade de arquivos (5)
+    // Limita a quantidade total de imagens (5)
     if (images.length + newFiles.length > 5) {
       setError('Você pode fazer upload de no máximo 5 imagens.');
-    } else {
-      // Atualizar o estado com novos arquivos únicos
-      setImages(prevImages => [...prevImages, ...newFiles]);
-      setError(null);
+      return;
     }
+
+    // Atualiza o estado com novos ficheiros
+    setImages(prevImages => [...prevImages, ...newFiles]);
+    setError(null); // Limpa erros
   };
 
   const handleVideoChange = (e) => {
     const files = Array.from(e.target.files);
-    setVideos(files); //
-    const maxSize = 50 * 1024 * 1024; // 50MB por vídeo
+    const maxSize = 50 * 1024 * 1024; // 50MB
 
+    // Verifica tamanho dos ficheiros
     const oversizedFiles = files.filter(file => file.size > maxSize);
     if (oversizedFiles.length > 0) {
       setError('Cada vídeo deve ter no máximo 50MB.');
       return;
     }
 
+    // Verifica se já existem ficheiros duplicados
     const newVideos = files.filter(file =>
       !videos.some(existingFile =>
         existingFile.name === file.name && existingFile.size === file.size
       )
     );
 
+    // Limita a quantidade total de vídeos (3)
     if (videos.length + newVideos.length > 3) {
       setError('Você pode fazer upload de no máximo 3 vídeos.');
-    } else {
-      setVideos(prevVideos => [...prevVideos, ...newVideos]);
-      setError(null);
+      return;
     }
+
+    // Atualiza o estado com novos ficheiros
+    setVideos(prevVideos => [...prevVideos, ...newVideos]);
+    setError(null); // Limpa erros
   };
+
 
   const removeImage = (indexToRemove) => {
     setImages((prevImages) => prevImages.filter((_, index) => index !== indexToRemove));
@@ -153,6 +158,9 @@ const NewHorses = ({ setIsLoggedIn }) => {
     images.forEach((image) => formData.append('horse[images][]', image));
     videos.forEach((video) => formData.append('horse[videos][]', video));
 
+    console.log('Conteúdo do FormData:');
+  for (let [key, value] of formData.entries()) {
+  console.log(`${key}:`, value);}
     try {
       const response = await fetch(`${process.env.REACT_APP_API_SERVER_URL}/horses`, {
         method: 'POST',
@@ -178,9 +186,6 @@ const NewHorses = ({ setIsLoggedIn }) => {
     }
   };
 
-  console.log('Conteúdo do FormData:');
-for (let [key, value] of formData.entries()) {
-console.log(`${key}:`, value);}
 
   return (
     <Layout setIsLoggedIn={setIsLoggedIn}>
