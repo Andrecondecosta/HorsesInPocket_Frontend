@@ -66,60 +66,53 @@ const NewHorses = ({ setIsLoggedIn }) => {
     const files = Array.from(e.target.files);
     const maxSize = 10 * 1024 * 1024; // 10MB
 
-    // Verifica tamanho dos ficheiros
+    // Arquivos excedendo o tamanho permitido
     const oversizedFiles = files.filter(file => file.size > maxSize);
     if (oversizedFiles.length > 0) {
       setError('Cada imagem deve ter no máximo 10MB.');
       return;
     }
 
-    // Verifica se já existem ficheiros duplicados
+    // Checar se já existem arquivos no estado `images`
     const newFiles = files.filter(file =>
       !images.some(existingFile =>
         existingFile.name === file.name && existingFile.size === file.size
       )
     );
 
-    // Limita a quantidade total de imagens (5)
+    // Verificar o limite de quantidade de arquivos (5)
     if (images.length + newFiles.length > 5) {
       setError('Você pode fazer upload de no máximo 5 imagens.');
-      return;
+    } else {
+      // Atualizar o estado com novos arquivos únicos
+      setImages(prevImages => [...prevImages, ...newFiles]);
+      setError(null);
     }
-
-    // Atualiza o estado com novos ficheiros
-    setImages(prevImages => [...prevImages, ...newFiles]);
-    setError(null); // Limpa erros
   };
 
   const handleVideoChange = (e) => {
     const files = Array.from(e.target.files);
-    const maxSize = 50 * 1024 * 1024; // 50MB
+    const maxSize = 50 * 1024 * 1024; // 50MB por vídeo
 
-    // Verifica tamanho dos ficheiros
     const oversizedFiles = files.filter(file => file.size > maxSize);
     if (oversizedFiles.length > 0) {
       setError('Cada vídeo deve ter no máximo 50MB.');
       return;
     }
 
-    // Verifica se já existem ficheiros duplicados
     const newVideos = files.filter(file =>
       !videos.some(existingFile =>
         existingFile.name === file.name && existingFile.size === file.size
       )
     );
 
-    // Limita a quantidade total de vídeos (3)
     if (videos.length + newVideos.length > 3) {
       setError('Você pode fazer upload de no máximo 3 vídeos.');
-      return;
+    } else {
+      setVideos(prevVideos => [...prevVideos, ...newVideos]);
+      setError(null);
     }
-
-    // Atualiza o estado com novos ficheiros
-    setVideos(prevVideos => [...prevVideos, ...newVideos]);
-    setError(null); // Limpa erros
   };
-
 
   const removeImage = (indexToRemove) => {
     setImages((prevImages) => prevImages.filter((_, index) => index !== indexToRemove));
@@ -130,12 +123,8 @@ const NewHorses = ({ setIsLoggedIn }) => {
   const handleSubmit = async (e) => {
     e.preventDefault();
     const token = localStorage.getItem('authToken');
-    console.log('Token:', token);
-    console.log('Imagens para enviar:', images); // Log das imagens
-    console.log('Vídeos para enviar:', videos); //
     const formData = new FormData();
 
-    // Adiciona os dados básicos do cavalo
     formData.append('horse[name]', newHorse.name);
     formData.append('horse[age]', newHorse.age);
     formData.append('horse[height_cm]', newHorse.height_cm);
@@ -145,7 +134,6 @@ const NewHorses = ({ setIsLoggedIn }) => {
     formData.append('horse[training_level]', newHorse.training_level);
     formData.append('horse[piroplasmosis]', newHorse.piroplasmosis);
 
-    // Adiciona ancestrais
     Object.keys(ancestors).forEach((relation) => {
       const ancestor = ancestors[relation];
       formData.append(`horse[ancestors_attributes][][relation_type]`, relation);
@@ -154,14 +142,14 @@ const NewHorses = ({ setIsLoggedIn }) => {
       formData.append(`horse[ancestors_attributes][][breed]`, ancestor.breed || '');
     });
 
-    // Adiciona imagens e vídeos
-    images.forEach((image) => formData.append('horse[images][]', image));
-    videos.forEach((video) => formData.append('horse[videos][]', video));
+    images.forEach((image) => {
+      formData.append('horse[images][]', image);
+    });
 
-    console.log('Conteúdo do FormData:');
-  for (let [key, value] of formData.entries()) {
-  console.log(`${key}:`, value);}
-  try {
+    videos.forEach((video) => {
+      formData.append('horse[videos][]', video);
+    });
+
     const response = await fetch(`${process.env.REACT_APP_API_SERVER_URL}/horses`, {
       method: 'POST',
       headers: {
@@ -170,26 +158,12 @@ const NewHorses = ({ setIsLoggedIn }) => {
       body: formData,
     });
 
-    console.log('Resposta bruta do backend:', response);
-
-    if (!response.ok) {
-      const result = await response.text(); // Captura o texto bruto
-      console.error('Erro ao criar cavalo:', result);
-      setError(result || 'Erro desconhecido ao criar cavalo.');
-      return;
+    if (response.ok) {
+      navigate('/myhorses');
+    } else {
+      console.error('Erro ao criar cavalo:', response.statusText);
     }
-
-    const result = await response.json(); // Só faz JSON se o `response.ok` for true
-    console.log('Resposta JSON do backend:', result);
-
-    navigate('/myhorses');
-  } catch (error) {
-    console.error('Erro ao enviar os dados:', error);
-    setError('Erro ao conectar com o servidor. Tente novamente mais tarde.');
-  }
-
   };
-
 
   return (
     <Layout setIsLoggedIn={setIsLoggedIn}>
