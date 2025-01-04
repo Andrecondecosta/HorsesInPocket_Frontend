@@ -124,6 +124,8 @@ const NewHorses = ({ setIsLoggedIn }) => {
     e.preventDefault();
     const token = localStorage.getItem('authToken');
     console.log('Token:', token);
+    console.log('Imagens para enviar:', images); // Log das imagens
+    console.log('Vídeos para enviar:', videos); //
     const formData = new FormData();
 
     // Adiciona os dados básicos do cavalo
@@ -146,19 +148,8 @@ const NewHorses = ({ setIsLoggedIn }) => {
     });
 
     // Adiciona imagens e vídeos
-    formData.append('horse[name]', newHorse.name);
-    formData.append('horse[age]', newHorse.age);
-
-    // Adiciona imagens
-    images.forEach((image) => {
-      formData.append('horse[images][]', image);
-    });
-
-    // Adiciona vídeos
-    videos.forEach((video) => {
-      formData.append('horse[videos][]', video);
-    });
-
+    images.forEach((image) => formData.append('horse[images][]', image));
+    videos.forEach((video) => formData.append('horse[videos][]', video));
 
     try {
       const response = await fetch(`${process.env.REACT_APP_API_SERVER_URL}/horses`, {
