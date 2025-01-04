@@ -5,7 +5,6 @@ import Layout from '../components/Layout';
 
 const MyHorses = () => {
   const [horses, setHorses] = useState([]);
-  console.log('API URL:', process.env.REACT_APP_API_SERVER_URL);
 
   useEffect(() => {
     const fetchHorses = async () => {

@@ -137,6 +137,17 @@ body, html {
 }
 
 @media (max-width: 768px) {
+
+  body, html {
+    overflow: auto; /* Ativa scroll para mobile */
+    height: auto; /* Permite altura dinâmica */
+  }
+
+  .container {
+    padding: 10px; /* Ajusta espaçamento em telas pequenas */
+    max-width: 100%; /* Garante que o conteúdo respeite os limites da tela */
+    box-sizing: border-box; /* Inclui padding/borda no tamanho total */
+    }
   .navbar {
     flex-direction: row;
     padding: 28px; /* Padding ainda menor */
@@ -166,6 +177,16 @@ body, html {
 }
 
 @media (max-width: 480px) {
+    body, html {
+    overflow: auto; /* Ativa scroll para mobile */
+    height: auto; /* Permite altura dinâmica */
+  }
+
+  .container {
+    padding: 10px; /* Ajusta espaçamento em telas pequenas */
+    max-width: 100%; /* Garante que o conteúdo respeite os limites da tela */
+    box-sizing: border-box; /* Inclui padding/borda no tamanho total */
+    }
   .navbar {
     flex-direction: row;
     padding: 20px; /* Padding ainda menor */
@@ -186,9 +207,9 @@ body, html {
   }
 
   .content-wrapper {
-    margin: 40px 17px 26px;
-    padding: 5px;
     border-radius: 4px;
-    width: 91%;
+    margin: 45px 25px 29px;
+    padding: 28px;
+    width: 89%;
   }
 }
