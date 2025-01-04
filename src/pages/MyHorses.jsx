@@ -3,37 +3,26 @@ import { Link } from 'react-router-dom';
 import './MyHorses.css';
 import Layout from '../components/Layout';
 
-const MyHorses = ({ setIsLoggedIn }) => {
+const MyHorses = () => {
   const [horses, setHorses] = useState([]);
   console.log('API URL:', process.env.REACT_APP_API_SERVER_URL);
-  const token = localStorage.getItem('authToken');
 
- useEffect(() => {
+  useEffect(() => {
     const fetchHorses = async () => {
-      try {
-        const response = await fetch(`${process.env.REACT_APP_API_SERVER_URL}/horses`, {
-          headers: {
-            'Authorization': `Bearer ${token}`,
-            'Content-Type': 'application/json',
-          },
-        });
-
-        if (!response.ok) {
-          throw new Error('Erro ao buscar dados');
-        }
-
-        const data = await response.json();
-        setHorses(data);
-      } catch (err) {
-        console.error('Erro ao carregar cavalos:', err);
-      }
+      const response = await fetch(`${process.env.REACT_APP_API_SERVER_URL}/horses`, {
+        headers: {
+          'Authorization': `Bearer ${localStorage.getItem('authToken')}`,
+        },
+      });
+      const data = await response.json();
+      setHorses(data);
     };
 
     fetchHorses();
-  }, [token]);
+  }, []);
 
   return (
-    <Layout setIsLoggedIn={setIsLoggedIn}>
+    <Layout>
     <div className="my-horses-container">
       <div className="header">
         <h1 className="title">Meus Cavalos</h1>
