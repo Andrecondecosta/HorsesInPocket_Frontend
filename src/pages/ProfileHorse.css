@@ -266,7 +266,9 @@
     justify-content: space-between;
     align-items: center;
     flex-wrap: nowrap; /* Evita quebra de linha */
-    padding: 10px;
+    width: 115%;
+    margin-top: -53px;
+    margin-left: -22px;
   }
 /* Apenas para telas menores */
 
@@ -366,33 +368,21 @@
     color: #333;
   }
 
+  .section-title {
+    margin-left: -26px;
 
+  }
+.horse-info-section{
+  width: 114%;
+}
 
   /* Grade de Informações */
   .info-grid {
-    grid-template-columns: repeat(2, 1fr); /* Duas colunas no mobile */
+    grid-template-columns: repeat(2, 1fr);
     gap: 15px;
     margin-bottom: 20px;
-  }
-
-  /* Cada Item */
-  .info-item strong {
-    font-size: 0.8rem;
-  }
-
-  .info-item p {
-    font-size: 0.7rem;
-  }
-
-  /* Descrição */
-  .description-section {
-    font-size: 0.8rem;
-    margin-top: 15px;
-  }
-
-  .description-section p {
-    font-size: 0.7rem;
-  }
+    margin-left: -19px;
+}
 
   /* Galeria de Imagens e Vídeos */
   .profile-media-container {
