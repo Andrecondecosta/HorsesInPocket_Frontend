@@ -100,8 +100,11 @@
 
   .horse-name {
     font-size: 0.7rem;
+    margin-top: -4px;
   }
-
+  .horse-box{
+    margin-bottom: 15px;
+  }
   .ancestor-box {
     width: 70px; /* Reduzido para dispositivos móveis */
     padding: 3px;

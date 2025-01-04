@@ -188,12 +188,12 @@ const ProfileHorse = ({ setIsLoggedIn }) => {
           <p>{horse.height_cm} m ({heightInHH} hh)</p>
         </div>
         <div className="info-item">
-          <strong>Nível de Treinamento</strong>
-          <p>{horse.training_level}</p>
-        </div>
-        <div className="info-item">
           <strong>Piroplasmosis</strong>
           <p>{horse.piroplasmosis ? 'Sim' : 'Não'}</p>
+        </div>
+        <div className="info-item">
+          <strong>Nível de Treinamento</strong>
+          <p>{horse.training_level}</p>
         </div>
       </div>
 
@@ -213,7 +213,7 @@ const ProfileHorse = ({ setIsLoggedIn }) => {
 
       {/* Genealogia */}
       <div className="genealogy-section">
-        <h2 className="section-title">Genealogia</h2>
+        <h2 className="section-title-geno">Genealogia</h2>
         <GenealogyTree horse={horse} />
       </div>
 
