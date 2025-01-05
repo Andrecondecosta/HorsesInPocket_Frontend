@@ -7,6 +7,7 @@ import './ProfileHorse.css';
 import GenealogyTree from '../components/GenealogyTree';
 import Layout from '../components/Layout';
 import ProfileMedia from '../components/ProfileMedia';
+import ShareHorse from '../components/ShareHorse';
 
 const ProfileHorse = ({ setIsLoggedIn }) => {
   const { id } = useParams();
@@ -219,19 +220,11 @@ const ProfileHorse = ({ setIsLoggedIn }) => {
 
       {/* Modal de Compartilhar */}
       {showShareModal && (
-        <div className="share-modal">
-          <h2>Compartilhar Cavalo</h2>
-          <input
-            type="email"
-            placeholder="Digite o e-mail do destinatário"
-            value={shareEmail}
-            onChange={(e) => setShareEmail(e.target.value)}
-          />
-          <button onClick={handleShare}>Compartilhar</button>
-          <button onClick={() => setShowShareModal(false)}>Cancelar</button>
-        </div>
+        <ShareHorse
+          horseId={id}
+          onClose={() => setShowShareModal(false)}
+        />
       )}
-
       {/* Lightbox para visualização de imagens */}
       {isOpen && (
         <Lightbox

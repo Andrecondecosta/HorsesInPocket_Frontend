@@ -11,8 +11,9 @@ import NewHorses from '../pages/NewHorses';
 import ProfileHorse from '../pages/ProfileHorse';
 import EditHorse from '../pages/EditHorse';
 import ReceivedHorses from '../pages/ReceivedHorses';
-import './Content.css';
 import HomePage from '../pages/HomePage';
+import SharedHorse from '../pages/SharedHorse';
+import './Content.css';
 
 
 function Content({ setIsLoggedIn }) {
@@ -30,6 +31,7 @@ function Content({ setIsLoggedIn }) {
         <Route path="/horses/:id/edit" element={<ProtectedRoute element={<EditHorse setIsLoggedIn={setIsLoggedIn}/>} />} />
         <Route path="/received" element={<ProtectedRoute element={<ReceivedHorses setIsLoggedIn={setIsLoggedIn}/>} />} />
         <Route path="/dashboard" element={<DashboardPage setIsLoggedIn={setIsLoggedIn}/>} />
+        <Route path="/horses/shared/:token" element={<SharedHorse />} />
         <Route path="*" element={<h1>404 - Página não encontrada</h1>} />
       </Routes>
     </div>

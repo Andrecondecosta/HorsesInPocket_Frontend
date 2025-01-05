@@ -186,52 +186,40 @@
   top: 50%;
   left: 50%;
   transform: translate(-50%, -50%);
-  background-color: #ffffff;
-  padding: 20px;
+  background-color: white;
+  border: 1px solid #ccc;
   border-radius: 8px;
-  box-shadow: 0 4px 8px rgba(0, 0, 0, 0.2);
+  padding: 20px;
   z-index: 1000;
-  width: 400px;
+  box-shadow: 0px 4px 6px rgba(0, 0, 0, 0.1);
 }
 
 .share-modal h2 {
-  font-size: 1.2rem;
-  margin-bottom: 20px;
+  margin-bottom: 10px;
 }
 
-.share-modal input {
-  width: 100%;
+.share-modal .share-options button {
+  margin: 10px 5px;
   padding: 10px;
-  margin-bottom: 15px;
-  border: 1px solid #ccc;
-  border-radius: 6px;
+  font-size: 14px;
+  display: flex;
+  align-items: center;
+  gap: 5px;
 }
 
-.share-modal button {
-  font-size: 0.9rem;
-  padding: 10px 15px;
+.share-modal .error-message {
+  color: red;
+  margin-bottom: 10px;
+}
+
+.share-modal .close-button {
+  margin-top: 15px;
+  padding: 8px;
+  background-color: #f44336;
+  color: white;
   border: none;
-  border-radius: 6px;
+  border-radius: 4px;
   cursor: pointer;
-  transition: background-color 0.2s ease;
-}
-
-.share-modal button:first-child {
-  background-color: #8eb486;
-  color: #ffffff;
-}
-
-.share-modal button:first-child:hover {
-  background-color: #6e9469;
-}
-
-.share-modal button:last-child {
-  background-color: #d9534f;
-  color: #ffffff;
-}
-
-.share-modal button:last-child:hover {
-  background-color: #c9302c;
 }
 
 /* Lightbox */

@@ -16,7 +16,9 @@ const LoginPage = ({ setIsLoggedIn }) => {
     await login(email, password);
     if (localStorage.getItem('authToken')) {
       setIsLoggedIn(true);
-      navigate('/dashboard');
+      const redirectUrl = new URLSearchParams(window.location.search).get('redirect') || '/dashboard';
+      navigate(redirectUrl);
+
     }
   };
 
