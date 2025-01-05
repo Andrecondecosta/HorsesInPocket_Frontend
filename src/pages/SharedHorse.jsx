@@ -5,10 +5,9 @@ const SharedHorse = () => {
   const { token } = useParams();
   const navigate = useNavigate();
   const [error, setError] = useState(null);
-  const [horse, setHorse] = useState(null);
 
   useEffect(() => {
-    const fetchSharedHorse = async () => {
+    const handleSharedLink = async () => {
       const authToken = localStorage.getItem('authToken');
       if (!authToken) {
         // Redireciona para login com o token do link
@@ -17,38 +16,32 @@ const SharedHorse = () => {
       }
 
       try {
-        const response = await fetch(`${process.env.REACT_APP_API_SERVER_URL}/horses/shared/${token}`, {
-          headers: {
-            'Authorization': `Bearer ${authToken}`,
-          },
-        });
+        const response = await fetch(
+          `${process.env.REACT_APP_API_SERVER_URL}/horses/shared/${token}`,
+          {
+            headers: {
+              'Authorization': `Bearer ${authToken}`,
+            },
+          }
+        );
 
         if (!response.ok) {
           const errorData = await response.json();
-          throw new Error(errorData.error || 'Erro ao carregar cavalo partilhado');
+          throw new Error(errorData.error || 'Erro ao processar o link');
         }
 
-        const data = await response.json();
-        setHorse(data);
+        // Redireciona para página de recebidos após sucesso
+        navigate('/received');
       } catch (err) {
         setError(err.message);
       }
     };
 
-    fetchSharedHorse();
-  }, [navigate, token]);
+    handleSharedLink();
+  }, [token, navigate]);
 
   if (error) return <p>{error}</p>;
-  if (!horse) return <p>Carregando...</p>;
-
-  return (
-    <div>
-      <h1>{horse.name}</h1>
-      <p>{horse.description}</p>
-      <p>Altura: {horse.height_cm}m</p>
-      {/* Outros detalhes do cavalo */}
-    </div>
-  );
+  return <p>A processar o link...</p>;
 };
 
 export default SharedHorse;
