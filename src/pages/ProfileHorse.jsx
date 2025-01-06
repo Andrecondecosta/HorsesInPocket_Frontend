@@ -30,21 +30,42 @@ const ProfileHorse = ({ setIsLoggedIn }) => {
 
   useEffect(() => {
     const blurContent = () => {
-      document.body.classList.add('no-screenshot');
+      document.body.classList.add('blur');
+      setTimeout(() => {
+        document.body.classList.remove('blur'); // Remove o desfoque após 2 segundos
+      }, 2000);
     };
 
-    const removeBlur = () => {
-      document.body.classList.remove('no-screenshot');
+    // Detecta PrintScreen em desktop
+    const handleKeyDown = (e) => {
+      if (e.key === 'PrintScreen') {
+        blurContent();
+        e.preventDefault();
+      }
     };
 
-    // Adiciona o blur automaticamente
-    blurContent();
+    // Para dispositivos móveis: não existe evento direto, mas tenta capturar eventos de fundo
+    const detectScreenshotMobile = () => {
+      blurContent();
+    };
 
-    // Remove quando o componente for desmontado
+    // Listeners
+    document.addEventListener('keydown', handleKeyDown);
+
+    // Fallback para captura de screenshot em dispositivos móveis (não confiável)
+    window.addEventListener('visibilitychange', () => {
+      if (document.visibilityState === 'hidden') {
+        detectScreenshotMobile();
+      }
+    });
+
+    // Cleanup
     return () => {
-      removeBlur();
+      document.removeEventListener('keydown', handleKeyDown);
+      window.removeEventListener('visibilitychange', detectScreenshotMobile);
     };
   }, []);
+
 
 
 

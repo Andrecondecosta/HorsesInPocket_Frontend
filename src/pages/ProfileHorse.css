@@ -257,9 +257,12 @@
   filter: blur(10px); /* Adiciona desfoque */
 }
 
-.no-screenshot.active {
-  filter: none; /* Remove o desfoque quando necessário */
+/* Adiciona desfoque apenas quando necessário */
+.blur {
+  filter: blur(10px);
+  pointer-events: none; /* Evita interações enquanto desfocado */
 }
+
 @media (max-width: 768px) {
   /* Cabeçalho: Breadcrumbs e botões na mesma linha */
   .profile-container{
