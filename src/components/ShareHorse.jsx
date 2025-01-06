@@ -13,6 +13,7 @@ const ShareHorse = ({ horseId, onClose }) => {
   const API_URL = process.env.REACT_APP_API_SERVER_URL;
 
   useEffect(() => {
+    // Gerar o link de partilha
     const generateShareLink = async () => {
       setIsLoading(true);
       setError(null);
@@ -43,6 +44,26 @@ const ShareHorse = ({ horseId, onClose }) => {
 
     generateShareLink();
   }, [horseId, API_URL, token]);
+
+  useEffect(() => {
+    // Ajustar zoom quando o teclado aparece/dispare
+    const handleBlur = () => {
+      document.body.style.transform = 'scale(1)';
+      document.body.style.transformOrigin = '0 0';
+    };
+
+    const inputs = document.querySelectorAll('input, textarea');
+    inputs.forEach((input) => {
+      input.addEventListener('blur', handleBlur);
+    });
+
+    return () => {
+      // Remover event listeners ao desmontar
+      inputs.forEach((input) => {
+        input.removeEventListener('blur', handleBlur);
+      });
+    };
+  }, []);
 
   const shareByEmail = async () => {
     setEmailSuccess(null);
@@ -77,16 +98,14 @@ const ShareHorse = ({ horseId, onClose }) => {
 
       {/* Modal de partilha */}
       <div className="share-modal">
-
-
-          {isLoading ? (
-            <p>A gerar o link de partilha...</p>
-          ) : error ? (
-            <p className="error-message">{error}</p>
-          ) : (
-            <>
-            <div className='share-header'>
-                <h2>Partilhar Cavalo</h2>
+        {isLoading ? (
+          <p>A gerar o link de partilha...</p>
+        ) : error ? (
+          <p className="error-message">{error}</p>
+        ) : (
+          <>
+            <div className="share-header">
+              <h2>Partilhar Cavalo</h2>
               <div className="share-options">
                 <button
                   className="copy-button"
@@ -102,28 +121,26 @@ const ShareHorse = ({ horseId, onClose }) => {
                 >
                   <FaWhatsapp /> WhatsApp
                 </button>
-                </div>
               </div>
+            </div>
 
-                <input
-                  type="email"
-                  placeholder="Introduza o email"
-                  value={email}
-                  onChange={(e) => setEmail(e.target.value)}
-                />
-                <div className="email-close-button">
-                {emailSuccess && <p className="success-message">{emailSuccess}</p>}
-                <button className="closee-button" onClick={onClose}>
-                  Cancelar
-                </button>
-                <button className="email-button" onClick={shareByEmail}>
-                  Partilhar
-                </button>
-                </div>
+            <input
+              type="email"
+              placeholder="Introduza o email"
+              value={email}
+              onChange={(e) => setEmail(e.target.value)}
+            />
+            <div className="email-close-button">
+              {emailSuccess && <p className="success-message">{emailSuccess}</p>}
+              <button className="closee-button" onClick={onClose}>
+                Cancelar
+              </button>
+              <button className="email-button" onClick={shareByEmail}>
+                Partilhar
+              </button>
+            </div>
           </>
         )}
-
-
       </div>
     </>
   );
