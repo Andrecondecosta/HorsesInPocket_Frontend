@@ -250,6 +250,16 @@
   display: none; /* Esconde os três pontos no desktop */
 }
 
+.no-select {
+  user-select: none;
+  -webkit-user-select: none;
+  -ms-user-select: none;
+  -moz-user-select: none;
+}
+
+body {
+  pointer-events: none;
+}
 
 @media (max-width: 768px) {
   /* Cabeçalho: Breadcrumbs e botões na mesma linha */
@@ -268,9 +278,6 @@
     margin-bottom: -43px;
 
   }
-/* Apenas para telas menores */
-
-  /* Ocultar botões normais *
 
   /* Mostrar menu de três pontos */
     .desktop-only {

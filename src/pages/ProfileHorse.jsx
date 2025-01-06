@@ -36,29 +36,44 @@ const ProfileHorse = ({ setIsLoggedIn }) => {
   };
 
     // Bloqueio de captura de ecrã
-    useEffect(() => {
-      const handleKeyDown = (e) => {
-        if (e.key === 'PrintScreen') {
-          alert('Captura de ecrã desativada!');
-          e.preventDefault();
-        }
-      };
+  useEffect(() => {
+    const handleKeyDown = (e) => {
+      if (e.key === 'PrintScreen') {
+        alert('Captura de ecrã desativada!');
+        e.preventDefault();
+      }
+    };
 
-      const handleKeyUp = (e) => {
-        if (e.key === 'PrintScreen') {
-          navigator.clipboard.writeText('');
-          alert('Captura de ecrã desativada!');
-        }
-      };
+    const handleKeyUp = (e) => {
+      if (e.key === 'PrintScreen') {
+        navigator.clipboard.writeText('');
+        alert('Captura de ecrã desativada!');
+      }
+    };
 
-      document.addEventListener('keydown', handleKeyDown);
-      document.addEventListener('keyup', handleKeyUp);
+    const disableRightClick = (e) => {
+      e.preventDefault();
+      alert('Ação desativada nesta página!');
+    };
 
-      return () => {
-        document.removeEventListener('keydown', handleKeyDown);
-        document.removeEventListener('keyup', handleKeyUp);
-      };
-    }, []);
+    const disablePrint = () => {
+      alert('Impressão desativada!');
+      window.stop();
+    };
+
+    document.addEventListener('keydown', handleKeyDown);
+    document.addEventListener('keyup', handleKeyUp);
+    document.addEventListener('contextmenu', disableRightClick);
+    window.onbeforeprint = disablePrint;
+
+    return () => {
+      document.removeEventListener('keydown', handleKeyDown);
+      document.removeEventListener('keyup', handleKeyUp);
+      document.removeEventListener('contextmenu', disableRightClick);
+      window.onbeforeprint = null;
+    };
+  }, []);
+
 
 
   useEffect(() => {
