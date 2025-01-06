@@ -35,10 +35,10 @@ const ProfileHorse = ({ setIsLoggedIn }) => {
     }
   };
 
-    // Bloqueio de captura de ecrã
   useEffect(() => {
     const handleKeyDown = (e) => {
       if (e.key === 'PrintScreen') {
+        document.body.classList.add('blur'); // Adiciona a classe para desfocar
         alert('Captura de ecrã desativada!');
         e.preventDefault();
       }
@@ -46,31 +46,18 @@ const ProfileHorse = ({ setIsLoggedIn }) => {
 
     const handleKeyUp = (e) => {
       if (e.key === 'PrintScreen') {
-        navigator.clipboard.writeText('');
-        alert('Captura de ecrã desativada!');
+        document.body.classList.remove('blur'); // Remove a classe após o evento
       }
     };
 
-    const disableRightClick = (e) => {
-      e.preventDefault();
-      alert('Ação desativada nesta página!');
-    };
-
-    const disablePrint = () => {
-      alert('Impressão desativada!');
-      window.stop();
-    };
-
+    // Adiciona os listeners para capturar o evento
     document.addEventListener('keydown', handleKeyDown);
     document.addEventListener('keyup', handleKeyUp);
-    document.addEventListener('contextmenu', disableRightClick);
-    window.onbeforeprint = disablePrint;
 
+    // Remove os listeners ao desmontar o componente
     return () => {
       document.removeEventListener('keydown', handleKeyDown);
       document.removeEventListener('keyup', handleKeyUp);
-      document.removeEventListener('contextmenu', disableRightClick);
-      window.onbeforeprint = null;
     };
   }, []);
 

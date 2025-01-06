@@ -250,15 +250,9 @@
   display: none; /* Esconde os três pontos no desktop */
 }
 
-.no-select {
-  user-select: none;
-  -webkit-user-select: none;
-  -ms-user-select: none;
-  -moz-user-select: none;
-}
-
-body {
-  pointer-events: none;
+.blur {
+  filter: blur(10px);
+  transition: filter 0.3s ease;
 }
 
 @media (max-width: 768px) {
