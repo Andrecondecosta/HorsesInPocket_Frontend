@@ -28,36 +28,21 @@ const ProfileHorse = ({ setIsLoggedIn }) => {
   const navigate = useNavigate();
   const token = localStorage.getItem('authToken');
 
-  const handleKeyDown = (e) => {
-    if (e.key === 'PrintScreen') {
-      alert('Captura de ecrã desativada!');
-      e.preventDefault();
-    }
-  };
-
   useEffect(() => {
-    const handleKeyDown = (e) => {
-      if (e.key === 'PrintScreen') {
-        document.body.classList.add('blur'); // Adiciona a classe para desfocar
-        alert('Captura de ecrã desativada!');
-        e.preventDefault();
-      }
+    const blurContent = () => {
+      document.body.classList.add('no-screenshot');
     };
 
-    const handleKeyUp = (e) => {
-      if (e.key === 'PrintScreen') {
-        document.body.classList.remove('blur'); // Remove a classe após o evento
-      }
+    const removeBlur = () => {
+      document.body.classList.remove('no-screenshot');
     };
 
-    // Adiciona os listeners para capturar o evento
-    document.addEventListener('keydown', handleKeyDown);
-    document.addEventListener('keyup', handleKeyUp);
+    // Adiciona o blur automaticamente
+    blurContent();
 
-    // Remove os listeners ao desmontar o componente
+    // Remove quando o componente for desmontado
     return () => {
-      document.removeEventListener('keydown', handleKeyDown);
-      document.removeEventListener('keyup', handleKeyUp);
+      removeBlur();
     };
   }, []);
 
