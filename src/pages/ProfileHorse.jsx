@@ -28,6 +28,39 @@ const ProfileHorse = ({ setIsLoggedIn }) => {
   const navigate = useNavigate();
   const token = localStorage.getItem('authToken');
 
+  const handleKeyDown = (e) => {
+    if (e.key === 'PrintScreen') {
+      alert('Captura de ecrã desativada!');
+      e.preventDefault();
+    }
+  };
+
+    // Bloqueio de captura de ecrã
+    useEffect(() => {
+      const handleKeyDown = (e) => {
+        if (e.key === 'PrintScreen') {
+          alert('Captura de ecrã desativada!');
+          e.preventDefault();
+        }
+      };
+
+      const handleKeyUp = (e) => {
+        if (e.key === 'PrintScreen') {
+          navigator.clipboard.writeText('');
+          alert('Captura de ecrã desativada!');
+        }
+      };
+
+      document.addEventListener('keydown', handleKeyDown);
+      document.addEventListener('keyup', handleKeyUp);
+
+      return () => {
+        document.removeEventListener('keydown', handleKeyDown);
+        document.removeEventListener('keyup', handleKeyUp);
+      };
+    }, []);
+
+
   useEffect(() => {
     // Verifica se o parâmetro de consulta readonly está presente
     const queryParams = new URLSearchParams(location.search);
