@@ -1,5 +1,6 @@
 import React, { useState } from 'react';
 import { useNavigate } from 'react-router-dom';
+import { createFFmpeg, fetchFile } from '@ffmpeg/ffmpeg';
 import './NewHorses.css';
 import Layout from '../components/Layout';
 import GenealogyForm from '../components/GenealogyForm';
@@ -26,8 +27,11 @@ const NewHorses = ({ setIsLoggedIn }) => {
   });
   const [images, setImages] = useState([]);
   const [videos, setVideos] = useState([]);
+  const [isCompressing, setIsCompressing] = useState(false);
   const [error, setError] = useState(null);
   const navigate = useNavigate();
+
+  const ffmpeg = createFFmpeg({ log: true });
 
   const handleNextStep = () => {
     if (currentStep < 3) setCurrentStep(currentStep + 1);
@@ -90,30 +94,62 @@ const NewHorses = ({ setIsLoggedIn }) => {
     }
   };
 
-  const handleVideoChange = (e) => {
+  const handleVideoChange = async (e) => {
     const files = Array.from(e.target.files);
     const maxSize = 50 * 1024 * 1024; // 50MB por vídeo
 
-    const oversizedFiles = files.filter(file => file.size > maxSize);
-    if (oversizedFiles.length > 0) {
-      setError('Cada vídeo deve ter no máximo 50MB.');
-      return;
-    }
+    setError(null);
 
-    const newVideos = files.filter(file =>
-      !videos.some(existingFile =>
-        existingFile.name === file.name && existingFile.size === file.size
-      )
-    );
+    for (const file of files) {
+      if (file.size > maxSize) {
+        setIsCompressing(true);
 
-    if (videos.length + newVideos.length > 3) {
-      setError('Você pode fazer upload de no máximo 3 vídeos.');
-    } else {
-      setVideos(prevVideos => [...prevVideos, ...newVideos]);
-      setError(null);
+        try {
+          // Carregar FFmpeg
+          if (!ffmpeg.isLoaded()) {
+            await ffmpeg.load();
+          }
+
+          // Carregar o arquivo para FFmpeg
+          ffmpeg.FS('writeFile', file.name, await fetchFile(file));
+
+          // Executar a compressão
+          await ffmpeg.run(
+            '-i',
+            file.name,
+            '-vcodec',
+            'libx264',
+            '-crf',
+            '28',
+            'output.mp4'
+          );
+
+          // Obter o arquivo comprimido
+          const compressedVideo = ffmpeg.FS('readFile', 'output.mp4');
+
+          // Converter para Blob
+          const compressedBlob = new Blob([compressedVideo.buffer], {
+            type: 'video/mp4',
+          });
+
+          // Adicionar ao estado
+          setVideos((prevVideos) => [
+            ...prevVideos,
+            new File([compressedBlob], `compressed-${file.name}`, {
+              type: 'video/mp4',
+            }),
+          ]);
+        } catch (err) {
+          console.error('Erro ao comprimir vídeo:', err);
+          setError('Erro ao comprimir vídeo');
+        } finally {
+          setIsCompressing(false);
+        }
+      } else {
+        setVideos((prevVideos) => [...prevVideos, file]);
+      }
     }
   };
-
   const removeImage = (indexToRemove) => {
     setImages((prevImages) => prevImages.filter((_, index) => index !== indexToRemove));
   };
@@ -297,80 +333,85 @@ const NewHorses = ({ setIsLoggedIn }) => {
           )}
 
       {/* Passo 2 */}
-      {currentStep === 2 && (
-        <div className="upload-container">
-          {/* Imagem */}
-          <div className="upload-block">
-            <h2>Imagem</h2>
-            <p>Máximo de 5 imagens, até 10 MB cada.</p>
+{currentStep === 2 && (
+  <div className="upload-container">
+    {/* Imagem */}
+    <div className="upload-block">
+      <h2>Imagem</h2>
+      <p>Máximo de 5 imagens, até 10 MB cada.</p>
+      <button
+        className="upload-button"
+        onClick={() => document.getElementById('imageUpload').click()}
+      >
+        Escolher Imagem
+      </button>
+      <input
+        type="file"
+        id="imageUpload"
+        multiple
+        onChange={handleImageChange}
+        style={{ display: 'none' }}
+      />
+      {error && <p className="error-message">{error}</p>} {/* Exibe o erro */}
+      {/* Mostrar Imagens Carregadas */}
+      <div className="image-upload-list">
+        {images.map((image, index) => (
+          <div key={index} className="image-upload-item">
+            <span className="image-name">{image.name}</span>
             <button
-              className="upload-button"
-              onClick={() => document.getElementById('imageUpload').click()}
+              type="button"
+              onClick={() => removeImage(index)}
+              className="remove-upload-button"
             >
-              Escolher Imagem
+              X
             </button>
-            <input
-              type="file"
-              id="imageUpload"
-              multiple
-              onChange={handleImageChange}
-              style={{ display: 'none' }}
-            />
-            {error && <p className="error-message">{error}</p>} {/* Exibe o erro */}
-            {/* Mostrar Imagens Carregadas */}
-            <div className="image-upload-list">
-              {images.map((image, index) => (
-                <div key={index} className="image-upload-item">
-                  <span className="image-name">{image.name}</span>
-                  <button
-                    type="button"
-                    onClick={() => removeImage(index)}
-                    className="remove-upload-button"
-                  >
-                    X
-                  </button>
-                </div>
-              ))}
-            </div>
           </div>
+        ))}
+      </div>
+    </div>
 
-          {/* Vídeo */}
-          <div className="upload-block">
-            <h2>Vídeo</h2>
-            <p>Máximo de 3 vídeos, até 50 MB cada.</p>
+    {/* Vídeo */}
+    <div className="upload-block">
+      <h2>Vídeo</h2>
+      <p>Máximo de 3 vídeos, até 50 MB cada.</p>
+      <button
+        className="upload-button"
+        onClick={() => document.getElementById('videoUpload').click()}
+      >
+        Escolher Vídeo
+      </button>
+      <input
+        type="file"
+        id="videoUpload"
+        multiple
+        accept="video/*"
+        onChange={handleVideoChange}
+        style={{ display: 'none' }}
+      />
+      {isCompressing && <p className="compressing-message">Comprimindo vídeos...</p>}
+      {error && <p className="error-message">{error}</p>} {/* Exibe o erro */}
+      {/* Mostrar Vídeos Carregados */}
+      <div className="video-upload-list">
+        {videos.map((video, index) => (
+          <div key={index} className="video-upload-item">
+            <span className="video-name">{video.name}</span>
             <button
-              className="upload-button"
-              onClick={() => document.getElementById('videoUpload').click()}
+              type="button"
+              onClick={() =>
+                setVideos((prevVideos) =>
+                  prevVideos.filter((_, i) => i !== index)
+                )
+              }
+              className="remove-video-button"
             >
-              Escolher Vídeo
+              X
             </button>
-            <input
-              type="file"
-              id="videoUpload"
-              multiple
-              accept="video/*"
-              onChange={handleVideoChange}
-              style={{ display: 'none' }}
-            />
-            {error && <p className="error-message">{error}</p>} {/* Exibe o erro */}
-            {/* Mostrar Vídeos Carregados */}
-            <div className="video-upload-list">
-              {videos.map((video, index) => (
-                <div key={index} className="video-upload-item">
-                  <span className="video-name">{video.name}</span>
-                  <button
-                    type="button"
-                    onClick={() => setVideos((prevVideos) => prevVideos.filter((_, i) => i !== index))}
-                    className="remove-video-button"
-                  >
-                    X
-                  </button>
-                </div>
-              ))}
-            </div>
           </div>
-        </div>
-      )}
+        ))}
+      </div>
+    </div>
+  </div>
+)}
 
         {/* Passo 3 */}
         {currentStep === 3 && (
