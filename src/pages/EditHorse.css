@@ -440,15 +440,12 @@
   }
 
   .edit-step-buttons {
-    position: fixed; /* Fixa os botões na parte inferior */
-    bottom: 0; /* Alinha com o fundo da tela */
-    left: 0;
-    width: 96%; /* Ocupa toda a largura */
-    padding: 10px 0; /* Espaçamento interno */
+    width: 96%;
+    padding: 10px 0;
     display: flex;
-    justify-content: space-around; /* Espaça os botões uniformemente */
-    z-index: 100; /* Garante que fique acima do conteúdo */
-    margin-bottom: 31px;
+    justify-content: space-around;
+    z-index: 100;
+    margin-top: 61px;
   }
 
   .edit-step-button {
@@ -479,6 +476,21 @@
   }
 
   .edit-step-title {
+    font-size: 0.7rem;
+    text-align: center;
+    word-break: break-word; /* Permite quebra de linha */
+    margin-top: 5px; /* Espaço entre o círculo e o texto */
+    white-space: normal; /* Permite quebra no mobile */
+  }
+
+  .edit-step-title2 {
+    font-size: 0.7rem;
+    text-align: center;
+    word-break: break-word; /* Permite quebra de linha */
+    margin-top: 5px; /* Espaço entre o círculo e o texto */
+    white-space: normal; /* Permite quebra no mobile */
+  }
+  .edit-step-title3 {
     font-size: 0.7rem;
     text-align: center;
     word-break: break-word; /* Permite quebra de linha */
@@ -526,5 +538,57 @@
     .edit-upload-button {
       font-size: 0.9rem; /* Botão menor */
       padding: 8px 16px; /* Reduz padding interno */
+    }
+  }
+
+  @media (max-width: 537px) {
+    .edit-step-title3 {
+      font-size: 0.7rem;
+      text-align: center;
+      word-break: break-word; /* Permite quebra de linha */
+      margin-top: 5px; /* Espaço entre o círculo e o texto */
+      white-space: normal; /* Permite quebra no mobile */
+      margin-bottom: 13px;
+    }
+
+    .edit-step-title2 {
+      font-size: 0.7rem;
+      text-align: center;
+      word-break: break-word; /* Permite quebra de linha */
+      margin-top: 5px; /* Espaço entre o círculo e o texto */
+      white-space: normal; /* Permite quebra no mobile */
+      margin-bottom: 13px;
+    }
+  }
+
+  @media (max-width: 480px) {
+
+    .edit-horse-form {
+      display: flex;
+      grid-template-columns: 1fr 1fr 1fr 1fr;
+      gap: 8px;
+      width: 100%;
+      margin: 0 auto;
+      flex-direction: column;
+  }
+    .edit-horse-container .breadcrumbs {
+      margin-left: 10px !important;
+      width: 97% !important;
+      margin-bottom: 12px !important;
+      margin-top: 30px;
+  }
+  .edit-breadcrumbs {
+    font-size: 13px;
+  }
+}
+  @media (max-width: 415px) {
+
+    .edit-step-title2 {
+      font-size: 0.7rem;
+      text-align: center;
+      word-break: break-word; /* Permite quebra de linha */
+      margin-top: 5px; /* Espaço entre o círculo e o texto */
+      white-space: normal; /* Permite quebra no mobile */
+      margin-bottom: 0px;
     }
   }

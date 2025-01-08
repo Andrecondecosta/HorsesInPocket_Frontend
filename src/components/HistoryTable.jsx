@@ -47,6 +47,8 @@ const HistoryTable = () => {
         return 'status-pending';
       case 'shared':
         return 'status-shared';
+      case 'updated':
+        return 'status-updated';
       case 'deleted':
         return 'status-deleted';
       default:
@@ -62,7 +64,7 @@ const HistoryTable = () => {
           <thead>
             <tr>
               <th>Nome</th>
-              <th>Recetor Do Cavalo</th>
+              <th>User</th>
               <th>Estado</th>
               <th>Data</th>
             </tr>

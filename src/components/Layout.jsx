@@ -50,7 +50,7 @@ const Layout = ({ setIsLoggedIn, children }) => {
   return (
     <div className="layout-container">
       <div className="navbar">
-        <Link to="/" className="logo-link">HorsesInPocket</Link>
+        <Link to="/dashboard" className="logo-link">HorsesInPocket</Link>
         <div className="user-info" ref={menuRef}>
           <span className="user-text" onClick={() => setMenuOpen(!menuOpen)}>
             <strong>Olá</strong>, {userName} ⚙️

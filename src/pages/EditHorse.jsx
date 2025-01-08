@@ -233,12 +233,12 @@ return (
         </div>
         <div className="edit-step">
           <div className={`edit-step-circle ${currentStep === 2 ? 'active' : ''}`}>2</div>
-          <span className="edit-step-title">Imagens e Vídeos</span>
+          <span className="edit-step-title2">Imagens e Vídeos</span>
         </div>
         <div className="edit-steps-line-2"></div>
         <div className="edit-step">
           <div className={`edit-step-circle ${currentStep === 3 ? 'active' : ''}`}>3</div>
-          <span className="edit-step-title">Genealogia</span>
+          <span className="edit-step-title3">Genealogia</span>
         </div>
       </div>
 

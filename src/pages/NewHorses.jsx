@@ -192,7 +192,7 @@ const NewHorses = ({ setIsLoggedIn }) => {
 
               <div className="step">
                 <div className={`step-circle ${currentStep === 2 ? 'active' : ''}`}>2</div>
-                <span className="step-title">
+                <span className="step-title2">
                   Imagens e Vídeos {currentStep === 2 && <span></span>}
                 </span>
               </div>
@@ -200,7 +200,7 @@ const NewHorses = ({ setIsLoggedIn }) => {
 
               <div className="step">
                 <div className={`step-circle ${currentStep === 3 ? 'active' : ''}`}>3</div>
-                <span className="step-title">
+                <span className="step-title3">
                   Genealogia {currentStep === 3 && <span></span>}
                 </span>
               </div>

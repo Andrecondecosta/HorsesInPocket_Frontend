@@ -23,51 +23,11 @@ const ProfileHorse = ({ setIsLoggedIn }) => {
   const [showMenu, setShowMenu] = useState(false);
   const menuRef = useRef(null);
   const [isMenuOpen, setIsMenuOpen] = useState(false); // Adiciona o estado do menu
+  const [isOwner, setIsOwner] = useState(false);
 
 
   const navigate = useNavigate();
   const token = localStorage.getItem('authToken');
-
-  useEffect(() => {
-    const blurContent = () => {
-      document.body.classList.add('blur');
-      setTimeout(() => {
-        document.body.classList.remove('blur'); // Remove o desfoque após 2 segundos
-      }, 2000);
-    };
-
-    // Detecta PrintScreen em desktop
-    const handleKeyDown = (e) => {
-      if (e.key === 'PrintScreen') {
-        blurContent();
-        e.preventDefault();
-      }
-    };
-
-    // Para dispositivos móveis: não existe evento direto, mas tenta capturar eventos de fundo
-    const detectScreenshotMobile = () => {
-      blurContent();
-    };
-
-    // Listeners
-    document.addEventListener('keydown', handleKeyDown);
-
-    // Fallback para captura de screenshot em dispositivos móveis (não confiável)
-    window.addEventListener('visibilitychange', () => {
-      if (document.visibilityState === 'hidden') {
-        detectScreenshotMobile();
-      }
-    });
-
-    // Cleanup
-    return () => {
-      document.removeEventListener('keydown', handleKeyDown);
-      window.removeEventListener('visibilitychange', detectScreenshotMobile);
-    };
-  }, []);
-
-
-
 
   useEffect(() => {
     // Verifica se o parâmetro de consulta readonly está presente
@@ -90,6 +50,7 @@ const ProfileHorse = ({ setIsLoggedIn }) => {
 
         const data = await response.json();
         setHorse(data);
+        setIsOwner(data.is_owner); // Define se o usuário é o dono
         setSelectedImage(0);
       } catch (error) {
         setError('Erro ao carregar perfil do cavalo');
@@ -180,9 +141,9 @@ const ProfileHorse = ({ setIsLoggedIn }) => {
 
       {/* Botões para Desktop */}
       <div className="profile-actions desktop-only">
-        <button className="edit-button" onClick={() => navigate(`/horses/${id}/edit`)}>
+      {isOwner && (<button className="edit-button" onClick={() => navigate(`/horses/${id}/edit`)}>
           <FaEdit /> Editar
-        </button>
+        </button> )}
         <button className="delete-button" onClick={handleDelete}>
           <FaTrash /> Eliminar
         </button>
@@ -193,9 +154,9 @@ const ProfileHorse = ({ setIsLoggedIn }) => {
 
       {/* Menu de três pontos para Mobile */}
       <div className="mobile-menu mobile-only" ref={menuRef}>
-      <button className="edit-button" onClick={() => navigate(`/horses/${id}/edit`)}>
+      {isOwner && (<button className="edit-button" onClick={() => navigate(`/horses/${id}/edit`)}>
           <FaEdit />
-        </button>
+        </button> )}
         <button className="delete-button" onClick={handleDelete}>
           <FaTrash />
         </button>

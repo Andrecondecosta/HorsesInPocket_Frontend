@@ -97,6 +97,7 @@
     align-items: center; /* Centraliza os cards */
     gap: 15px; /* Ajusta o espaçamento entre os cards */
     margin: auto;
+    margin-top: 30px;
   }
 
   .card {

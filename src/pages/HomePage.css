@@ -1,101 +1,123 @@
-
-.homepage {
+/* Geral */
+.homepage-container {
   display: flex;
   flex-direction: column;
-  align-items: center;
-  text-align: center;
-}
-
-/* Cabeçalho */
-.header {
-  width: 100%;
-  display: flex;
-  justify-content: space-between;
-  align-items: center;
+  gap: 50px;
   padding: 20px;
-  color: #fff;
-}
-
-.logo {
-  font-size: 24px;
-  font-weight: bold;
-}
-
-.nav a {
-  margin: 0 15px;
-  text-decoration: none;
-  color: #fff;
-  transition: color 0.3s;
-}
-
-.nav a:hover {
-  color: #8EB486;
+  background-color: white;
 }
 
 /* Hero Section */
-.hero {
-  width: 100%;
-  padding: 50px;
-  background: #E8ECD7;
+.hero-section {
+  text-align: center;
+  background-color: #f8f9fa;
+  padding: 50px 20px;
+  border-radius: 8px;
+  border: 1px solid #8eb486;
 }
 
-.hero h1 {
+.hero-title {
   font-size: 36px;
+  font-weight: bold;
+  color: #333;
   margin-bottom: 20px;
 }
 
-.cta-button {
+.hero-description {
+  font-size: 18px;
+  color: #555;
+  margin-bottom: 30px;
+}
+
+.hero-button {
+  display: inline-block;
+  background-color: #007bff;
+  color: white;
   padding: 10px 20px;
-  background: #47663B;
-  color: #fff;
-  border: none;
   border-radius: 5px;
-  cursor: pointer;
-  transition: background 0.3s;
+  text-decoration: none;
+  font-size: 16px;
 }
 
-.cta-button:hover {
-  background: #8EB486;
+.hero-button:hover {
+  background-color: #0056b3;
 }
 
-/* Seções */
-.section {
-  width: 100%;
+/* Features Section */
+.features-section {
+  text-align: center;
   padding: 50px 20px;
 }
 
-.section h2 {
+.section-title {
   font-size: 28px;
-  margin-bottom: 20px;
+  font-weight: bold;
+  margin-bottom: 40px;
 }
 
-.services {
-  display: flex;
-  justify-content: center;
+.features-grid {
+  display: grid;
+  grid-template-columns: repeat(auto-fit, minmax(250px, 1fr));
   gap: 20px;
 }
 
-.service-card {
+.feature-card {
+  background-color: white;
+  border: 1px solid #ddd;
+  border-radius: 8px;
   padding: 20px;
-  background: #E8ECD7;
-  border: 1px solid #ccc;
-  border-radius: 10px;
+  box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
+  transition: transform 0.3s ease, box-shadow 0.3s ease;
 }
 
-/* Rodapé */
-.footer {
-  width: 100%;
-  padding: 20px;
-  background: #333;
-  color: #fff;
+.feature-card:hover {
+  transform: translateY(-5px);
+  box-shadow: 0 8px 16px rgba(0, 0, 0, 0.2);
+}
+
+.feature-card h3 {
+  font-size: 20px;
+  margin-bottom: 10px;
+}
+
+.feature-card p {
+  font-size: 16px;
+  color: #666;
+}
+
+/* Call to Action Section */
+.cta-section {
   text-align: center;
+  padding: 50px 20px;
+  background-color: #8EB486;
+  color: white;
+  border-radius: 8px;
 }
 
-.footer a {
+.cta-section h2 {
+  font-size: 28px;
+  font-weight: bold;
+  margin-bottom: 20px;
+}
+
+.cta-section p {
+  font-size: 18px;
+  margin-bottom: 30px;
+}
+
+.cta-button {
+  display: inline-block;
+  background-color: white;
   color: #8EB486;
+  padding: 10px 20px;
+  border-radius: 5px;
   text-decoration: none;
+  font-size: 16px;
+  border: 2px solid white;
 }
 
-.footer a:hover {
-  text-decoration: underline;
+.cta-button:hover {
+  background-color: #6d9b6b;
+  color: white;
+  border-color: white;
 }

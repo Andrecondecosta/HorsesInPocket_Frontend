@@ -1,6 +1,7 @@
 import React, { useState, useEffect } from 'react';
 import { useNavigate } from 'react-router-dom';
-import './ReceivedHorses.css';
+import Layout from '../components/Layout';
+import './MyHorses.css';
 
 const ReceivedHorses = () => {
   const [horses, setHorses] = useState([]);
@@ -45,21 +46,39 @@ const ReceivedHorses = () => {
   if (error) return <p>{error}</p>;
 
   return (
-    <div className="received-horses-container">
-      <h1>Cavalos Recebidos</h1>
-      <div className="horses-grid">
-        {horses.map((horse) => (
-          <div key={horse.id} className="horse-card">
-            <img src={horse.images?.[0] || "/placeholder.jpg"} alt={horse.name} />
-            <div className="horse-info">
-              <h2 className="horse-name">{horse.name}</h2>
-              <p className="horse-sender">Enviado por: {horse.sender_name}</p>
-              <button onClick={() => navigate(`/horses/${horse.id}?readonly=true`)}>Ver Detalhes</button>
-            </div>
+    <Layout>
+      <div className="my-horses-container">
+        <h1 className="page-title">Cavalos Recebidos</h1>
+        <div className="profile-breadcrumb-container">
+          <div className="breadcrumbs">
+            <a href="/dashboard">Dashboard</a> / <span>Cavalos Recebidos</span>
           </div>
-        ))}
+        </div>
+        <div className="horses-grid">
+          {horses.map((horse) => (
+            <div key={horse.id} className="horse-card">
+              <div className="horse-image-container">
+                {horse.images && horse.images.length > 0 ? (
+                  <img src={horse.images[0]} alt={horse.name} className="myhorse-image" />
+                ) : (
+                  <div className="placeholder-image">Sem Imagem</div>
+                )}
+              </div>
+              <div className="horse-info">
+                <h3 className="horse-name">{horse.name}</h3>
+                <p className="horse-sender"><strong> Enviado por: </strong> <br /> {horse.sender_name || "Desconhecido"}</p>
+                <button
+                  onClick={() => navigate(`/horses/${horse.id}?readonly=true`)}
+                  className="details-button"
+                >
+                  Ver Detalhes
+                </button>
+              </div>
+            </div>
+          ))}
+        </div>
       </div>
-    </div>
+    </Layout>
   );
 };
 

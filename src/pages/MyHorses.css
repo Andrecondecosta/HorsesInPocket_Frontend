@@ -1,149 +1,179 @@
-/* Contêiner principal */
-.horses-container {
-  max-width: 1200px;
-  margin: 0 auto;
-  padding: 20px;
+.page-title {
+  font-size: 24px;
+  font-weight: bold;
 }
 
-/* Cabeçalho */
+.my-horses-container {
+
 .header {
   display: flex;
   justify-content: space-between;
   align-items: center;
   margin-bottom: 20px;
-  padding: 0 20px;
 }
 
-.title {
-  font-size: 2em;
-  font-weight: 700;
-  color: #333;
-  font-family: 'Poppins', sans-serif;
-  margin: 0;
-}
 
-/* Botão de criação de novo cavalo */
+
 .create-button {
-  padding: 8px 14px;
-  font-size: 1.2em;
-  background-color: #4CAF50;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  background-color: #007bff;
   color: white;
   border: none;
-  border-radius: 50%;
+  border-radius: 8px;
+  padding: 10px 20px;
+  font-size: 16px;
   cursor: pointer;
-  transition: background-color 0.3s, transform 0.3s;
-  font-weight: bold;
+  transition: background-color 0.3s ease;
+  text-decoration: none !important;
+  margin-bottom: 31px;
+}
+a {
+  text-decoration: none; /* Remove o sublinhado do Link */
 }
 
 .create-button:hover {
-  background-color: #45a049;
-  transform: scale(1.05);
+  background-color: #0056b3;
 }
 
-/* Grid de cavalos */
 .horses-grid {
   display: grid;
-  grid-template-columns: repeat(3, 1fr); /* 3 colunas fixas */
+  grid-template-columns: repeat(auto-fit, minmax(219px, 0fr));
   gap: 20px;
-  padding: 20px;
-  margin: auto;
-}
+  justify-content: start;
+  margin-left: 30px;
+      }
 
-/* Cartão de cavalo */
+
 .horse-card {
+  background: #fff;
   border: 1px solid #ddd;
   border-radius: 8px;
   overflow: hidden;
-  text-align: center;
-  padding: 0;
-  box-shadow: 0 4px 12px rgba(0, 0, 0, 0.1);
-  transition: transform 0.2s, box-shadow 0.2s;
-  background-color: white;
-  height: 340px; /* Altura fixa */
-  display: flex;
-  flex-direction: column;
-  justify-content: space-between;
+  transition: transform 0.3s ease, box-shadow 0.3s ease;
 }
 
 .horse-card:hover {
-  transform: scale(1.05);
-  box-shadow: 0 6px 16px rgba(0, 0, 0, 0.2);
+  transform: translateY(-5px);
+  box-shadow: 0px 8px 12px rgba(0, 0, 0, 0.2);
 }
 
-/* Imagem do cavalo */
-.horse-image {
+.horse-image-container {
   width: 100%;
-  height: 270px;
-  object-fit: cover;
-  object-position: center;
-  border-radius: 8px 8px 0 0;
+  height: 150px;
+  overflow: hidden;
 }
 
-/* Informações do cavalo */
+.myhorse-image {
+  width: 100%;
+  height: 100%;
+  object-fit: cover;
+}
+
+.placeholder-image {
+  width: 100%;
+  height: 100%;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  background-color: #e2e2e2;
+  color: #777;
+  font-size: 14px;
+}
+
 .horse-info {
   padding: 15px;
+
 }
 
-/* Nome do cavalo */
 .horse-name {
-  font-size: 20px;
-  color: #333;
-  margin-top: 10px;
+  font-size: 18px;
   font-weight: bold;
+  margin-bottom: 8px;
+  color: #333;
+}
+.horse-sender {
+  font-size: 14px;
+  color: #555;
+  margin-bottom: 8px;
+}
+.horse-description {
+  font-size: 14px;
+  color: #555;
+  margin-bottom: 30px;
+}
+
+.details-button {
+  display: inline-block;
+  background-color: white;
+  color: #8EB486;
+  padding: 8px 16px;
+  border-radius: 5px;
   text-decoration: none;
+  font-size: 14px;
+  transition: background-color 0.3s ease;
+  margin-left: 40px;
+  border: 2px solid #8EB486;
 }
 
-/* Link do cavalo (sem sublinhado) */
-.horse-link {
-  text-decoration: none;
-  color: inherit;
+.details-button:hover {
+  background-color: #6d9b6b;
 }
-
-/* Estilos responsivos */
-@media (max-width: 1200px) {
-  .horses-grid {
-    grid-template-columns: repeat(2, 1fr); /* 2 colunas para telas menores */
-  }
 }
+@media (max-width: 768px){
 
-@media (max-width: 768px) {
-  .header {
-    flex-direction: row; /* Alinha os itens em linha */
-    justify-content: space-between; /* Espaça os itens horizontalmente */
-    align-items: center;
-    width: 100%;
-  }
+  .my-horses-container .horses-grid {
+    display: grid;
+    grid-template-columns: repeat(auto-fit, minmax(218px, 0fr));
+    gap: 20px;
+    }
 
-  .title {
-    font-size: 1.5em;
-    margin-bottom: 0;
-  }
+  .my-horses-container .create-button {
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      background-color: #007bff;
+      color: white;
+      border: none;
+      border-radius: 8px;
+      padding: 10px 20px;
+      font-size: 16px;
+      cursor: pointer;
+      transition: background-color 0.3s ease;
+      text-decoration: none !important;
+      margin-left: 65px;
+    }
 
-  .create-button {
-    font-size: 1em;
-    padding: 6px 12px;
-    margin-left: 10px; /* Adiciona margem à esquerda para mover o botão mais para dentro */
-  }
+  .my-horses-container .details-button {
+    display: inline-block;
+    background-color: white;
+    color: #8EB486;
+    padding: 8px 16px;
+    border-radius: 5px;
+    text-decoration: none;
+    font-size: 14px;
+    transition: background-color 0.3s ease;
+    margin-left: 15px;
+    border: 2px solid #8EB486;
+    }
+    }
 
-  .horses-grid {
-    grid-template-columns: 1fr; /* 1 coluna para telas menores */
-    gap: 15px;
-    padding: 10px;
-  }
+    @media (max-width: 480px) {
 
-  .horse-card {
-    height: auto; /* Ajusta a altura automaticamente */
-  }
+      .page-title {
+        margin-bottom: 10px !important;
+      }
+      .my-horses-container .horses-grid {
+        display: grid;
+        grid-template-columns: repeat(auto-fit, minmax(168px, 0fr));
+        gap: 10px;
+        justify-content: center;
+        margin: 0;
+    }
 
-  .horse-image {
-    height: 250px; /* Ajusta a altura da imagem */
-  }
+    .my-horses-container .create-button {
+      margin-left: -10px;
+    }
 
-  .horse-info {
-    padding: 10px;
-  }
-
-  .horse-name {
-    font-size: 16px;
-  }
 }

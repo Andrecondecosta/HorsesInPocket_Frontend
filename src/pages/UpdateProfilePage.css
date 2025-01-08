@@ -1,0 +1,116 @@
+.inline-edit-profile .inline-input {
+  border: none;
+  border-bottom: 1px solid #ccc;
+  margin-left: 10px;
+  font-size: inherit;
+  font-family: inherit;
+  background: transparent;
+  width: auto;
+  padding: 2px;
+}
+
+.inline-edit-profile .inline-input:focus {
+  outline: none;
+  border-bottom: 1px solid #47663B;
+}
+
+.profile-edit-actions {
+  margin-top: 20px;
+  display: flex;
+  justify-content: flex-end;
+}
+
+.profile-save-button {
+  padding: 10px 20px;
+  background-color: #47663B;
+  color: #fff;
+  border: none;
+  border-radius: 6px;
+  font-size: 16px;
+  font-weight: bold;
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  cursor: pointer;
+  margin-bottom: 21px
+}
+
+.profile-save-button:hover {
+  background-color: #8EB486;
+}
+.update-profile-details-container {
+  display: flex;
+  align-items: center;
+  justify-content: flex-start;
+  background-color: #fff;
+  padding: 20px;
+  border-radius: 12px;
+  box-shadow: 0px 2px 4px rgba(0, 0, 0, 0.1);
+  margin-top: 49px;
+  width: 96%;
+  margin-left: 10px;
+}
+
+@media (max-width: 768px) {
+  .profile-breadcrumb-container .breadcrumbs {
+      display: flex;
+      align-items: center;
+      gap: 5px;
+      font-size: 0.9rem;
+      color: #6e6e6e;
+      background-color: #f5f5f5;
+      padding: 10px 15px;
+      border-radius: 8px;
+      margin-top: 37px;
+  }
+
+  .update-profile-details-container {
+      flex-direction: column;
+      align-items: center;
+  }
+  .profile-details {
+    flex: 1 1;
+    margin-left: 20px;
+    margin-top: 20px;
+  }
+  .profile-breadcrumb-container .breadcrumbs {
+    display: flex;
+    align-items: center;
+    gap: 5px;
+    font-size: 12px;
+    color: #6e6e6e;
+    background-color: #f5f5f5;
+    padding: 10px 15px;
+    border-radius: 8px;
+    margin-top: 14px;
+  }
+}
+
+@media (max-width: 480px) {
+.profile-breadcrumb-container {
+  display: flex;
+  align-items: center;
+  margin-bottom: 22px;
+  width: 98%;
+  margin-left: 8px;
+  flex-direction: column;
+  margin-top: -15px;
+}
+
+.profile-save-button {
+margin-top: -20px;
+margin-left: -6px;
+margin-bottom: 0px;
+}
+.profile-breadcrumb-container .breadcrumbs {
+  display: flex;
+  align-items: center;
+  gap: 5px;
+  font-size: 12px;
+  color: #6e6e6e;
+  background-color: #f5f5f5;
+  padding: 10px 15px;
+  border-radius: 8px;
+  margin-top: 37px;
+}
+}

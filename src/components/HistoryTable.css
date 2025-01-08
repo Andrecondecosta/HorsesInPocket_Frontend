@@ -50,14 +50,14 @@
 }
 
 /* Cores específicas dos estados */
-.status-received {
+.status-updated {
   background-color: #ECC62F; /* Amarelo */
   color: white  ;
 }
 
-.status-pending {
-  background-color: #E2E1E1; /* Cinza claro */
-  color: black;
+.status-received {
+  background-color: #ccc; /* Cinza claro */
+  color: white;
 }
 
 .status-shared {
@@ -88,12 +88,12 @@
   }
 
   .history-table th {
-    font-size: 12px; /* Reduz o tamanho do texto do cabeçalho */
+    font-size: 14px; /* Reduz o tamanho do texto do cabeçalho */
     padding: 8px;
   }
 
   .history-table td {
-    font-size: 9px; /* Reduz o tamanho do texto das células */
+    font-size: 12px; /* Reduz o tamanho do texto das células */
     padding: 8px;
   }
 
@@ -106,8 +106,8 @@
 @media (max-width: 480px) {
   .history-titles {
     font-size: 18px;
-    margin-top: 100px;
-    margin-bottom: 43px;
+    margin-top: 40px;
+    margin-bottom: 30px;
   }
 
   .history-table-container {
@@ -120,7 +120,7 @@
   }
 
   .history-table td {
-    font-size: 7px;
+    font-size: 10px;
     padding: 6px;
 
   }

@@ -18,7 +18,7 @@
   background-color: #f5f5f5;
   padding: 10px 15px;
   border-radius: 8px;
-  margin-top: 37px;
+  margin-top: 10px;
 }
 
 .breadcrumbs a {
@@ -85,15 +85,17 @@
   font-size: 1.2rem;
   font-weight: bold;
   margin-bottom: 15px;
-  border-bottom: 2px solid #333;
+  border-bottom: 2px solid #8eb486;
   padding-bottom: 5px;
 }
 .section-title-geno{
   font-size: 1.2rem;
   font-weight: bold;
   margin-bottom: 15px;
-  border-bottom: 2px solid #333;
+  border-bottom: 2px solid #8eb486;
   padding-bottom: 5px;
+  width: 90%;
+  margin-left: 63px;
 }
 
 
@@ -244,6 +246,7 @@
 .desktop-only {
   display: flex; /* Exibe os botões no desktop */
   gap: 10px;
+  margin-bottom: 30px;
 }
 
 .mobile-only {
@@ -258,17 +261,15 @@
 }
 
 /* Adiciona desfoque apenas quando necessário */
-.blur {
-  filter: blur(10px);
-  pointer-events: none; /* Evita interações enquanto desfocado */
-}
 
 @media (max-width: 768px) {
   /* Cabeçalho: Breadcrumbs e botões na mesma linha */
-  .profile-container{
-    width: 125%;
-    margin-left: -36px;
+  .profile-container {
+  width: 100%;
+  margin-left: 0px;
+  margin-top: 60px;
   }
+
   .profile-header {
     display: flex;
     justify-content: space-between;
@@ -289,6 +290,8 @@
     .mobile-only {
       display: flex; /* Mostra os três pontos no mobile */
       position: relative;
+      margin-bottom: 35px;
+
     }
 
     .menu-button-perfil {
@@ -350,7 +353,7 @@
   /* Breadcrumbs */
   .breadcrumbs {
     flex: 1; /* Permite que os breadcrumbs ocupem o máximo espaço disponível */
-    font-size: 0.5rem; /* Reduz tamanho da fonte */
+    font-size: 12px; /* Reduz tamanho da fonte */
     padding: 5px 8px;
     background-color: #f5f5f5;
     border-radius: 5px;
@@ -401,34 +404,17 @@
   border-bottom: 1px solid #ccc;
   }
   /* Cada Item */
-  .info-item strong {
 
-  }
-
-  .info-item p {
-
-  }
   .info-item-nivel{
     grid-column: span 3
   }
 
-  .info-item-nivel p {
-
-  }
-
-  .info-item-nivel strong {
-
-  }
 
   /* Descrição */
   .description-section {
 
     margin-top: 5px;
     margin-bottom: 40px;
-  }
-
-  .description-section p {
-
   }
 
   /* Galeria de Imagens e Vídeos */
@@ -444,10 +430,6 @@
 
   .carousel-container {
     max-width: 100%; /* Ocupa toda a largura */
-  }
-
-  .carousel-container h2 {
-
   }
 
   .media-item {
@@ -483,5 +465,19 @@
   .share-modal button {
     font-size: 0.8rem;
     padding: 8px 10px;
+  }
+  @media (max-width: 480px) {
+
+    .profile-header {
+      flex-direction: column;
+    }
+    .breadcrumbs {
+      margin-left: 10px !important;
+      width: 100% !important;
+      margin-bottom: 12px !important;
+    }
+    .mobile-only {
+      margin-bottom: 48px;
+  }
   }
 }

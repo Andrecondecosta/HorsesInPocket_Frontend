@@ -36,7 +36,7 @@
 }
 
 .generation.grandparents {
-  gap: 100px; /* Espaço entre os avós */
+  gap: 10px; /* Espaço entre os avós */
 }
 
 /* Elementos Individuais */
@@ -86,10 +86,11 @@
 }
 
 /* Responsividade para Mobile */
-@media (max-width: 768px) {
+@media (max-width: 1023px) {
   .genealogy-tree {
     width: 100%;
     padding: 5px;
+    margin-left: 10px;
   }
 
   .horse-image {

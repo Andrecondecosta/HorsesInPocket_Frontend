@@ -37,10 +37,12 @@
   color: #333;
   margin-bottom: 30px; /* Espaçamento maior abaixo */
   text-align: left;
-  width: 90%;
-  margin-left: auto;
+  width: 100%;
+  margin-left: 12px;
   margin-right: auto;
   margin-top: 40px;
+  margin-top: 29px;
+  border-bottom: 3px solid #ccc;
 }
 
 /* Barra de navegação dos passos */
@@ -79,6 +81,7 @@
   gap: 10px;
 }
 
+
 .step-circle {
   display: flex;
   align-items: center;
@@ -104,7 +107,18 @@
   font-weight: bold;
   white-space: nowrap; /* Evita quebra de linha */
 }
-
+.step-title2 {
+  font-size: 1rem;
+  color: #333;
+  font-weight: bold;
+  white-space: nowrap; /* Evita quebra de linha */
+}
+.step-title3 {
+  font-size: 1rem;
+  color: #333;
+  font-weight: bold;
+  white-space: nowrap; /* Evita quebra de linha */
+}
 /* Formulário principal */
 .new-horse-form {
   display: grid;
@@ -445,15 +459,12 @@ textarea {
   }
 
   .step-buttons {
-    position: fixed; /* Fixa os botões na parte inferior */
-    bottom: 0; /* Alinha com o fundo da tela */
-    left: 0;
-    width: 96%; /* Ocupa toda a largura */
-    padding: 10px 0; /* Espaçamento interno */
+    width: 96%;
+    padding: 10px 0;
     display: flex;
-    justify-content: space-around; /* Espaça os botões uniformemente */
-    z-index: 100; /* Garante que fique acima do conteúdo */
-    margin-bottom: 31px;
+    justify-content: space-around;
+    z-index: 100;
+    margin-top: 61px;
   }
 
   .step-button {
@@ -467,7 +478,8 @@ textarea {
     justify-content: space-around; /* Espaça os passos igualmente */
     align-items: center;
     width: 100%; /* Ocupa toda a largura */
-    margin-bottom: 60px;
+    margin-bottom: 30px;
+    margin-top: 40px;
   }
 
   .step {
@@ -490,7 +502,20 @@ textarea {
     margin-top: 5px; /* Espaço entre o círculo e o texto */
     white-space: normal; /* Permite quebra no mobile */
   }
-
+  .step-title2 {
+    font-size: 0.7rem;
+    text-align: center;
+    word-break: break-word; /* Permite quebra de linha */
+    margin-top: 5px; /* Espaço entre o círculo e o texto */
+    white-space: normal; /* Permite quebra no mobile */
+  }
+  .step-title3 {
+    font-size: 0.7rem;
+    text-align: center;
+    word-break: break-word; /* Permite quebra de linha */
+    margin-top: 5px; /* Espaço entre o círculo e o texto */
+    white-space: normal; /* Permite quebra no mobile */
+  }
 
   .steps-line {
     display: none; /* Remove os traços */
@@ -533,4 +558,62 @@ textarea {
       padding: 8px 16px; /* Reduz padding interno */
     }
 
+}
+@media (max-width: 537px) {
+  .step-title3 {
+    font-size: 0.7rem;
+    text-align: center;
+    word-break: break-word; /* Permite quebra de linha */
+    margin-top: 5px; /* Espaço entre o círculo e o texto */
+    white-space: normal; /* Permite quebra no mobile */
+    margin-bottom: 13px;
+  }
+
+  .step-title2 {
+    font-size: 0.7rem;
+    text-align: center;
+    word-break: break-word; /* Permite quebra de linha */
+    margin-top: 5px; /* Espaço entre o círculo e o texto */
+    white-space: normal; /* Permite quebra no mobile */
+    margin-bottom: 13px;
+  }
+}
+@media (max-width: 480px) {
+
+  .new-horse-form {
+    display: flex;
+    grid-template-columns: 1fr 1fr 1fr 1fr;
+    gap: 8px;
+    width: 100%;
+    margin: 0 auto;
+    flex-direction: column;
+}
+  .new-horse-container .breadcrumbs {
+    margin-left: 10px !important;
+    width: 97% !important;
+    margin-bottom: 12px !important;
+    margin-top: 30px;
+    padding: 10px;
+}
+.step-title3 {
+  font-size: 0.7rem;
+  text-align: center;
+  word-break: break-word; /* Permite quebra de linha */
+  margin-top: 5px; /* Espaço entre o círculo e o texto */
+  white-space: normal; /* Permite quebra no mobile */
+  margin-bottom: 13px;
+}
+}
+
+
+@media (max-width: 415px) {
+
+  .step-title2 {
+    font-size: 0.7rem;
+    text-align: center;
+    word-break: break-word; /* Permite quebra de linha */
+    margin-top: 5px; /* Espaço entre o círculo e o texto */
+    white-space: normal; /* Permite quebra no mobile */
+    margin-bottom: 0px;
+  }
 }
