@@ -1,6 +1,5 @@
-import React, { useState } from 'react';
+import React, { useState, useRef } from 'react';
 import { useNavigate } from 'react-router-dom';
-import { createFFmpeg, fetchFile } from '@ffmpeg/ffmpeg';
 import './NewHorses.css';
 import Layout from '../components/Layout';
 import GenealogyForm from '../components/GenealogyForm';
@@ -27,11 +26,16 @@ const NewHorses = ({ setIsLoggedIn }) => {
   });
   const [images, setImages] = useState([]);
   const [videos, setVideos] = useState([]);
-  const [isCompressing, setIsCompressing] = useState(false);
   const [error, setError] = useState(null);
+  const [fieldErrors, setFieldErrors] = useState({});
   const navigate = useNavigate();
+  const nameRef = useRef(null);
+  const ageRef = useRef(null);
+  const genderRef = useRef(null);
+  const colorRef = useRef(null);
+  const trainingLevelRef = useRef(null);
+  const imageRef = useRef(null);
 
-  const ffmpeg = createFFmpeg({ log: true });
 
   const handleNextStep = () => {
     if (currentStep < 3) setCurrentStep(currentStep + 1);
@@ -94,70 +98,115 @@ const NewHorses = ({ setIsLoggedIn }) => {
     }
   };
 
-  const handleVideoChange = async (e) => {
+  const handleVideoChange = (e) => {
     const files = Array.from(e.target.files);
     const maxSize = 50 * 1024 * 1024; // 50MB por vídeo
 
-    setError(null);
+    const oversizedFiles = files.filter(file => file.size > maxSize);
+    if (oversizedFiles.length > 0) {
+      setError('Cada vídeo deve ter no máximo 50MB.');
+      return;
+    }
 
-    for (const file of files) {
-      if (file.size > maxSize) {
-        setIsCompressing(true);
+    const newVideos = files.filter(file =>
+      !videos.some(existingFile =>
+        existingFile.name === file.name && existingFile.size === file.size
+      )
+    );
 
-        try {
-          // Carregar FFmpeg
-          if (!ffmpeg.isLoaded()) {
-            await ffmpeg.load();
-          }
-
-          // Carregar o arquivo para FFmpeg
-          ffmpeg.FS('writeFile', file.name, await fetchFile(file));
-
-          // Executar a compressão
-          await ffmpeg.run(
-            '-i',
-            file.name,
-            '-vcodec',
-            'libx264',
-            '-crf',
-            '28',
-            'output.mp4'
-          );
-
-          // Obter o arquivo comprimido
-          const compressedVideo = ffmpeg.FS('readFile', 'output.mp4');
-
-          // Converter para Blob
-          const compressedBlob = new Blob([compressedVideo.buffer], {
-            type: 'video/mp4',
-          });
-
-          // Adicionar ao estado
-          setVideos((prevVideos) => [
-            ...prevVideos,
-            new File([compressedBlob], `compressed-${file.name}`, {
-              type: 'video/mp4',
-            }),
-          ]);
-        } catch (err) {
-          console.error('Erro ao comprimir vídeo:', err);
-          setError('Erro ao comprimir vídeo');
-        } finally {
-          setIsCompressing(false);
-        }
-      } else {
-        setVideos((prevVideos) => [...prevVideos, file]);
-      }
+    if (videos.length + newVideos.length > 3) {
+      setError('Você pode fazer upload de no máximo 3 vídeos.');
+    } else {
+      setVideos(prevVideos => [...prevVideos, ...newVideos]);
+      setError(null);
     }
   };
+
   const removeImage = (indexToRemove) => {
     setImages((prevImages) => prevImages.filter((_, index) => index !== indexToRemove));
   };
 
   const heightInHH = (newHorse.height_cm / 0.1016).toFixed(1);
 
+  const validateFields = () => {
+    const errors = {};
+    let firstErrorField = null;
+    let firstErrorStep = null; // Passo do primeiro erro
+
+    // Validações do Passo 1
+    if (currentStep === 1 || !firstErrorStep) {
+      if (!newHorse.name.trim()) {
+        errors.name = "O nome é obrigatório.";
+        if (!firstErrorField) {
+          firstErrorField = nameRef;
+          firstErrorStep = 1;
+        }
+      }
+      if (!newHorse.age || newHorse.age <= 0) {
+        errors.age = "A idade é obrigatória e deve ser maior que zero.";
+        if (!firstErrorField) {
+          firstErrorField = ageRef;
+          firstErrorStep = 1;
+        }
+      }
+      if (!newHorse.gender) {
+        errors.gender = "O gênero é obrigatório.";
+        if (!firstErrorField) {
+          firstErrorField = genderRef;
+          firstErrorStep = 1;
+        }
+      }
+      if (!newHorse.color) {
+        errors.color = "A cor é obrigatória.";
+        if (!firstErrorField) {
+          firstErrorField = colorRef;
+          firstErrorStep = 1;
+        }
+      }
+      if (!newHorse.training_level.trim()) {
+        errors.training_level = "O nível de treinamento é obrigatório.";
+        if (!firstErrorField) {
+          firstErrorField = trainingLevelRef;
+          firstErrorStep = 1;
+        }
+      }
+    }
+
+    // Validações do Passo 2
+    if (currentStep === 2 || !firstErrorStep) {
+      if (images.length === 0) {
+        errors.images = "Pelo menos uma imagem é obrigatória.";
+        if (!firstErrorField) {
+          firstErrorField = imageRef;
+          firstErrorStep = 2;
+        }
+      }
+    }
+
+    setFieldErrors(errors);
+
+    // Navega para o passo do primeiro erro
+    if (firstErrorStep && firstErrorStep !== currentStep) {
+      setCurrentStep(firstErrorStep);
+    }
+
+    // Fazer scroll para o primeiro campo com erro
+    if (firstErrorField && firstErrorField.current) {
+      firstErrorField.current.scrollIntoView({ behavior: "smooth", block: "center" });
+      firstErrorField.current.focus(); // Foca no campo
+    }
+
+    // Retorna true se não houver erros
+    return Object.keys(errors).length === 0;
+  };
+
+
   const handleSubmit = async (e) => {
     e.preventDefault();
+
+    if (!validateFields()) {
+      return;
+    }
     const token = localStorage.getItem('authToken');
     const formData = new FormData();
 
@@ -228,7 +277,7 @@ const NewHorses = ({ setIsLoggedIn }) => {
 
               <div className="step">
                 <div className={`step-circle ${currentStep === 2 ? 'active' : ''}`}>2</div>
-                <span className="step-title2">
+                <span className="step-title">
                   Imagens e Vídeos {currentStep === 2 && <span></span>}
                 </span>
               </div>
@@ -247,50 +296,75 @@ const NewHorses = ({ setIsLoggedIn }) => {
         {currentStep === 1 && (
         <form className="new-horse-form">
           {/* Primeira linha com 4 campos */}
-          <input
-            type="text"
-            name="name"
-            placeholder="Nome"
-            value={newHorse.name}
-            onChange={handleChange}
-            required
-          />
-          <input
-            type="number"
-            name="age"
-            placeholder="Idade"
-            value={newHorse.age}
-            onChange={handleChange}
-            required
-          />
-          <select name="gender" value={newHorse.gender} onChange={handleChange} require>
-            <option value="">Gênero</option>
-            <option value="gelding">Castrado</option>
-            <option value="mare">Égua</option>
-            <option value="stallion">Garanhão</option>
-          </select>
-          <select name="color" value={newHorse.color} onChange={handleColorChange}>
-            <option value="">Cor</option>
-            <option value="Baio">Baio</option>
-            <option value="Castanho">Castanho</option>
-            <option value="Alazão">Alazão</option>
-            <option value="Preto">Preto</option>
-            <option value="Tordilho">Tordilho</option>
-            <option value="Ruão">Ruão</option>
-            <option value="Palomino">Palomino</option>
-            <option value="Isabel">Isabel</option>
-            <option value="Ruço">Ruço</option>
-          </select>
+          <div className="form-group">
+            <input
+              ref={nameRef}
+              type="text"
+              name="name"
+              placeholder="Nome"
+              value={newHorse.name}
+              onChange={handleChange}
+              required
+            />
+            {fieldErrors.name && <p className="error-message">{fieldErrors.name}</p>}
+          </div>
+          <div className="form-group">
+            <input
+              ref={ageRef}
+              type="number"
+              name="age"
+              placeholder="Idade"
+              value={newHorse.age}
+              onChange={handleChange}
+              required
+            />
+            {fieldErrors.age && <p className="error-message">{fieldErrors.age}</p>}
+          </div>
+          <div className="form-group">
+            <select
+              ref={genderRef}
+              name="gender"
+              value={newHorse.gender}
+              onChange={handleChange}
+              required
+            >
+              <option value="">Gênero</option>
+              <option value="gelding">Castrado</option>
+              <option value="mare">Égua</option>
+              <option value="stallion">Garanhão</option>
+            </select>
+            {fieldErrors.gender && <p className="error-message">{fieldErrors.gender}</p>}
+          </div>
+          <div className="form-group">
+            <select ref={colorRef} name="color" value={newHorse.color} onChange={handleColorChange}>
+              <option value="">Cor</option>
+              <option value="Baio">Baio</option>
+              <option value="Castanho">Castanho</option>
+              <option value="Alazão">Alazão</option>
+              <option value="Preto">Preto</option>
+              <option value="Tordilho">Tordilho</option>
+              <option value="Ruão">Ruão</option>
+              <option value="Palomino">Palomino</option>
+              <option value="Isabel">Isabel</option>
+              <option value="Ruço">Ruço</option>
+            </select>
+            {fieldErrors.color && <p className="error-message">{fieldErrors.color}</p>}
+          </div>
+
 
             {/* Segunda linha: Slider de altura e Piroplasmose */}
               {/* Campo de texto */}
-              <input
-                type="text"
-                name="training_level"
-                placeholder="training_level"
-                value={newHorse.training_level}
-                onChange={handleChange}
-              />
+              <div className="form-group">
+                <input
+                  ref={trainingLevelRef}
+                  type="text"
+                  name="training_level"
+                  placeholder="Nível de Treinamento"
+                  value={newHorse.training_level}
+                  onChange={handleChange}
+                />
+                {fieldErrors.training_level && <p className="error-message">{fieldErrors.training_level}</p>}
+              </div>
 
               {/* Checkbox com Label */}
               <div className="piroplasmosis-label">
@@ -333,85 +407,82 @@ const NewHorses = ({ setIsLoggedIn }) => {
           )}
 
       {/* Passo 2 */}
-{currentStep === 2 && (
-  <div className="upload-container">
-    {/* Imagem */}
-    <div className="upload-block">
-      <h2>Imagem</h2>
-      <p>Máximo de 5 imagens, até 10 MB cada.</p>
-      <button
-        className="upload-button"
-        onClick={() => document.getElementById('imageUpload').click()}
-      >
-        Escolher Imagem
-      </button>
-      <input
-        type="file"
-        id="imageUpload"
-        multiple
-        onChange={handleImageChange}
-        style={{ display: 'none' }}
-      />
-      {error && <p className="error-message">{error}</p>} {/* Exibe o erro */}
-      {/* Mostrar Imagens Carregadas */}
-      <div className="image-upload-list">
-        {images.map((image, index) => (
-          <div key={index} className="image-upload-item">
-            <span className="image-name">{image.name}</span>
+      {currentStep === 2 && (
+        <div className="upload-container">
+          {/* Imagem */}
+          <div className="upload-block">
+            <h2>Imagem</h2>
+            <p>Máximo de 5 imagens, até 10 MB cada.</p>
             <button
-              type="button"
-              onClick={() => removeImage(index)}
-              className="remove-upload-button"
+              className="upload-button"
+              onClick={() => document.getElementById('imageUpload').click()}
             >
-              X
+              Escolher Imagem
             </button>
+            <input
+              ref={imageRef}
+              type="file"
+              id="imageUpload"
+              multiple
+              onChange={handleImageChange}
+              style={{ display: 'none' }}
+            />
+            {fieldErrors.images && <p className="error-message">{fieldErrors.images}</p>} {/* Erro de imagem */}
+            {error && <p className="error-message">{error}</p>} {/* Exibe o erro */}
+            {/* Mostrar Imagens Carregadas */}
+            <div className="image-upload-list">
+              {images.map((image, index) => (
+                <div key={index} className="image-upload-item">
+                  <span className="image-name">{image.name}</span>
+                  <button
+                    type="button"
+                    onClick={() => removeImage(index)}
+                    className="remove-upload-button"
+                  >
+                    X
+                  </button>
+                </div>
+              ))}
+            </div>
           </div>
-        ))}
-      </div>
-    </div>
 
-    {/* Vídeo */}
-    <div className="upload-block">
-      <h2>Vídeo</h2>
-      <p>Máximo de 3 vídeos, até 50 MB cada.</p>
-      <button
-        className="upload-button"
-        onClick={() => document.getElementById('videoUpload').click()}
-      >
-        Escolher Vídeo
-      </button>
-      <input
-        type="file"
-        id="videoUpload"
-        multiple
-        accept="video/*"
-        onChange={handleVideoChange}
-        style={{ display: 'none' }}
-      />
-      {isCompressing && <p className="compressing-message">Comprimindo vídeos...</p>}
-      {error && <p className="error-message">{error}</p>} {/* Exibe o erro */}
-      {/* Mostrar Vídeos Carregados */}
-      <div className="video-upload-list">
-        {videos.map((video, index) => (
-          <div key={index} className="video-upload-item">
-            <span className="video-name">{video.name}</span>
+          {/* Vídeo */}
+          <div className="upload-block">
+            <h2>Vídeo</h2>
+            <p>Máximo de 3 vídeos, até 50 MB cada.</p>
             <button
-              type="button"
-              onClick={() =>
-                setVideos((prevVideos) =>
-                  prevVideos.filter((_, i) => i !== index)
-                )
-              }
-              className="remove-video-button"
+              className="upload-button"
+              onClick={() => document.getElementById('videoUpload').click()}
             >
-              X
+              Escolher Vídeo
             </button>
+            <input
+              type="file"
+              id="videoUpload"
+              multiple
+              accept="video/*"
+              onChange={handleVideoChange}
+              style={{ display: 'none' }}
+            />
+            {error && <p className="error-message">{error}</p>} {/* Exibe o erro */}
+            {/* Mostrar Vídeos Carregados */}
+            <div className="video-upload-list">
+              {videos.map((video, index) => (
+                <div key={index} className="video-upload-item">
+                  <span className="video-name">{video.name}</span>
+                  <button
+                    type="button"
+                    onClick={() => setVideos((prevVideos) => prevVideos.filter((_, i) => i !== index))}
+                    className="remove-video-button"
+                  >
+                    X
+                  </button>
+                </div>
+              ))}
+            </div>
           </div>
-        ))}
-      </div>
-    </div>
-  </div>
-)}
+        </div>
+      )}
 
         {/* Passo 3 */}
         {currentStep === 3 && (

@@ -385,6 +385,17 @@ textarea {
 .remove-video-button:hover {
   background-color: #d32f2f;
 }
+.form-group input:focus,
+.form-group select:focus {
+  border-color: red;
+  outline: none;
+}
+
+.error-message {
+  color: red;
+  font-size: 12px;
+  margin-top: 5px;
+}
 
 /* Responsividade */
 
