@@ -13,6 +13,9 @@ import EditHorse from '../pages/EditHorse';
 import ReceivedHorses from '../pages/ReceivedHorses';
 import HomePage from '../pages/HomePage';
 import SharedHorse from '../pages/SharedHorse';
+import AdminDashboard from '../pages/AdminDashboard';
+import ForgotPassword from '../pages/ForgotPassword';
+import ResetPassword from '../pages/ResetPassword';
 import './Content.css';
 
 
@@ -22,6 +25,8 @@ function Content({ setIsLoggedIn }) {
       <Routes>
         <Route path="/login" element={<LoginPage setIsLoggedIn={setIsLoggedIn} />} />
         <Route path="/register" element={<RegisterPage />} />
+        <Route path="/forgot/password" element={<ForgotPassword />} />
+        <Route path="/reset/password/:token" element={<ResetPassword />} />
         <Route path="/" element={<HomePage />} />
         <Route path="/profile" element={<ProtectedRoute element={<ProfilePage setIsLoggedIn={setIsLoggedIn}/>} />} />
         <Route path="/update-profile" element={<ProtectedRoute element={<UpdateProfilePage setIsLoggedIn={setIsLoggedIn}/>} />} />
@@ -32,6 +37,8 @@ function Content({ setIsLoggedIn }) {
         <Route path="/received" element={<ProtectedRoute element={<ReceivedHorses setIsLoggedIn={setIsLoggedIn}/>} />} />
         <Route path="/dashboard" element={<DashboardPage setIsLoggedIn={setIsLoggedIn}/>} />
         <Route path="/horses/shared/:token" element={<SharedHorse />} />
+        <Route path="/admin/dashboard" element={<AdminDashboard />} />
+
         <Route path="*" element={<h1>404 - Página não encontrada</h1>} />
       </Routes>
     </div>

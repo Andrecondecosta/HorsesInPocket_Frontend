@@ -63,7 +63,10 @@ const LoginPage = ({ setIsLoggedIn }) => {
           {error && <p className="error-message">{error}</p>}
         </form>
         <p className="register-message">
-          Não tem Conta? <Link to="/register">Efetue o Registo.</Link>
+          Esqueceu-se da palavra-passe? <Link to="/forgot/password">Recupere aqui</Link>.
+        </p>
+        <p className="register-message">
+          Não tem uma conta? <Link to="/register">Registe-se</Link>.
         </p>
       </div>
     </div>

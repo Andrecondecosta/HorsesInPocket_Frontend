@@ -32,10 +32,12 @@ const RegisterPage = () => {
       gender,
     };
 
-    await register(userData);
+    const receivedToken = await register(userData);
 
-    if (token) {
+    if (receivedToken) {
       navigate('/login');
+    } else {
+      console.error('Registo falhou: Token não foi recebido.');
     }
   };
 

@@ -102,6 +102,12 @@ const ProfileHorse = ({ setIsLoggedIn }) => {
     };
   }, []);
 
+  const hasAncestorsData = (ancestors) => {
+    return ancestors && ancestors.length > 0 && ancestors.some(
+      (ancestor) =>
+        ancestor.name?.trim() || ancestor.breeder?.trim() || ancestor.breed?.trim()
+    );
+  };
 
   const handleDelete = async () => {
     try {
@@ -217,7 +223,11 @@ const ProfileHorse = ({ setIsLoggedIn }) => {
       {/* Genealogia */}
       <div className="genealogy-section">
         <h2 className="section-title-geno">Genealogia</h2>
+      {hasAncestorsData(horse.ancestors) ? (
         <GenealogyTree horse={horse} />
+      ) : (
+        <p className="no-genealogy">Sem informações genealógicas disponíveis.</p>
+      )}
       </div>
 
       {/* Modal de Compartilhar */}

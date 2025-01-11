@@ -260,6 +260,13 @@
   filter: blur(10px); /* Adiciona desfoque */
 }
 
+.no-genealogy {
+  text-align: center;
+  font-style: italic;
+  color: #888; /* Cor cinza para destaque */
+  margin-top: 20px;
+}
+
 /* Adiciona desfoque apenas quando necessário */
 
 @media (max-width: 768px) {

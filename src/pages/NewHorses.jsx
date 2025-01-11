@@ -3,6 +3,7 @@ import { useNavigate } from 'react-router-dom';
 import './NewHorses.css';
 import Layout from '../components/Layout';
 import GenealogyForm from '../components/GenealogyForm';
+import LoadingPopup from '../components/LoadingPopup';
 
 const NewHorses = ({ setIsLoggedIn }) => {
   const [currentStep, setCurrentStep] = useState(1);
@@ -28,6 +29,7 @@ const NewHorses = ({ setIsLoggedIn }) => {
   const [videos, setVideos] = useState([]);
   const [error, setError] = useState(null);
   const [fieldErrors, setFieldErrors] = useState({});
+  const [isSubmitting, setIsSubmitting] = useState(false);
   const navigate = useNavigate();
   const nameRef = useRef(null);
   const ageRef = useRef(null);
@@ -43,6 +45,10 @@ const NewHorses = ({ setIsLoggedIn }) => {
 
   const handlePreviousStep = () => {
     if (currentStep > 1) setCurrentStep(currentStep - 1);
+  };
+
+  const capitalizeFirstLetter = (value) => {
+    return value.charAt(0).toUpperCase() + value.slice(1).toLowerCase();
   };
 
   const handleChange = (e) => {
@@ -61,6 +67,13 @@ const NewHorses = ({ setIsLoggedIn }) => {
     }));
   };
 
+  const handleCapitalizedChange = (e) => {
+    const { name, value } = e.target;
+    setNewHorse((prevHorse) => ({
+      ...prevHorse,
+      [name]: capitalizeFirstLetter(value),
+    }));
+  };
 
   const handleColorChange = (e) => {
     setNewHorse((prevHorse) => ({
@@ -207,6 +220,8 @@ const NewHorses = ({ setIsLoggedIn }) => {
     if (!validateFields()) {
       return;
     }
+    setIsSubmitting(true);
+    try {
     const token = localStorage.getItem('authToken');
     const formData = new FormData();
 
@@ -244,11 +259,18 @@ const NewHorses = ({ setIsLoggedIn }) => {
     });
 
     if (response.ok) {
-      navigate('/myhorses');
+      navigate("/myhorses");
     } else {
-      console.error('Erro ao criar cavalo:', response.statusText);
+      console.error("Erro ao criar cavalo:", response.statusText);
     }
+    }catch (error) {
+    console.error("Erro ao submeter cavalo:", error);
+    } finally {
+    setIsSubmitting(false); // Esconde o popup
+    }
+
   };
+
 
   return (
     <Layout setIsLoggedIn={setIsLoggedIn}>
@@ -303,7 +325,7 @@ const NewHorses = ({ setIsLoggedIn }) => {
               name="name"
               placeholder="Nome"
               value={newHorse.name}
-              onChange={handleChange}
+              onChange={handleCapitalizedChange}
               required
             />
             {fieldErrors.name && <p className="error-message">{fieldErrors.name}</p>}
@@ -361,7 +383,7 @@ const NewHorses = ({ setIsLoggedIn }) => {
                   name="training_level"
                   placeholder="Nível de Treinamento"
                   value={newHorse.training_level}
-                  onChange={handleChange}
+                  onChange={handleCapitalizedChange}
                 />
                 {fieldErrors.training_level && <p className="error-message">{fieldErrors.training_level}</p>}
               </div>
@@ -400,7 +422,7 @@ const NewHorses = ({ setIsLoggedIn }) => {
               name="description"
               placeholder="Descrição do cavalo"
               value={newHorse.description}
-              onChange={handleChange}
+              onChange={handleCapitalizedChange}
             />
         </form>
 
@@ -484,12 +506,28 @@ const NewHorses = ({ setIsLoggedIn }) => {
         </div>
       )}
 
-        {/* Passo 3 */}
-        {currentStep === 3 && (
-          <div className="step-content">
-            <GenealogyForm ancestors={ancestors} setAncestors={setAncestors} />
-          </div>
-        )}
+        {/* Genealogia */}
+{currentStep === 3 && (
+  <div className="step-content">
+    <GenealogyForm ancestors={ancestors} setAncestors={setAncestors} />
+    {Object.values(ancestors).some(
+      (ancestor) => ancestor.name || ancestor.breeder || ancestor.breed
+    ) && (
+      <div className="genealogy-tree">
+        <h2>Árvore Genealógica</h2>
+        <ul>
+          {Object.entries(ancestors).map(([relation, details]) => (
+            details.name || details.breeder || details.breed ? (
+              <li key={relation}>
+                <strong>{relation}</strong>: {details.name || 'N/A'}, {details.breeder || 'N/A'}, {details.breed || 'N/A'}
+              </li>
+            ) : null
+          ))}
+        </ul>
+      </div>
+    )}
+  </div>
+)}
 
         {/* Botões */}
         <div className="step-buttons">
@@ -500,7 +538,9 @@ const NewHorses = ({ setIsLoggedIn }) => {
           </button>}
         </div>
       </div>
+      {isSubmitting && <LoadingPopup message="A guardar o cavalo, por favor aguarde..." />}
     </Layout>
+
   );
 };
 

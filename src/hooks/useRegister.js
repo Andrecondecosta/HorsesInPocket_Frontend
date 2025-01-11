@@ -20,13 +20,15 @@ export const useRegister = () => {
 
       const data = await response.json();
 
-      if (!response.ok) {
-        throw new Error(data.errors || 'Falha ao registrar usuário');
+      if (!response.ok || !data.token) {
+        throw new Error(data.errors?.join(', ') || 'Falha ao registrar usuário');
       }
 
-      setToken(data.token);  // Supondo que o backend retorne um token JWT
+      setToken(data.token);
+      return data.token; // Retorna o token explicitamente
     } catch (err) {
       setError(err.message);
+      return null; // Retorna nulo em caso de erro
     } finally {
       setLoading(false);
     }
