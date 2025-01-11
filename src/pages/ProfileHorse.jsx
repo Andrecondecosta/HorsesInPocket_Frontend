@@ -21,9 +21,10 @@ const ProfileHorse = ({ setIsLoggedIn }) => {
   const [readonly, setReadonly] = useState(false);
   const [shareEmail, setShareEmail] = useState('');
   const [showShareModal, setShowShareModal] = useState(false);
-  const [showMenu, setShowMenu] = useState(false);
+  const [showDeleteModal, setShowDeleteModal] = useState(false);
+  const [deleteMessage, setDeleteMessage] = useState("");
+  const [isMenuOpen, setIsMenuOpen] = useState(false);
   const menuRef = useRef(null);
-  const [isMenuOpen, setIsMenuOpen] = useState(false); // Adiciona o estado do menu
   const [isOwner, setIsOwner] = useState(false);
 
 
@@ -110,9 +111,14 @@ const ProfileHorse = ({ setIsLoggedIn }) => {
     );
   };
 
-  const handleDelete = async () => {
+  const handleDelete = async (deleteType) => {
     try {
-      const response = await fetch(`${process.env.REACT_APP_API_SERVER_URL}/horses/${id}`, {
+      const endpoint =
+        deleteType === "destroy"
+          ? `/horses/${id}`
+          : `/horses/${id}/delete_shares`;
+
+      const response = await fetch(`${process.env.REACT_APP_API_SERVER_URL}${endpoint}`, {
         method: 'DELETE',
         headers: {
           'Content-Type': 'application/json',
@@ -120,15 +126,26 @@ const ProfileHorse = ({ setIsLoggedIn }) => {
         },
       });
 
-      if (!response.ok) {
-        throw new Error('Failed to delete horse');
+      if (response.ok) {
+         setDeleteMessage(
+          deleteType === "destroy"
+            ? "Cavalo eliminado para todos!"
+            : "Partilhas subsequentes removidas com sucesso!"
+        );
+        setTimeout(() => {
+          setDeleteMessage("");
+          setShowDeleteModal(false);
+          if (deleteType === "destroy") navigate("/myhorses"); // Redireciona se deletado para todos
+        }, 5000);
+      } else {
+        throw new Error("Erro ao realizar operação");
       }
-
-      navigate('/myhorses');
     } catch (error) {
-      setError('Erro ao deletar cavalo');
+      console.error("Erro:", error);
+      setDeleteMessage("Erro ao realizar a operação. Tente novamente.");
     }
   };
+
 
   if (isLoading) return <LoadingPopup message="Carregando ..." />;
   if (error) return <p>{error}</p>;
@@ -151,7 +168,7 @@ const ProfileHorse = ({ setIsLoggedIn }) => {
       {isOwner && (<button className="edit-button" onClick={() => navigate(`/horses/${id}/edit`)}>
           <FaEdit /> Editar
         </button> )}
-        <button className="delete-button" onClick={handleDelete}>
+        <button className="delete-button" onClick={() => setShowDeleteModal(true)}>
           <FaTrash /> Eliminar
         </button>
         <button className="share-button" onClick={() => setShowShareModal(true)}>
@@ -164,7 +181,7 @@ const ProfileHorse = ({ setIsLoggedIn }) => {
       {isOwner && (<button className="edit-button" onClick={() => navigate(`/horses/${id}/edit`)}>
           <FaEdit />
         </button> )}
-        <button className="delete-button" onClick={handleDelete}>
+        <button className="delete-button" onClick={() => setShowDeleteModal(true)}>
           <FaTrash />
         </button>
         <button className="share-button" onClick={() => setShowShareModal(true)}>
@@ -203,33 +220,67 @@ const ProfileHorse = ({ setIsLoggedIn }) => {
         </div>
         <div className="info-item">
           <strong>Nível de Treinamento</strong>
-          <p>{horse.training_level}</p>
+            <p>{horse.training_level}</p>
+          </div>
+        </div>
+
+        {/* Descrição */}
+        <div className="description-section">
+          <strong>Descrição</strong>
+          <p>{horse.description}</p>
         </div>
       </div>
 
-      {/* Descrição */}
-      <div className="description-section">
-        <strong>Descrição</strong>
-        <p>{horse.description}</p>
-      </div>
-    </div>
 
+        {/* Imagens e Vídeos */}
+        <div className="profile-gallery">
+          <h2 className="section-title">Imagens e Vídeos</h2>
+          <ProfileMedia images={horse.images} videos={horse.videos} />
+        </div>
 
-      {/* Imagens e Vídeos */}
-      <div className="profile-gallery">
-        <h2 className="section-title">Imagens e Vídeos</h2>
-        <ProfileMedia images={horse.images} videos={horse.videos} />
-      </div>
+        {/* Genealogia */}
+        <div className="genealogy-section">
+          <h2 className="section-title-geno">Genealogia</h2>
+        {hasAncestorsData(horse.ancestors) ? (
+          <GenealogyTree horse={horse} />
+        ) : (
+          <p className="no-genealogy">Sem informações genealógicas disponíveis.</p>
+        )}
+        </div>
 
-      {/* Genealogia */}
-      <div className="genealogy-section">
-        <h2 className="section-title-geno">Genealogia</h2>
-      {hasAncestorsData(horse.ancestors) ? (
-        <GenealogyTree horse={horse} />
-      ) : (
-        <p className="no-genealogy">Sem informações genealógicas disponíveis.</p>
-      )}
-      </div>
+        {showDeleteModal && (
+          <div className="modal-overlay">
+            <div className="modal-content">
+              <h3>Eliminar Cavalo</h3>
+              <div className="delete-options">
+                {!deleteMessage ? (
+                  <>
+                    <button
+                      className="delete-option-button"
+                      onClick={() => handleDelete("destroy")}
+                    >
+                      <FaTrash /> <p>Apagar para Todos</p>
+                    </button>
+                    <button
+                      className="delete-option-button"
+                      onClick={() => handleDelete("delete_shares")}
+                    >
+                      <FaTrash /> <p>Apagar para Partilhados</p>
+                    </button>
+                    <button
+                      className="modal-close"
+                      onClick={() => setShowDeleteModal(false)}
+                    >
+                      Cancelar
+                    </button>
+                  </>
+                ) : (
+                  <p className="delete-message">{deleteMessage}</p>
+                )}
+              </div>
+            </div>
+          </div>
+        )}
 
       {/* Modal de Compartilhar */}
       {showShareModal && (
@@ -238,6 +289,7 @@ const ProfileHorse = ({ setIsLoggedIn }) => {
           onClose={() => setShowShareModal(false)}
         />
       )}
+
       {/* Lightbox para visualização de imagens */}
       {isOpen && (
         <Lightbox

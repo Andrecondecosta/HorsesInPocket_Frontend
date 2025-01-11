@@ -118,7 +118,8 @@ a {
 }
 
 .details-button:hover {
-  background-color: #6d9b6b;
+  background-color: #8EB486;
+  color: white;
 }
 }
 @media (max-width: 768px){
