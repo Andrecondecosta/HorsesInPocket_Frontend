@@ -2,6 +2,7 @@ import React, { useState, useEffect } from 'react';
 import { useParams, useNavigate } from 'react-router-dom';
 import Layout from '../components/Layout';
 import GenealogyForm from '../components/GenealogyForm';
+import LoadingPopup from '../components/LoadingPopup';
 import '../pages/EditHorse.css';
 
 const EditHorse = ({ setIsLoggedIn }) => {
@@ -30,6 +31,7 @@ const EditHorse = ({ setIsLoggedIn }) => {
   const [videos, setVideos] = useState([]);
   const [error, setError] = useState(null);
   const [isLoading, setIsLoading] = useState(true);
+  const [isSubmitting, setIsSubmitting] = useState(false);
   const [deletedImages, setDeletedImages] = useState([]);
   const [deletedVideos, setDeletedVideos] = useState([]);
   const [newImages, setNewImages] = useState([]);
@@ -153,7 +155,7 @@ const EditHorse = ({ setIsLoggedIn }) => {
       alert("Você pode adicionar no máximo 3 vídeos.");
       return;
     }
-
+    setIsSubmitting(true);
     const formData = new FormData();
 
     // Adicionar dados do cavalo
@@ -201,18 +203,20 @@ const EditHorse = ({ setIsLoggedIn }) => {
         setHorse(updatedHorse);
         setImages(updatedHorse.images);
         setVideos(updatedHorse.videos);
-        alert('Cavalo atualizado com sucesso!');
         navigate(`/horses/${id}`);
       } else {
         console.error('Erro ao atualizar cavalo:', response.statusText);
       }
     } catch (error) {
       console.error('Erro ao enviar os dados:', error);
+    } finally {
+      setIsSubmitting(false);
     }
+
   };
 
 
-  if (isLoading) return <p>Carregando...</p>;
+  if (isLoading) return <LoadingPopup message="Carregando ..." />;
   if (error) return <p>{error}</p>;
 
 return (
@@ -438,6 +442,7 @@ return (
           </button>}
         </div>
     </div>
+    {isSubmitting && <LoadingPopup message="A guardar o cavalo, por favor aguarde..." />}
   </Layout>
 );
 

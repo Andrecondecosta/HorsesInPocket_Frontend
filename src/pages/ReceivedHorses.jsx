@@ -1,6 +1,7 @@
 import React, { useState, useEffect } from 'react';
 import { useNavigate } from 'react-router-dom';
 import Layout from '../components/Layout';
+import LoadingPopup from '../components/LoadingPopup';
 import './MyHorses.css';
 
 const ReceivedHorses = () => {
@@ -41,8 +42,7 @@ const ReceivedHorses = () => {
       setIsLoading(false);
     }
   }, [token]);
-
-  if (isLoading) return <p>Carregando...</p>;
+  if (isLoading) return <LoadingPopup message="Carregando detalhes do cavalo, aguarde..." />;
   if (error) return <p>{error}</p>;
 
   return (

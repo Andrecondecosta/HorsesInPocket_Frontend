@@ -2,6 +2,7 @@ import React, { useState, useEffect } from 'react';
 import { FaEdit } from 'react-icons/fa';
 import { Link } from 'react-router-dom';
 import Layout from '../components/Layout';
+import LoadingPopup from '../components/LoadingPopup';
 import './ProfilePage.css';
 
 const ProfilePage = () => {
@@ -42,7 +43,7 @@ const ProfilePage = () => {
     }
   }, [token]);
 
-  if (isLoading) return <p>Carregando...</p>;
+  if (isLoading) return <LoadingPopup message="Carregando ..." />;
   if (error) return <p>{error}</p>;
 
   return (

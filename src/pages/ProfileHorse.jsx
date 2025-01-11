@@ -2,12 +2,13 @@ import React, { useState, useEffect, useRef } from 'react';
 import { useParams, useNavigate, useLocation } from 'react-router-dom';
 import { FaEdit, FaTrash, FaShareAlt } from 'react-icons/fa';
 import Lightbox from "yet-another-react-lightbox";
-import "yet-another-react-lightbox/styles.css";
-import './ProfileHorse.css';
 import GenealogyTree from '../components/GenealogyTree';
 import Layout from '../components/Layout';
 import ProfileMedia from '../components/ProfileMedia';
 import ShareHorse from '../components/ShareHorse';
+import "yet-another-react-lightbox/styles.css";
+import LoadingPopup from '../components/LoadingPopup';
+import './ProfileHorse.css';
 
 const ProfileHorse = ({ setIsLoggedIn }) => {
   const { id } = useParams();
@@ -129,7 +130,7 @@ const ProfileHorse = ({ setIsLoggedIn }) => {
     }
   };
 
-  if (isLoading) return <p>Carregando...</p>;
+  if (isLoading) return <LoadingPopup message="Carregando ..." />;
   if (error) return <p>{error}</p>;
 
   const heightInHH = (horse.height_cm / 0.1016).toFixed(1);

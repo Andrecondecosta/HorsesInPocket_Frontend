@@ -2,6 +2,7 @@ import React, { useState, useEffect } from 'react';
 import { FaSave } from 'react-icons/fa';
 import { Link, useNavigate } from 'react-router-dom';
 import Layout from '../components/Layout';
+import LoadingPopup from '../components/LoadingPopup';
 import './ProfilePage.css';
 import './UpdateProfilePage.css';
 
@@ -94,8 +95,7 @@ const UpdateProfilePage = () => {
       setError('Erro ao atualizar perfil');
     }
   };
-
-  if (isLoading) return <p>Carregando...</p>;
+if (isLoading) return <LoadingPopup message="Carregando ..." />;
   if (error) return <p>{error}</p>;
 
   return (
