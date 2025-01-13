@@ -12,8 +12,8 @@ const ShareHorse = ({ horseId, onClose }) => {
   const token = localStorage.getItem('authToken');
   const API_URL = process.env.REACT_APP_API_SERVER_URL;
 
+  // Gerar o link de partilha
   useEffect(() => {
-    // Gerar o link de partilha
     const generateShareLink = async () => {
       setIsLoading(true);
       setError(null);
@@ -45,27 +45,13 @@ const ShareHorse = ({ horseId, onClose }) => {
     generateShareLink();
   }, [horseId, API_URL, token]);
 
-  useEffect(() => {
-    // Ajustar zoom quando o teclado aparece/dispare
-    const handleBlur = () => {
-      document.body.style.transform = 'scale(1)';
-      document.body.style.transformOrigin = '0 0';
-    };
-
-    const inputs = document.querySelectorAll('input, textarea');
-    inputs.forEach((input) => {
-      input.addEventListener('blur', handleBlur);
-    });
-
-    return () => {
-      // Remover event listeners ao desmontar
-      inputs.forEach((input) => {
-        input.removeEventListener('blur', handleBlur);
-      });
-    };
-  }, []);
-
+  // Função para partilhar por email
   const shareByEmail = async () => {
+    if (!email || !/\S+@\S+\.\S+/.test(email)) {
+      setError('Por favor, insira um email válido.');
+      return;
+    }
+
     setEmailSuccess(null);
     setError(null);
 
@@ -109,7 +95,11 @@ const ShareHorse = ({ horseId, onClose }) => {
               <div className="share-options">
                 <button
                   className="copy-button"
-                  onClick={() => navigator.clipboard.writeText(shareLink)}
+                  onClick={() => {
+                    navigator.clipboard.writeText(shareLink);
+                    alert('Link copiado!');
+                  }}
+                  aria-label="Copiar link para partilha"
                 >
                   <FaLink /> Copiar Link
                 </button>
@@ -118,6 +108,7 @@ const ShareHorse = ({ horseId, onClose }) => {
                   onClick={() =>
                     window.open(`https://wa.me/?text=${encodeURIComponent(shareLink)}`, '_blank')
                   }
+                  aria-label="Partilhar no WhatsApp"
                 >
                   <FaWhatsapp /> WhatsApp
                 </button>
@@ -129,13 +120,14 @@ const ShareHorse = ({ horseId, onClose }) => {
               placeholder="Introduza o email"
               value={email}
               onChange={(e) => setEmail(e.target.value)}
+              aria-label="Campo para introduzir email"
             />
             <div className="email-close-button">
               {emailSuccess && <p className="success-message">{emailSuccess}</p>}
-              <button className="closee-button" onClick={onClose}>
+              <button className="closee-button" onClick={onClose} aria-label="Fechar modal">
                 Cancelar
               </button>
-              <button className="email-button" onClick={shareByEmail}>
+              <button className="email-button" onClick={shareByEmail} aria-label="Partilhar por email">
                 Partilhar
               </button>
             </div>

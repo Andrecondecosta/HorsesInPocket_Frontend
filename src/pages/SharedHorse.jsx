@@ -2,7 +2,7 @@ import React, { useEffect, useState } from 'react';
 import { useParams, useNavigate } from 'react-router-dom';
 
 const SharedHorse = () => {
-  const { token } = useParams();
+  const { token } = useParams(); // Captura o token da URL
   const navigate = useNavigate();
   const [error, setError] = useState(null);
   const [loading, setLoading] = useState(true);
@@ -11,7 +11,7 @@ const SharedHorse = () => {
     const handleSharedLink = async () => {
       const authToken = localStorage.getItem('authToken');
       if (!authToken) {
-        // Redireciona para login com o link original como parâmetro
+        // Redireciona para o login se não autenticado
         navigate(`/login?redirect=/horses/shared/${token}`);
         return;
       }
@@ -28,7 +28,7 @@ const SharedHorse = () => {
 
         if (!response.ok) {
           const errorData = await response.json();
-          throw new Error(errorData.error || 'Erro ao processar o link');
+          throw new Error(errorData.error || 'Erro ao processar o link.');
         }
 
         // Redireciona para a página de recebidos após sucesso
