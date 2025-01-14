@@ -6,23 +6,23 @@ import './CardSection.css';
 const CardSection = () => {
   return (
     <div className="card-section">
-      {/* Card Meus Cavalos */}
+      {/* Card My Horses */}
       <Link to="/myhorses" className="card-link">
         <div className="card">
-          <h3 className="card-title">Meus Cavalos</h3>
+          <h3 className="card-title">My Horses</h3>
           <div className="card-action">
-            <span>Ver Mais</span>
+            <span>View More</span>
             <ArrowRightCircleIcon className="arrow-icon" />
           </div>
         </div>
       </Link>
 
-      {/* Card Cavalos Recebidos */}
+      {/* Card Received Horses */}
       <Link to="/received" className="card-link">
         <div className="card">
-          <h3 className="card-title">Cavalos Recebidos</h3>
+          <h3 className="card-title">Received Horses</h3>
           <div className="card-action">
-            <span>Ver Mais</span>
+            <span>View More</span>
             <ArrowRightCircleIcon className="arrow-icon" />
           </div>
         </div>

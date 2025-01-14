@@ -7,7 +7,7 @@ const ForgotPassword = () => {
   const [successMessage, setSuccessMessage] = useState('');
   const [errorMessage, setErrorMessage] = useState('');
   const [loading, setLoading] = useState(false);
-  const navigate = useNavigate(); // Hook para redirecionamento
+  const navigate = useNavigate(); // Hook for redirection
 
   const handleSubmit = async (e) => {
     e.preventDefault();
@@ -26,12 +26,12 @@ const ForgotPassword = () => {
 
       if (!response.ok) {
         const errorData = await response.json();
-        throw new Error(errorData.message || 'Erro ao enviar email de recuperação.');
+        throw new Error(errorData.message || 'Error sending recovery email.');
       }
 
-      setSuccessMessage('Email de recuperação enviado com sucesso! Verifique a sua caixa de entrada.');
+      setSuccessMessage('Recovery email sent successfully! Please check your inbox.');
 
-      // Redirecionar para a página de login após 3 segundos
+      // Redirect to the login page after 5 seconds
       setTimeout(() => {
         navigate('/login');
       }, 5000);
@@ -45,7 +45,7 @@ const ForgotPassword = () => {
   return (
     <div className="forgot-password-page">
       <div className="forgot-password-container">
-        <h2>Recuperação de Palavra-Passe</h2>
+        <h2>Password Recovery</h2>
         {successMessage && <p className="success-message">{successMessage}</p>}
         {errorMessage && <p className="error-message">{errorMessage}</p>}
         <form className="forgot-password-form" onSubmit={handleSubmit}>
@@ -55,16 +55,16 @@ const ForgotPassword = () => {
               value={email}
               onChange={(e) => setEmail(e.target.value)}
               required
-              placeholder="Digite o seu email"
+              placeholder="Enter your email"
             />
           </div>
           <button type="submit" disabled={loading}>
-            {loading ? 'Enviando...' : 'Enviar Email'}
+            {loading ? 'Sending...' : 'Send Email'}
           </button>
         </form>
         <div className="forgot-password-links">
           <p className="register-message">
-            Lembrou-se da palavra-passe? <Link to="/login">Faça Login</Link>.
+            Remembered your password? <Link to="/login">Login here</Link>.
           </p>
         </div>
       </div>

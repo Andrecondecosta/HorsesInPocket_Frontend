@@ -10,15 +10,15 @@ const ProfileMedia = ({ images, videos }) => {
 
   return (
     <div className="profile-media-container">
-      {/* Carrossel de Imagens */}
+      {/* Image Carousel */}
       {images && images.length > 0 && (
         <div className="carousel-container">
-          <h2>Imagens</h2>
+          <h2>Images</h2>
           <img
             src={images[selectedImageIndex]}
-            alt={`Imagem ${selectedImageIndex + 1}`}
+            alt={`Image ${selectedImageIndex + 1}`}
             className="media-item"
-            onClick={() => setIsImageLightboxOpen(true)} // Abre o Lightbox
+            onClick={() => setIsImageLightboxOpen(true)} // Opens the Lightbox
           />
           <div className="pagination-dots">
             {images.map((_, index) => (
@@ -43,10 +43,10 @@ const ProfileMedia = ({ images, videos }) => {
         </div>
       )}
 
-      {/* Carrossel de Vídeos */}
+      {/* Video Carousel */}
       {videos && videos.length > 0 && (
         <div className="carousel-container">
-          <h2>Vídeos</h2>
+          <h2>Videos</h2>
           <video
             controls
             className="media-item"

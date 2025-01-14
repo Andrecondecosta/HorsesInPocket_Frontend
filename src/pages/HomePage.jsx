@@ -8,42 +8,42 @@ const HomePage = () => {
       <div className="homepage-container">
         {/* Hero Section */}
         <div className="hero-section">
-          <h1 className="hero-title">Bem-vindo ao Horses in Pocket</h1>
+          <h1 className="hero-title">Welcome to HorseHub</h1>
           <p className="hero-description">
-            Gerencie, conecte-se e compartilhe informações sobre cavalos de forma simples e eficiente.
-            O Horses in Pocket oferece uma solução completa para criadores e amantes de cavalos.
+            Manage, connect, and share information about horses easily and efficiently.
+            HorseHub offers a complete solution for breeders and horse enthusiasts.
           </p>
           <Link to="/login" className="hero-button">
-            Começar Agora
+            Get Started Now
           </Link>
         </div>
 
         {/* Features Section */}
         <div className="features-section">
-          <h2 className="section-title">O que oferecemos</h2>
+          <h2 className="section-title">What We Offer</h2>
           <div className="features-grid">
             <div className="feature-card">
-              <h3>Gestão Completa</h3>
+              <h3>Comprehensive Management</h3>
               <p>
-                Organize os perfis dos seus cavalos com detalhes como imagens, vídeos e genealogias, tudo em um só lugar.
+                Organize your horses' profiles with details like images, videos, and genealogies, all in one place.
               </p>
             </div>
             <div className="feature-card">
-              <h3>Compartilhamento Simplificado</h3>
+              <h3>Simplified Sharing</h3>
               <p>
-                Compartilhe informações de forma rápida e segura via e-mail ou links exclusivos.
+                Share information quickly and securely via email or unique links.
               </p>
             </div>
             <div className="feature-card">
-              <h3>Controle Total e Segurança</h3>
+              <h3>Full Control and Security</h3>
               <p>
-                Monitore todas as ações realizadas, garantindo que você tenha controle sobre os seus dados.
+                Monitor all actions taken, ensuring you have control over your data.
               </p>
             </div>
             <div className="feature-card">
-              <h3>Acesso em Qualquer Dispositivo</h3>
+              <h3>Access on Any Device</h3>
               <p>
-                Navegue facilmente de qualquer lugar, seja no computador, tablet ou smartphone.
+                Easily navigate from anywhere, whether on a computer, tablet, or smartphone.
               </p>
             </div>
           </div>
@@ -51,13 +51,13 @@ const HomePage = () => {
 
         {/* Call to Action Section */}
         <div className="cta-section">
-          <h2>Junte-se a nós agora!</h2>
+          <h2>Join Us Now!</h2>
           <p>
-            Descubra como o Horses in Pocket pode transformar a maneira como você gerencia, compartilha
-            e se conecta com cavalos. Seja você um criador experiente ou um apaixonado, nós temos a solução ideal para você.
+            Discover how Horses in Pocket can transform the way you manage, share,
+            and connect with horses. Whether you're an experienced breeder or a passionate enthusiast, we have the perfect solution for you.
           </p>
           <Link to="/register" className="cta-button">
-            Criar Conta
+            Create Account
           </Link>
         </div>
       </div>

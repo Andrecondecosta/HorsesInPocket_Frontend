@@ -15,31 +15,31 @@ const GenealogyForm = ({ ancestors, setAncestors }) => {
   };
 
   const ancestorLabels = {
-    father: 'Pai',
-    mother: 'Mãe',
-    paternal_grandfather: 'Avô Paterno',
-    paternal_grandmother: 'Avó Paterna',
-    maternal_grandfather: 'Avô Materno',
-    maternal_grandmother: 'Avó Materna',
+    father: 'Father',
+    mother: 'Mother',
+    paternal_grandfather: 'Paternal Grandfather',
+    paternal_grandmother: 'Paternal Grandmother',
+    maternal_grandfather: 'Maternal Grandfather',
+    maternal_grandmother: 'Maternal Grandmother',
   };
 
   const renderFields = () => (
     <div className="genealogy-fields">
       <input
         type="text"
-        placeholder="Nome"
+        placeholder="Name"
         value={ancestors[activeTab]?.name || ''}
         onChange={(e) => handleAncestorChange(activeTab, 'name', e.target.value)}
       />
       <input
         type="text"
-        placeholder="Criador"
+        placeholder="Breeder"
         value={ancestors[activeTab]?.breeder || ''}
         onChange={(e) => handleAncestorChange(activeTab, 'breeder', e.target.value)}
       />
       <input
         type="text"
-        placeholder="Raça"
+        placeholder="Breed"
         value={ancestors[activeTab]?.breed || ''}
         onChange={(e) => handleAncestorChange(activeTab, 'breed', e.target.value)}
       />

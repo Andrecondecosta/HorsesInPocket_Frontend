@@ -12,7 +12,7 @@ const ShareHorse = ({ horseId, onClose }) => {
   const token = localStorage.getItem('authToken');
   const API_URL = process.env.REACT_APP_API_SERVER_URL;
 
-  // Gerar o link de partilha
+  // Generate the share link
   useEffect(() => {
     const generateShareLink = async () => {
       setIsLoading(true);
@@ -23,14 +23,14 @@ const ShareHorse = ({ horseId, onClose }) => {
           method: 'POST',
           headers: {
             'Content-Type': 'application/json',
-            'Authorization': `Bearer ${token}`,
+            Authorization: `Bearer ${token}`,
           },
           body: JSON.stringify({ expires_at: null }),
         });
 
         if (!response.ok) {
           const errorData = await response.json();
-          throw new Error(errorData.error || 'Erro ao gerar o link de partilha');
+          throw new Error(errorData.error || 'Failed to generate share link');
         }
 
         const data = await response.json();
@@ -45,10 +45,10 @@ const ShareHorse = ({ horseId, onClose }) => {
     generateShareLink();
   }, [horseId, API_URL, token]);
 
-  // Função para partilhar por email
+  // Function to share via email
   const shareByEmail = async () => {
     if (!email || !/\S+@\S+\.\S+/.test(email)) {
-      setError('Por favor, insira um email válido.');
+      setError('Please enter a valid email.');
       return;
     }
 
@@ -60,17 +60,17 @@ const ShareHorse = ({ horseId, onClose }) => {
         method: 'POST',
         headers: {
           'Content-Type': 'application/json',
-          'Authorization': `Bearer ${token}`,
+          Authorization: `Bearer ${token}`,
         },
         body: JSON.stringify({ email }),
       });
 
       if (!response.ok) {
         const errorData = await response.json();
-        throw new Error(errorData.error || 'Erro ao partilhar por email');
+        throw new Error(errorData.error || 'Failed to share via email');
       }
 
-      setEmailSuccess(`Cavalo partilhado com sucesso com ${email}`);
+      setEmailSuccess(`Horse successfully shared with ${email}`);
       setEmail('');
     } catch (err) {
       setError(err.message);
@@ -79,36 +79,36 @@ const ShareHorse = ({ horseId, onClose }) => {
 
   return (
     <>
-      {/* Fundo cinza escuro */}
+      {/* Dark gray background */}
       <div className="modal-overlay"></div>
 
-      {/* Modal de partilha */}
+      {/* Share modal */}
       <div className="share-modal">
         {isLoading ? (
-          <p>A gerar o link de partilha...</p>
+          <p>Generating share link...</p>
         ) : error ? (
           <p className="error-message">{error}</p>
         ) : (
           <>
             <div className="share-header">
-              <h2>Partilhar Cavalo</h2>
+              <h2>Share Horse</h2>
               <div className="share-options">
                 <button
                   className="copy-button"
                   onClick={() => {
                     navigator.clipboard.writeText(shareLink);
-                    alert('Link copiado!');
+                    alert('Link copied!');
                   }}
-                  aria-label="Copiar link para partilha"
+                  aria-label="Copy share link"
                 >
-                  <FaLink /> Copiar Link
+                  <FaLink /> Copy Link
                 </button>
                 <button
                   className="whatsapp-button"
                   onClick={() =>
                     window.open(`https://wa.me/?text=${encodeURIComponent(shareLink)}`, '_blank')
                   }
-                  aria-label="Partilhar no WhatsApp"
+                  aria-label="Share on WhatsApp"
                 >
                   <FaWhatsapp /> WhatsApp
                 </button>
@@ -117,18 +117,18 @@ const ShareHorse = ({ horseId, onClose }) => {
 
             <input
               type="email"
-              placeholder="Introduza o email"
+              placeholder="Enter email"
               value={email}
               onChange={(e) => setEmail(e.target.value)}
-              aria-label="Campo para introduzir email"
+              aria-label="Email input field"
             />
             <div className="email-close-button">
               {emailSuccess && <p className="success-message">{emailSuccess}</p>}
-              <button className="closee-button" onClick={onClose} aria-label="Fechar modal">
-                Cancelar
+              <button className="close-button" onClick={onClose} aria-label="Close modal">
+                Cancel
               </button>
-              <button className="email-button" onClick={shareByEmail} aria-label="Partilhar por email">
-                Partilhar
+              <button className="email-button" onClick={shareByEmail} aria-label="Share via email">
+                Share
               </button>
             </div>
           </>

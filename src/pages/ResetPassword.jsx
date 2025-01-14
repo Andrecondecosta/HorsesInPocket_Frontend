@@ -1,10 +1,10 @@
 import React, { useState } from 'react';
 import { useParams, useNavigate } from 'react-router-dom';
-import './ForgotPassword.css'; // Reutilizamos o mesmo CSS do ForgotPassword
+import './ForgotPassword.css'; // Reusing the ForgotPassword CSS
 
 const ResetPassword = () => {
-  const { token } = useParams(); // Captura o token da URL
-  const navigate = useNavigate(); // Hook para redirecionar
+  const { token } = useParams(); // Capture the token from the URL
+  const navigate = useNavigate(); // Hook for navigation
   const [password, setPassword] = useState('');
   const [confirmPassword, setConfirmPassword] = useState('');
   const [message, setMessage] = useState('');
@@ -12,10 +12,10 @@ const ResetPassword = () => {
 
   const handleSubmit = async (event) => {
     event.preventDefault();
-    console.log("Token enviado:", token);
+    console.log('Token sent:', token);
 
     if (password !== confirmPassword) {
-      setMessage('As senhas não coincidem.');
+      setMessage('Passwords do not match.');
       setSuccess(false);
       return;
     }
@@ -28,20 +28,20 @@ const ResetPassword = () => {
       });
 
       if (response.ok) {
-        setMessage('Senha redefinida com sucesso!');
+        setMessage('Password reset successfully!');
         setSuccess(true);
 
-        // Redireciona para a página de login após 3 segundos
+        // Redirect to login page after 3 seconds
         setTimeout(() => {
           navigate('/login');
         }, 3000);
       } else {
         const errorData = await response.json();
-        setMessage(errorData.error || 'Erro ao redefinir a senha. Tente novamente.');
+        setMessage(errorData.error || 'Failed to reset password. Please try again.');
         setSuccess(false);
       }
     } catch (error) {
-      setMessage('Ocorreu um erro. Por favor, tente novamente.');
+      setMessage('An error occurred. Please try again.');
       setSuccess(false);
     }
   };
@@ -49,31 +49,31 @@ const ResetPassword = () => {
   return (
     <div className="forgot-password-page">
       <div className="forgot-password-container">
-        <h2>Redefinir Senha</h2>
+        <h2>Reset Password</h2>
         {message && <p className={`message ${success ? 'success' : 'error'}`}>{message}</p>}
         {!success && (
           <form className="forgot-password-form" onSubmit={handleSubmit}>
             <div className="input-group">
-              <label>Nova Senha:</label>
+              <label>New Password:</label>
               <input
                 type="password"
                 value={password}
                 onChange={(e) => setPassword(e.target.value)}
-                placeholder="Digite sua nova senha"
+                placeholder="Enter your new password"
                 required
               />
             </div>
             <div className="input-group">
-              <label>Confirmar Nova Senha:</label>
+              <label>Confirm New Password:</label>
               <input
                 type="password"
                 value={confirmPassword}
                 onChange={(e) => setConfirmPassword(e.target.value)}
-                placeholder="Confirme sua nova senha"
+                placeholder="Confirm your new password"
                 required
               />
             </div>
-            <button type="submit">Redefinir Senha</button>
+            <button type="submit">Reset Password</button>
           </form>
         )}
       </div>

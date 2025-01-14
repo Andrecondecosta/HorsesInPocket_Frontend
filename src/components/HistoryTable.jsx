@@ -11,7 +11,7 @@ const HistoryTable = () => {
       try {
         const response = await fetch(`${process.env.REACT_APP_API_SERVER_URL}/logs`, {
           headers: {
-            'Authorization': `Bearer ${localStorage.getItem('authToken')}`,
+            Authorization: `Bearer ${localStorage.getItem('authToken')}`,
           },
         });
 
@@ -58,15 +58,15 @@ const HistoryTable = () => {
 
   return (
     <div className="history-table">
-      <h2 className="history-titles">Histórico</h2>
+      <h2 className="history-titles">History</h2>
       <div className="history-table-container">
         <table>
           <thead>
             <tr>
-              <th>Nome</th>
+              <th>Name</th>
               <th>User</th>
-              <th>Estado</th>
-              <th>Data</th>
+              <th>Status</th>
+              <th>Date</th>
             </tr>
           </thead>
           <tbody>

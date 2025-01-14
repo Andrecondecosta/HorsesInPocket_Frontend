@@ -18,7 +18,7 @@ const ReceivedHorses = () => {
           method: 'GET',
           headers: {
             'Content-Type': 'application/json',
-            'Authorization': `Bearer ${token}`,
+            Authorization: `Bearer ${token}`,
           },
         });
 
@@ -27,9 +27,9 @@ const ReceivedHorses = () => {
         }
 
         const data = await response.json();
-        setHorses(data || []); // Garante que `horses` será um array válido
+        setHorses(data || []); // Ensures `horses` will be a valid array
       } catch (error) {
-        setError('Erro ao carregar cavalos recebidos');
+        setError('Error loading received horses');
       } finally {
         setIsLoading(false);
       }
@@ -38,20 +38,21 @@ const ReceivedHorses = () => {
     if (token) {
       fetchReceivedHorses();
     } else {
-      setError('Token não encontrado');
+      setError('Token not found');
       setIsLoading(false);
     }
   }, [token]);
-  if (isLoading) return <LoadingPopup message="Carregando detalhes do cavalo, aguarde..." />;
+
+  if (isLoading) return <LoadingPopup message="Loading horse details, please wait..." />;
   if (error) return <p>{error}</p>;
 
   return (
     <Layout>
       <div className="my-horses-container">
-        <h1 className="page-title">Cavalos Recebidos</h1>
+        <h1 className="page-title">Received Horses</h1>
         <div className="profile-breadcrumb-container">
           <div className="breadcrumbs">
-            <a href="/dashboard">Dashboard</a> / <span>Cavalos Recebidos</span>
+            <a href="/dashboard">Dashboard</a> / <span>Received Horses</span>
           </div>
         </div>
         <div className="horses-grid">
@@ -61,17 +62,21 @@ const ReceivedHorses = () => {
                 {horse.images && horse.images.length > 0 ? (
                   <img src={horse.images[0]} alt={horse.name} className="myhorse-image" />
                 ) : (
-                  <div className="placeholder-image">Sem Imagem</div>
+                  <div className="placeholder-image">No Image</div>
                 )}
               </div>
               <div className="horse-info">
                 <h3 className="horse-name">{horse.name}</h3>
-                <p className="horse-sender"><strong> Enviado por: </strong> <br /> {horse.sender_name || "Desconhecido"}</p>
+                <p className="horse-sender">
+                  <strong> Sent by: </strong>
+                  <br />
+                  {horse.sender_name || 'Unknown'}
+                </p>
                 <button
                   onClick={() => navigate(`/horses/${horse.id}?readonly=true`)}
                   className="details-button"
                 >
-                  Ver Detalhes
+                  View Details
                 </button>
               </div>
             </div>

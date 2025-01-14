@@ -27,12 +27,10 @@ const ProfileHorse = ({ setIsLoggedIn }) => {
   const menuRef = useRef(null);
   const [isOwner, setIsOwner] = useState(false);
 
-
   const navigate = useNavigate();
   const token = localStorage.getItem('authToken');
 
   useEffect(() => {
-    // Verifica se o parâmetro de consulta readonly está presente
     const queryParams = new URLSearchParams(location.search);
     setReadonly(queryParams.get('readonly') === 'true');
 
@@ -52,10 +50,10 @@ const ProfileHorse = ({ setIsLoggedIn }) => {
 
         const data = await response.json();
         setHorse(data);
-        setIsOwner(data.is_owner); // Define se o usuário é o dono
+        setIsOwner(data.is_owner);
         setSelectedImage(0);
       } catch (error) {
-        setError('Erro ao carregar perfil do cavalo');
+        setError('Failed to load horse profile');
       } finally {
         setIsLoading(false);
       }
@@ -64,7 +62,7 @@ const ProfileHorse = ({ setIsLoggedIn }) => {
     if (token) {
       fetchHorse();
     } else {
-      setError('Token não encontrado');
+      setError('Token not found');
       setIsLoading(false);
     }
   }, [id, location.search, token]);
@@ -81,19 +79,20 @@ const ProfileHorse = ({ setIsLoggedIn }) => {
       });
 
       if (!response.ok) {
-        throw new Error('Erro ao compartilhar cavalo');
+        throw new Error('Failed to share horse');
       }
 
-      alert('Cavalo compartilhado com sucesso');
+      alert('Horse shared successfully');
       setShareEmail('');
       setShowShareModal(false);
     } catch (error) {
-      setError('Erro ao compartilhar cavalo');
+      setError('Failed to share horse');
     }
   };
+
   const handleClickOutside = (event) => {
     if (menuRef.current && !menuRef.current.contains(event.target)) {
-      setIsMenuOpen(false); // Fecha o menu se clicar fora
+      setIsMenuOpen(false);
     }
   };
 
@@ -127,131 +126,132 @@ const ProfileHorse = ({ setIsLoggedIn }) => {
       });
 
       if (response.ok) {
-         setDeleteMessage(
+        setDeleteMessage(
           deleteType === "destroy"
-            ? "Cavalo eliminado para todos!"
-            : "Partilhas subsequentes removidas com sucesso!"
+            ? "Horse deleted for everyone!"
+            : "Subsequent shares removed successfully!"
         );
         setTimeout(() => {
           setDeleteMessage("");
           setShowDeleteModal(false);
-          if (deleteType === "destroy") navigate("/myhorses"); // Redireciona se deletado para todos
+          if (deleteType === "destroy") navigate("/myhorses");
         }, 5000);
       } else {
-        throw new Error("Erro ao realizar operação");
+        throw new Error("Error performing operation");
       }
     } catch (error) {
-      console.error("Erro:", error);
-      setDeleteMessage("Erro ao realizar a operação. Tente novamente.");
+      console.error("Error:", error);
+      setDeleteMessage("Error performing operation. Please try again.");
     }
   };
 
-
-  if (isLoading) return <LoadingPopup message="Carregando ..." />;
+  if (isLoading) return <LoadingPopup message="Loading..." />;
   if (error) return <p>{error}</p>;
 
   const heightInHH = (horse.height_cm / 0.1016).toFixed(1);
 
   return (
-  <Layout setIsLoggedIn={setIsLoggedIn}>
-    <div className="profile-container">
-      {/* Cabeçalho com título e botões */}
-      <div className="profile-header">
-      {/* Breadcrumbs */}
-      <div className="breadcrumbs">
-        <a href="/dashboard">Dashboard</a> / <a href="/myhorses">Meus Cavalos</a> /{" "}
-        <span>Informação do Cavalo</span>
-      </div>
+    <Layout setIsLoggedIn={setIsLoggedIn}>
+      <div className="profile-container">
+        {/* Header with title and buttons */}
+        <div className="profile-header">
+          {/* Breadcrumbs */}
+          <div className="breadcrumbs">
+            <a href="/dashboard">Dashboard</a> / <a href="/myhorses">My Horses</a> /{" "}
+            <span>Horse Information</span>
+          </div>
 
-      {/* Botões para Desktop */}
-      <div className="profile-actions desktop-only">
-      {isOwner && (<button className="edit-button" onClick={() => navigate(`/horses/${id}/edit`)}>
-          <FaEdit /> Editar
-        </button> )}
-        <button className="delete-button" onClick={() => setShowDeleteModal(true)}>
-          <FaTrash /> Eliminar
-        </button>
-        <button className="share-button" onClick={() => setShowShareModal(true)}>
-          <FaShareAlt /> Partilhar
-        </button>
-      </div>
+          {/* Buttons for Desktop */}
+          <div className="profile-actions desktop-only">
+            {isOwner && (
+              <button className="edit-button" onClick={() => navigate(`/horses/${id}/edit`)}>
+                <FaEdit /> Edit
+              </button>
+            )}
+            <button className="delete-button" onClick={() => setShowDeleteModal(true)}>
+              <FaTrash /> Delete
+            </button>
+            <button className="share-button" onClick={() => setShowShareModal(true)}>
+              <FaShareAlt /> Share
+            </button>
+          </div>
 
-      {/* Menu de três pontos para Mobile */}
-      <div className="mobile-menu mobile-only" ref={menuRef}>
-      {isOwner && (<button className="edit-button" onClick={() => navigate(`/horses/${id}/edit`)}>
-          <FaEdit />
-        </button> )}
-        <button className="delete-button" onClick={() => setShowDeleteModal(true)}>
-          <FaTrash />
-        </button>
-        <button className="share-button" onClick={() => setShowShareModal(true)}>
-          <FaShareAlt />
-        </button>
-      </div>
-    </div>
-
-
-      <div className="horse-info-section">
-      <h2 className="section-title">Informação Específica</h2>
-      <div className="info-grid">
-        <div className="info-item">
-          <strong>Nome do Cavalo</strong>
-          <p>{horse.name}</p>
-        </div>
-        <div className="info-item">
-          <strong>Idade</strong>
-          <p>{horse.age} anos</p>
-        </div>
-        <div className="info-item">
-          <strong>Gênero</strong>
-          <p>{horse.gender}</p>
-        </div>
-        <div className="info-item">
-          <strong>Cor</strong>
-          <p>{horse.color}</p>
-        </div>
-        <div className="info-item">
-          <strong>Altura</strong>
-          <p>{horse.height_cm} m ({heightInHH} hh)</p>
-        </div>
-        <div className="info-item">
-          <strong>Piroplasmosis</strong>
-          <p>{horse.piroplasmosis ? 'Sim' : 'Não'}</p>
-        </div>
-        <div className="info-item">
-          <strong>Nível de Treinamento</strong>
-            <p>{horse.training_level}</p>
+          {/* Three-dot menu for Mobile */}
+          <div className="mobile-menu mobile-only" ref={menuRef}>
+            {isOwner && (
+              <button className="edit-button" onClick={() => navigate(`/horses/${id}/edit`)}>
+                <FaEdit />
+              </button>
+            )}
+            <button className="delete-button" onClick={() => setShowDeleteModal(true)}>
+              <FaTrash />
+            </button>
+            <button className="share-button" onClick={() => setShowShareModal(true)}>
+              <FaShareAlt />
+            </button>
           </div>
         </div>
 
-        {/* Descrição */}
-        <div className="description-section">
-          <strong>Descrição</strong>
-          <p>{horse.description}</p>
+        <div className="horse-info-section">
+          <h2 className="section-title">Specific Information</h2>
+          <div className="info-grid">
+            <div className="info-item">
+              <strong>Horse Name</strong>
+              <p>{horse.name}</p>
+            </div>
+            <div className="info-item">
+              <strong>Age</strong>
+              <p>{horse.age} years</p>
+            </div>
+            <div className="info-item">
+              <strong>Gender</strong>
+              <p>{horse.gender}</p>
+            </div>
+            <div className="info-item">
+              <strong>Color</strong>
+              <p>{horse.color}</p>
+            </div>
+            <div className="info-item">
+              <strong>Height</strong>
+              <p>{horse.height_cm} m ({heightInHH} hh)</p>
+            </div>
+            <div className="info-item">
+              <strong>Piroplasmosis</strong>
+              <p>{horse.piroplasmosis ? 'Yes' : 'No'}</p>
+            </div>
+            <div className="info-item">
+              <strong>Training Level</strong>
+              <p>{horse.training_level}</p>
+            </div>
+          </div>
+
+          {/* Description */}
+          <div className="description-section">
+            <strong>Description</strong>
+            <p>{horse.description}</p>
+          </div>
         </div>
-      </div>
 
-
-        {/* Imagens e Vídeos */}
+        {/* Images and Videos */}
         <div className="profile-gallery">
-          <h2 className="section-title">Imagens e Vídeos</h2>
+          <h2 className="section-title">Images and Videos</h2>
           <ProfileMedia images={horse.images} videos={horse.videos} />
         </div>
 
-        {/* Genealogia */}
+        {/* Genealogy */}
         <div className="genealogy-section">
-          <h2 className="section-title-geno">Genealogia</h2>
-        {hasAncestorsData(horse.ancestors) ? (
-          <GenealogyTree horse={horse} />
-        ) : (
-          <p className="no-genealogy">Sem informações genealógicas disponíveis.</p>
-        )}
+          <h2 className="section-title-geno">Genealogy</h2>
+          {hasAncestorsData(horse.ancestors) ? (
+            <GenealogyTree horse={horse} />
+          ) : (
+            <p className="no-genealogy">No genealogy information available.</p>
+          )}
         </div>
 
         {showDeleteModal && (
           <div className="modal-overlay">
             <div className="modal-content">
-              <h3>Eliminar Cavalo</h3>
+              <h3>Delete Horse</h3>
               <div className="delete-options">
                 {!deleteMessage ? (
                   <>
@@ -259,19 +259,19 @@ const ProfileHorse = ({ setIsLoggedIn }) => {
                       className="delete-option-button"
                       onClick={() => handleDelete("destroy")}
                     >
-                      <FaTrash /> <p>Apagar para Todos</p>
+                      <FaTrash /> <p>Delete for Everyone</p>
                     </button>
                     <button
                       className="delete-option-button"
                       onClick={() => handleDelete("delete_shares")}
                     >
-                      <FaTrash /> <p>Apagar para Partilhados</p>
+                      <FaTrash /> <p>Delete for Shared</p>
                     </button>
                     <button
                       className="modal-close"
                       onClick={() => setShowDeleteModal(false)}
                     >
-                      Cancelar
+                      Cancel
                     </button>
                   </>
                 ) : (
@@ -282,28 +282,27 @@ const ProfileHorse = ({ setIsLoggedIn }) => {
           </div>
         )}
 
-      {/* Modal de Compartilhar */}
-      {showShareModal && (
-        <ShareHorse
-          horseId={id}
-          onClose={() => setShowShareModal(false)}
-        />
-      )}
+        {/* Share Modal */}
+        {showShareModal && (
+          <ShareHorse
+            horseId={id}
+            onClose={() => setShowShareModal(false)}
+          />
+        )}
 
-      {/* Lightbox para visualização de imagens */}
-      {isOpen && (
-        <Lightbox
-          open={isOpen}
-          close={() => setIsOpen(false)}
-          slides={horse.images.map((image) => ({ src: image }))}
-          currentIndex={selectedImage}
-          onIndexChange={(index) => setSelectedImage(index)}
-        />
-      )}
-    </div>
-  </Layout>
-);
-
+        {/* Lightbox for image preview */}
+        {isOpen && (
+          <Lightbox
+            open={isOpen}
+            close={() => setIsOpen(false)}
+            slides={horse.images.map((image) => ({ src: image }))}
+            currentIndex={selectedImage}
+            onIndexChange={(index) => setSelectedImage(index)}
+          />
+        )}
+      </div>
+    </Layout>
+  );
 };
 
 export default ProfileHorse;

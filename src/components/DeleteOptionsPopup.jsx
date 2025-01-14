@@ -5,7 +5,7 @@ const DeleteOptionsPopup = ({ onClose, onDeleteForSelfAndSubsequent, onDeleteFor
   return (
     <div className="popup-overlay">
       <div className="popup-content">
-        <h3>Escolha a Opção de Eliminação</h3>
+        <h3>Choose Deletion Option</h3>
         <button
           className="delete-option-button"
           onClick={() => {
@@ -13,7 +13,7 @@ const DeleteOptionsPopup = ({ onClose, onDeleteForSelfAndSubsequent, onDeleteFor
             onDeleteForSelfAndSubsequent();
           }}
         >
-          Eliminar para mim e subsequentes
+          Delete for me and subsequent users
         </button>
         <button
           className="delete-option-button"
@@ -22,10 +22,10 @@ const DeleteOptionsPopup = ({ onClose, onDeleteForSelfAndSubsequent, onDeleteFor
             onDeleteForSubsequentOnly();
           }}
         >
-          Eliminar para subsequentes
+          Delete for subsequent users only
         </button>
         <button className="cancel-button" onClick={onClose}>
-          Cancelar
+          Cancel
         </button>
       </div>
     </div>

@@ -12,7 +12,6 @@ const Layout = ({ setIsLoggedIn, children }) => {
     ? 'https://res.cloudinary.com/dcvtrregd/image/upload/v1736802678/user_1_vl6pae.png'
     : 'https://res.cloudinary.com/dcvtrregd/image/upload/v1736802680/user_yp8nup.png';
 
-
   const handleLogout = () => {
     if (localStorage.getItem('authToken')) {
       localStorage.removeItem('authToken');
@@ -44,10 +43,10 @@ const Layout = ({ setIsLoggedIn, children }) => {
           setUserName(`${data.first_name}`);
           setUserGender(data.gender);
         } else {
-          setUserName('Usuário');
+          setUserName('User');
         }
       } catch (error) {
-        setUserName('Usuário');
+        setUserName('User');
       }
     };
     fetchProfile();
@@ -56,18 +55,24 @@ const Layout = ({ setIsLoggedIn, children }) => {
   return (
     <div className="layout-container">
       <div className="navbar">
-      <Link to="/dashboard" className="logo-link">
-          <img src="https://res.cloudinary.com/dcvtrregd/image/upload/v1736812812/HorsesInPocket/HorsesInPocket/FullLogo_Transparent_2_pm6gp2.png" alt="HorsesInPocket Logo" className="logo-image" />
+        <Link to="/dashboard" className="logo-link">
+          <img
+            src="https://res.cloudinary.com/dcvtrregd/image/upload/v1736812812/HorsesInPocket/HorsesInPocket/FullLogo_Transparent_2_pm6gp2.png"
+            alt="HorsesInPocket Logo"
+            className="logo-image"
+          />
         </Link>
         <div className="user-info" ref={menuRef}>
           <span className="user-text" onClick={() => setMenuOpen(!menuOpen)}>
-            <strong>Olá</strong>, {userName}
+            <strong>Hello</strong>, {userName}
             <img src={avatarUrl} alt="User Avatar" className="user-avatar" />
           </span>
           {menuOpen && (
             <div className="dropdown-menu">
-              <Link to="/profile">Perfil</Link>
-              <a href='' onClick={handleLogout} className="logout-button">Sair</a>
+              <Link to="/profile">Profile</Link>
+              <a href="" onClick={handleLogout} className="logout-button">
+                Logout
+              </a>
             </div>
           )}
         </div>

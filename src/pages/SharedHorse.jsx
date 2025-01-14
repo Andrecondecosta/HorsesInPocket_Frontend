@@ -2,7 +2,7 @@ import React, { useEffect, useState } from 'react';
 import { useParams, useNavigate } from 'react-router-dom';
 
 const SharedHorse = () => {
-  const { token } = useParams(); // Captura o token da URL
+  const { token } = useParams(); // Capture the token from the URL
   const navigate = useNavigate();
   const [error, setError] = useState(null);
   const [loading, setLoading] = useState(true);
@@ -11,7 +11,7 @@ const SharedHorse = () => {
     const handleSharedLink = async () => {
       const authToken = localStorage.getItem('authToken');
       if (!authToken) {
-        // Redireciona para o login se não autenticado
+        // Redirect to login if not authenticated
         navigate(`/login?redirect=/horses/shared/${token}`);
         return;
       }
@@ -21,17 +21,17 @@ const SharedHorse = () => {
           `${process.env.REACT_APP_API_SERVER_URL}/horses/shared/${token}`,
           {
             headers: {
-              'Authorization': `Bearer ${authToken}`,
+              Authorization: `Bearer ${authToken}`,
             },
           }
         );
 
         if (!response.ok) {
           const errorData = await response.json();
-          throw new Error(errorData.error || 'Erro ao processar o link.');
+          throw new Error(errorData.error || 'Failed to process the link.');
         }
 
-        // Redireciona para a página de recebidos após sucesso
+        // Redirect to the "received" page on success
         navigate('/received');
       } catch (err) {
         setError(err.message);
@@ -43,7 +43,7 @@ const SharedHorse = () => {
     handleSharedLink();
   }, [token, navigate]);
 
-  if (loading) return <p>A processar o link...</p>;
+  if (loading) return <p>Processing the link...</p>;
   if (error) return <p className="error-message">{error}</p>;
   return null;
 };

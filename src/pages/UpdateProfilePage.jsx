@@ -30,12 +30,12 @@ const UpdateProfilePage = () => {
           method: 'GET',
           headers: {
             'Content-Type': 'application/json',
-            'Authorization': `Bearer ${token}`,
+            Authorization: `Bearer ${token}`,
           },
         });
 
         if (!response.ok) {
-          throw new Error('Erro ao carregar perfil');
+          throw new Error('Error loading profile');
         }
 
         const data = await response.json();
@@ -47,12 +47,13 @@ const UpdateProfilePage = () => {
           phone_number: data.phone_number || '',
           address: data.address || '',
         });
-        const avatarUrl = data.gender === 'male'
-        ? 'https://res.cloudinary.com/dcvtrregd/image/upload/v1736802678/user_1_vl6pae.png'
-        : 'https://res.cloudinary.com/dcvtrregd/image/upload/v1736802680/user_yp8nup.png';
-      setAvatar(data.avatar || avatarUrl);
+        const avatarUrl =
+          data.gender === 'male'
+            ? 'https://res.cloudinary.com/dcvtrregd/image/upload/v1736802678/user_1_vl6pae.png'
+            : 'https://res.cloudinary.com/dcvtrregd/image/upload/v1736802680/user_yp8nup.png';
+        setAvatar(data.avatar || avatarUrl);
       } catch (error) {
-        setError('Erro ao carregar perfil do usuário');
+        setError('Error loading user profile');
       } finally {
         setIsLoading(false);
       }
@@ -61,7 +62,7 @@ const UpdateProfilePage = () => {
     if (token) {
       fetchProfile();
     } else {
-      setError('Token não encontrado');
+      setError('Token not found');
       setIsLoading(false);
     }
   }, [token]);
@@ -84,59 +85,59 @@ const UpdateProfilePage = () => {
         method: 'PUT',
         headers: {
           'Content-Type': 'application/json',
-          'Authorization': `Bearer ${token}`,
+          Authorization: `Bearer ${token}`,
         },
-        body: JSON.stringify({ user: formData }), // Certifique-se de usar "user"
+        body: JSON.stringify({ user: formData }), // Ensure the use of "user"
       });
 
       if (!response.ok) {
-        throw new Error('Erro ao atualizar perfil');
+        throw new Error('Error updating profile');
       }
 
-      setSuccess('Perfil atualizado com sucesso!');
+      setSuccess('Profile updated successfully!');
       setTimeout(() => navigate('/profile'), 2000);
     } catch (error) {
-      setError('Erro ao atualizar perfil');
+      setError('Error updating profile');
     }
   };
 
-if (isLoading) return <LoadingPopup message="Carregando ..." />;
+  if (isLoading) return <LoadingPopup message="Loading ..." />;
   if (error) return <p>{error}</p>;
 
   return (
-    <Layout >
+    <Layout>
       <div className="update-profile-page-container">
-        <h1 className="page-title">Editar Perfil</h1>
+        <h1 className="page-title">Edit Profile</h1>
         <div className="profile-breadcrumb-container">
           <div className="breadcrumbs">
-            <a href="/dashboard">Dashboard</a> / <a href="/profile">Definições</a> / <span>Editar Perfil</span>
+            <a href="/dashboard">Dashboard</a> / <a href="/profile">Settings</a> / <span>Edit Profile</span>
           </div>
-          {/* Botão Salvar conectado ao formulário */}
+          {/* Save Button connected to the form */}
           <div className="profile-edit-actions">
             <button
               type="submit"
               className="profile-save-button"
-              form="update-profile-form" // Conecta o botão ao formulário
+              form="update-profile-form" // Connect the button to the form
             >
-              <FaSave /> Salvar
+              <FaSave /> Save
             </button>
           </div>
         </div>
         <div className="update-profile-details-container">
-          {/* Imagem de perfil */}
+          {/* Profile Image */}
           <div className="profile-image">
-            <img src={avatar} alt="Foto de Perfil" />
+            <img src={avatar} alt="Profile Picture" />
           </div>
 
-          {/* Formulário de edição */}
+          {/* Edit Form */}
           <form
-            id="update-profile-form" // Identificador do formulário
+            id="update-profile-form" // Form identifier
             onSubmit={handleSubmit}
             className="inline-edit-profile"
           >
             <div className="profile-details">
               <p>
-                <strong>Nome:</strong>
+                <strong>First Name:</strong>
                 <input
                   type="text"
                   name="first_name"
@@ -146,7 +147,7 @@ if (isLoading) return <LoadingPopup message="Carregando ..." />;
                 />
               </p>
               <p>
-                <strong>Apelido:</strong>
+                <strong>Last Name:</strong>
                 <input
                   type="text"
                   name="last_name"
@@ -156,7 +157,7 @@ if (isLoading) return <LoadingPopup message="Carregando ..." />;
                 />
               </p>
               <p>
-                <strong>Data de Nascimento:</strong>
+                <strong>Date of Birth:</strong>
                 <input
                   type="date"
                   name="birthdate"
@@ -166,21 +167,21 @@ if (isLoading) return <LoadingPopup message="Carregando ..." />;
                 />
               </p>
               <p>
-                <strong>Gênero:</strong>
+                <strong>Gender:</strong>
                 <select
                   name="gender"
                   value={formData.gender}
                   onChange={handleInputChange}
                   className="inline-input"
                 >
-                  <option value="">Selecione</option>
-                  <option value="male">Masculino</option>
-                  <option value="female">Feminino</option>
-                  <option value="other">Outro</option>
+                  <option value="">Select</option>
+                  <option value="male">Male</option>
+                  <option value="female">Female</option>
+                  <option value="other">Other</option>
                 </select>
               </p>
               <p>
-                <strong>Telefone:</strong>
+                <strong>Phone Number:</strong>
                 <input
                   type="tel"
                   name="phone_number"
@@ -190,7 +191,7 @@ if (isLoading) return <LoadingPopup message="Carregando ..." />;
                 />
               </p>
               <p>
-                <strong>Endereço:</strong>
+                <strong>Address:</strong>
                 <input
                   type="text"
                   name="address"

@@ -36,8 +36,7 @@ const EditHorse = ({ setIsLoggedIn }) => {
   const [deletedVideos, setDeletedVideos] = useState([]);
   const [newImages, setNewImages] = useState([]);
   const [newVideos, setNewVideos] = useState([]);
-  const [existingVideos, setExistingVideos] = useState([]); // Lista de URLs de vídeos existentes
-
+  const [existingVideos, setExistingVideos] = useState([]);
 
   useEffect(() => {
     const fetchHorse = async () => {
@@ -49,15 +48,14 @@ const EditHorse = ({ setIsLoggedIn }) => {
         });
 
         if (!response.ok) {
-          throw new Error('Erro ao carregar cavalo');
+          throw new Error('Failed to load horse data');
         }
 
-        const horseData = await response.json(); // Renomeie para `horseData` para evitar confusão
+        const horseData = await response.json();
         setHorse(horseData);
 
         setExistingVideos(horseData.videos || []);
 
-        // Atualiza imagens e vídeos, se forem arrays
         if (Array.isArray(horseData.images)) {
           setImages(horseData.images);
         }
@@ -66,7 +64,6 @@ const EditHorse = ({ setIsLoggedIn }) => {
           setVideos(horseData.videos);
         }
 
-        // Atualiza ancestrais
         const loadedAncestors = {};
         horseData.ancestors?.forEach((ancestor) => {
           loadedAncestors[ancestor.relation_type] = ancestor;
@@ -74,8 +71,8 @@ const EditHorse = ({ setIsLoggedIn }) => {
         setAncestors(loadedAncestors);
 
       } catch (error) {
-        console.error('Erro ao carregar cavalo:', error);
-        setError('Erro ao carregar cavalo');
+        console.error('Error loading horse data:', error);
+        setError('Failed to load horse data');
       } finally {
         setIsLoading(false);
       }
@@ -85,14 +82,12 @@ const EditHorse = ({ setIsLoggedIn }) => {
   }, [id]);
 
   const handleNextStep = () => {
-    setCurrentStep((prevStep) => Math.min(prevStep + 1, 3)); // Limita o máximo a 3
+    setCurrentStep((prevStep) => Math.min(prevStep + 1, 3));
   };
 
   const handlePreviousStep = () => {
-    setCurrentStep((prevStep) => Math.max(prevStep - 1, 1)); // Limita o mínimo a 1
+    setCurrentStep((prevStep) => Math.max(prevStep - 1, 1));
   };
-
-
 
   const handleChange = (e) => {
     const { name, value, type, checked } = e.target;
@@ -125,40 +120,32 @@ const EditHorse = ({ setIsLoggedIn }) => {
   const removeImage = (indexToRemove) => {
     const imageToRemove = images[indexToRemove];
     if (typeof imageToRemove === 'string') {
-      // Adiciona o URL da imagem a ser excluída
       setDeletedImages((prev) => [...prev, imageToRemove]);
-      console.log('Imagem a ser excluída:', imageToRemove);
     }
-    // Remove a imagem da lista exibida
     setImages((prevImages) => prevImages.filter((_, index) => index !== indexToRemove));
   };
 
   const removeVideo = (indexToRemove) => {
     const videoToRemove = videos[indexToRemove];
     if (typeof videoToRemove === 'string') {
-      // Adiciona o URL do vídeo a ser excluído
       setDeletedVideos((prev) => [...prev, videoToRemove]);
-      console.log('Vídeo a ser excluído:', videoToRemove);
     }
-    // Remove o vídeo da lista exibida
     setVideos((prevVideos) => prevVideos.filter((_, index) => index !== indexToRemove));
   };
-
 
   const handleSubmit = async (e) => {
     e.preventDefault();
 
     const combinedVideos = [...existingVideos, ...newVideos];
 
-
     if (combinedVideos.length > 3) {
-      alert("Você pode adicionar no máximo 3 vídeos.");
+      alert("You can only add up to 3 videos.");
       return;
     }
+
     setIsSubmitting(true);
     const formData = new FormData();
 
-    // Adicionar dados do cavalo
     formData.append('horse[name]', horse.name);
     formData.append('horse[age]', horse.age);
     formData.append('horse[height_cm]', horse.height_cm);
@@ -168,7 +155,6 @@ const EditHorse = ({ setIsLoggedIn }) => {
     formData.append('horse[training_level]', horse.training_level);
     formData.append('horse[piroplasmosis]', horse.piroplasmosis);
 
-    // URLs de arquivos existentes (para preservação)
     images.forEach((image) => {
       if (typeof image === 'string') {
         formData.append('existing_images[]', image);
@@ -181,11 +167,9 @@ const EditHorse = ({ setIsLoggedIn }) => {
       }
     });
 
-    // Novos arquivos para upload
     newImages.forEach((image) => formData.append('horse[images][]', image));
     newVideos.forEach((video) => formData.append('horse[videos][]', video));
 
-    // Arquivos para exclusão
     deletedImages.forEach((imageUrl) => formData.append('deleted_images[]', imageUrl));
     deletedVideos.forEach((videoUrl) => formData.append('deleted_videos[]', videoUrl));
 
@@ -205,152 +189,145 @@ const EditHorse = ({ setIsLoggedIn }) => {
         setVideos(updatedHorse.videos);
         navigate(`/horses/${id}`);
       } else {
-        console.error('Erro ao atualizar cavalo:', response.statusText);
+        console.error('Error updating horse:', response.statusText);
       }
     } catch (error) {
-      console.error('Erro ao enviar os dados:', error);
+      console.error('Error submitting data:', error);
     } finally {
       setIsSubmitting(false);
     }
-
   };
 
-
-  if (isLoading) return <LoadingPopup message="Carregando ..." />;
-  if (error) return <p>{error}</p>;
-
-return (
-  <Layout setIsLoggedIn={setIsLoggedIn}>
-    <div className="edit-horse-container">
-      <h1 className="edit-page-title">Editar Cavalo</h1>
-      <div className="edit-breadcrumbs">
-        <a href="/dashboard">Dashboard /</a>
-        <a href="/myhorses">Meus Cavalos /</a>
-        <span>Editar Cavalo</span>
-      </div>
-
-      <div className="edit-steps-navigation">
-        <div className="edit-steps-line"></div>
-        <div className="edit-step">
-          <div className={`edit-step-circle ${currentStep === 1 ? 'active' : ''}`}>1</div>
-          <span className="edit-step-title">Informação Específica</span>
+  return (
+    <Layout setIsLoggedIn={setIsLoggedIn}>
+      <div className="edit-horse-container">
+        <h1 className="edit-page-title">Edit Horse</h1>
+        <div className="edit-breadcrumbs">
+          <a href="/dashboard">Dashboard /</a>
+          <a href="/myhorses">My Horses /</a>
+          <span>Edit Horse</span>
         </div>
-        <div className="edit-step">
-          <div className={`edit-step-circle ${currentStep === 2 ? 'active' : ''}`}>2</div>
-          <span className="edit-step-title2">Imagens e Vídeos</span>
+
+        <div className="edit-steps-navigation">
+          <div className="edit-steps-line"></div>
+          <div className="edit-step">
+            <div className={`edit-step-circle ${currentStep === 1 ? 'active' : ''}`}>1</div>
+            <span className="edit-step-title">Specific Information</span>
+          </div>
+          <div className="edit-step">
+            <div className={`edit-step-circle ${currentStep === 2 ? 'active' : ''}`}>2</div>
+            <span className="edit-step-title2">Images and Videos</span>
+          </div>
+          <div className="edit-steps-line-2"></div>
+          <div className="edit-step">
+            <div className={`edit-step-circle ${currentStep === 3 ? 'active' : ''}`}>3</div>
+            <span className="edit-step-title3">Genealogy</span>
+          </div>
         </div>
-        <div className="edit-steps-line-2"></div>
-        <div className="edit-step">
-          <div className={`edit-step-circle ${currentStep === 3 ? 'active' : ''}`}>3</div>
-          <span className="edit-step-title3">Genealogia</span>
-        </div>
-      </div>
 
         {currentStep === 1 && (
-        <form className="edit-horse-form">
-          <>
-            <input
-              type="text"
-              name="name"
-              className="edit-input"
-              placeholder="Nome"
-              value={horse.name}
-              onChange={handleChange}
-              required
-            />
-            <input
-              type="number"
-              name="age"
-              className="edit-input"
-              placeholder="Idade"
-              value={horse.age}
-              onChange={handleChange}
-              required
-            />
-            <select
-              name="gender"
-              className="edit-select"
-              value={horse.gender}
-              onChange={handleChange}
-              required
-            >
-              <option value="">Gênero</option>
-              <option value="gelding">Castrado</option>
-              <option value="mare">Égua</option>
-              <option value="stallion">Garanhão</option>
-            </select>
-            <select
-              name="color"
-              className="edit-select"
-              value={horse.color}
-              onChange={handleChange}
-            >
-              <option value="">Cor</option>
-              <option value="Baio">Baio</option>
-              <option value="Castanho">Castanho</option>
-              <option value="Alazão">Alazão</option>
-              <option value="Preto">Preto</option>
-              <option value="Tordilho">Tordilho</option>
-              <option value="Ruão">Ruão</option>
-              <option value="Palomino">Palomino</option>
-              <option value="Isabel">Isabel</option>
-              <option value="Ruço">Ruço</option>
-            </select>
-            <input
-              type="text"
-              name="training_level"
-              className="edit-input"
-              placeholder="Nível de Treinamento"
-              value={horse.training_level}
-              onChange={handleChange}
-            />
-            <div className="edit-piroplasmosis-label">
-              <label>Piroplasmosis</label>
+          <form className="edit-horse-form">
+            <>
               <input
-                type="checkbox"
-                name="piroplasmosis"
-                checked={horse.piroplasmosis}
+                type="text"
+                name="name"
+                className="edit-input"
+                placeholder="Name"
+                value={horse.name}
+                onChange={handleChange}
+                required
+              />
+              <input
+                type="number"
+                name="age"
+                className="edit-input"
+                placeholder="Age"
+                value={horse.age}
+                onChange={handleChange}
+                required
+              />
+              <select
+                name="gender"
+                className="edit-select"
+                value={horse.gender}
+                onChange={handleChange}
+                required
+              >
+                <option value="">Gender</option>
+                <option value="gelding">Gelding</option>
+                <option value="mare">Mare</option>
+                <option value="stallion">Stallion</option>
+              </select>
+              <select
+                name="color"
+                className="edit-select"
+                value={horse.color}
+                onChange={handleChange}
+              >
+                <option value="">Color</option>
+                <option value="Bay">Bay</option>
+                <option value="Chestnut">Chestnut</option>
+                <option value="Black">Black</option>
+                <option value="Gray">Gray</option>
+                <option value="Roan">Roan</option>
+                <option value="Palomino">Palomino</option>
+                <option value="Isabella">Isabella</option>
+              </select>
+              <input
+                type="text"
+                name="training_level"
+                className="edit-input"
+                placeholder="Training Level"
+                value={horse.training_level}
                 onChange={handleChange}
               />
-            </div>
-            <div className="edit-height-slider-container">
-              <div className="edit-height-slider-label">Altura</div>
-              <div style={{ display: 'flex', justifyContent: 'space-between', width: '100%' }}>
-                <span>{`${horse.height_cm}m`}</span>
-                <span>{`(${(horse.height_cm / 0.1016).toFixed(1)}hh)`}</span>
+              <div className="edit-piroplasmosis-label">
+                <label>Piroplasmosis</label>
+                <input
+                  type="checkbox"
+                  name="piroplasmosis"
+                  checked={horse.piroplasmosis}
+                  onChange={handleChange}
+                />
               </div>
-              <input
-                type="range"
-                name="height_cm"
-                className="edit-height-slider"
-                min="0.5"
-                max="2.5"
-                step="0.01"
-                value={horse.height_cm}
-                onChange={handleHeightChange}
+              <div className="edit-height-slider-container">
+                <div className="edit-height-slider-label">Height</div>
+                <div style={{ display: 'flex', justifyContent: 'space-between', width: '100%' }}>
+                  <span>{`${horse.height_cm}m`}</span>
+                  <span>{`(${(horse.height_cm / 0.1016).toFixed(1)}hh)`}</span>
+                </div>
+                <input
+                  type="range"
+                  name="height_cm"
+                  className="edit-height-slider"
+                  min="0.5"
+                  max="2.5"
+                  step="0.01"
+                  value={horse.height_cm}
+                  onChange={handleHeightChange}
+                />
+              </div>
+              <textarea
+                name="description"
+                className="edit-textarea"
+                placeholder="Horse Description"
+                value={horse.description}
+                onChange={handleChange}
               />
-            </div>
-            <textarea
-              name="description"
-              className="edit-textarea"
-              placeholder="Descrição do cavalo"
-              value={horse.description}
-              onChange={handleChange}
-            />
-          </>
+            </>
           </form>
         )}
 
         {currentStep === 2 && (
           <div className="edit-upload-container">
             <div className="edit-upload-block">
-              <h2>Imagem</h2>
-              <p>Máximo de 5 imagens, até 10 MB cada.</p>
+              <h2>Image</h2>
+              <p>Maximum 5 images, up to 10 MB each.</p>
               <button
                 className="edit-upload-button"
                 onClick={() => document.getElementById('edit-imageUpload').click()}
               >
-                Escolher Imagem
+                Choose Image
               </button>
               <input
                 type="file"
@@ -360,7 +337,6 @@ return (
                 style={{ display: 'none' }}
               />
               {error && <p className="edit-error-message">{error}</p>}
-              <div className="edit-image-upload-list">
               <div className="edit-image-upload-list">
                 {images.map((image, index) => (
                   <div key={index} className="edit-image-upload-item">
@@ -381,18 +357,16 @@ return (
                   </div>
                 ))}
               </div>
-
-              </div>
             </div>
 
             <div className="edit-upload-block">
-              <h2>Vídeo</h2>
-              <p>Máximo de 3 vídeos, até 50 MB cada.</p>
+              <h2>Video</h2>
+              <p>Maximum 3 videos, up to 50 MB each.</p>
               <button
                 className="edit-upload-button"
                 onClick={() => document.getElementById('edit-videoUpload').click()}
               >
-                Escolher Vídeo
+                Choose Video
               </button>
               <input
                 type="file"
@@ -433,19 +407,20 @@ return (
           </div>
         )}
 
-         {/* Botões */}
-          <div className="step-buttons">
-          {currentStep > 1 && <button className="step-button" onClick={handlePreviousStep}>Voltar</button>}
-          {currentStep < 3 && <button className="step-button" onClick={handleNextStep}>Próximo</button>}
-          {currentStep === 3 && <button type="submit" onClick={handleSubmit} className="step-button">
-          Criar Cavalo
-          </button>}
+        {/* Buttons */}
+        <div className="step-buttons">
+          {currentStep > 1 && <button className="step-button" onClick={handlePreviousStep}>Back</button>}
+          {currentStep < 3 && <button className="step-button" onClick={handleNextStep}>Next</button>}
+          {currentStep === 3 && (
+            <button type="submit" onClick={handleSubmit} className="step-button">
+              Update Horse
+            </button>
+          )}
         </div>
-    </div>
-    {isSubmitting && <LoadingPopup message="A guardar o cavalo, por favor aguarde..." />}
-  </Layout>
-);
-
+      </div>
+      {isSubmitting && <LoadingPopup message="Saving the horse, please wait..." />}
+    </Layout>
+  );
 };
 
 export default EditHorse;

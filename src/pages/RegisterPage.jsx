@@ -37,20 +37,24 @@ const RegisterPage = () => {
     if (receivedToken) {
       navigate('/login');
     } else {
-      console.error('Registo falhou: Token não foi recebido.');
+      console.error('Registration failed: Token was not received.');
     }
   };
 
   return (
     <div className="register-page">
-      {/* Lado esquerdo com a imagem */}
+      {/* Left side with the image */}
       <div className="register-image"></div>
 
-      {/* Lado direito com o formulário */}
+      {/* Right side with the form */}
       <div className="register-container">
         <div className="register-header">
-        <img src="https://res.cloudinary.com/dcvtrregd/image/upload/v1736812812/HorsesInPocket/HorsesInPocket/FullLogo_Transparent_2_pm6gp2.png" alt="HorsesInPocket Logo" className="register-logo-image" />
-          <h2>Registo</h2>
+          <img
+            src="https://res.cloudinary.com/dcvtrregd/image/upload/v1736812812/HorsesInPocket/HorsesInPocket/FullLogo_Transparent_2_pm6gp2.png"
+            alt="HorsesInPocket Logo"
+            className="register-logo-image"
+          />
+          <h2>Register</h2>
         </div>
 
         {error && <p className="error-message">{error}</p>}
@@ -59,7 +63,7 @@ const RegisterPage = () => {
           <input
             className="half-width"
             type="text"
-            placeholder="Nome"
+            placeholder="First Name"
             value={firstName}
             onChange={(e) => setFirstName(e.target.value)}
             required
@@ -67,7 +71,7 @@ const RegisterPage = () => {
           <input
             className="half-width"
             type="text"
-            placeholder="Apelido"
+            placeholder="Last Name"
             value={lastName}
             onChange={(e) => setLastName(e.target.value)}
             required
@@ -78,15 +82,15 @@ const RegisterPage = () => {
             onChange={(e) => setGender(e.target.value)}
             required
           >
-            <option value="">Género</option>
-            <option value="male">Masculino</option>
-            <option value="female">Feminino</option>
-            <option value="other">Outro</option>
+            <option value="">Gender</option>
+            <option value="male">Male</option>
+            <option value="female">Female</option>
+            <option value="other">Other</option>
           </select>
           <input
             className="half-width"
             type="date"
-            placeholder="Data de Nascimento"
+            placeholder="Date of Birth"
             value={birthdate}
             onChange={(e) => setBirthdate(e.target.value)}
             required
@@ -94,14 +98,14 @@ const RegisterPage = () => {
           <input
             className="half-width"
             type="tel"
-            placeholder="Telefone"
+            placeholder="Phone Number"
             value={phoneNumber}
             onChange={(e) => setPhoneNumber(e.target.value)}
           />
           <input
             className="half-width"
             type="text"
-            placeholder="Endereço"
+            placeholder="Address"
             value={address}
             onChange={(e) => setAddress(e.target.value)}
           />
@@ -124,18 +128,18 @@ const RegisterPage = () => {
           <input
             className="half-width"
             type="password"
-            placeholder="Confirmar Password"
+            placeholder="Confirm Password"
             value={passwordConfirmation}
             onChange={(e) => setPasswordConfirmation(e.target.value)}
             required
           />
           <button type="submit" className="register-button" disabled={loading}>
-            {loading ? 'A Registar...' : 'Registar'}
+            {loading ? 'Registering...' : 'Register'}
           </button>
         </form>
 
         <p className="login-message">
-          Já tem Conta? <Link to="/login">Efetue o Login</Link>.
+          Already have an account? <Link to="/login">Log In</Link>.
         </p>
       </div>
     </div>
