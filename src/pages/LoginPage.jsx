@@ -30,8 +30,9 @@ const LoginPage = ({ setIsLoggedIn }) => {
       {/* Lado direito com o formulário */}
       <div className="login-container">
         <div className="login-header">
-          <div className="login-logo">LOGO</div>
-          <h2>HorsesInPocket</h2>
+          <div className="login-logo">
+          <img src="https://res.cloudinary.com/dcvtrregd/image/upload/v1736812812/HorsesInPocket/HorsesInPocket/FullLogo_Transparent_2_pm6gp2.png" alt="HorsesInPocket Logo" className="login-logo-image" />
+          </div>
         </div>
         <form className="login-form" onSubmit={handleSubmit}>
           <div className="input-group">

@@ -49,7 +49,7 @@ const RegisterPage = () => {
       {/* Lado direito com o formulário */}
       <div className="register-container">
         <div className="register-header">
-          <div className="register-logo">LOGO</div>
+        <img src="https://res.cloudinary.com/dcvtrregd/image/upload/v1736812812/HorsesInPocket/HorsesInPocket/FullLogo_Transparent_2_pm6gp2.png" alt="HorsesInPocket Logo" className="register-logo-image" />
           <h2>Registo</h2>
         </div>
 

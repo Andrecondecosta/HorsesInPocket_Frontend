@@ -43,6 +43,10 @@ const ProfilePage = () => {
     }
   }, [token]);
 
+  const avatarUrl = user.gender === 'male'
+    ? 'https://res.cloudinary.com/dcvtrregd/image/upload/v1736802678/user_1_vl6pae.png'
+    : 'https://res.cloudinary.com/dcvtrregd/image/upload/v1736802680/user_yp8nup.png';
+
   if (isLoading) return <LoadingPopup message="Carregando ..." />;
   if (error) return <p>{error}</p>;
 
@@ -64,10 +68,10 @@ const ProfilePage = () => {
         <div className="profile-details-container">
           {/* Imagem de perfil */}
           <div className="profile-image">
-            <img
-              src={user.avatar || 'https://via.placeholder.com/150'} // Avatar genérico
-              alt="Foto de Perfil"
-            />
+          <img
+          src={user.avatar || avatarUrl} // Avatar genérico
+          alt="Foto de Perfil"
+        />
           </div>
 
           {/* Informações do perfil */}

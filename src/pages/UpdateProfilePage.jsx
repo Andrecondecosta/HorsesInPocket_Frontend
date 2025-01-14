@@ -16,6 +16,7 @@ const UpdateProfilePage = () => {
     address: '',
   });
   const [avatar, setAvatar] = useState('');
+  const [user, setUser] = useState({});
   const [isLoading, setIsLoading] = useState(true);
   const [error, setError] = useState(null);
   const [success, setSuccess] = useState(null);
@@ -46,7 +47,10 @@ const UpdateProfilePage = () => {
           phone_number: data.phone_number || '',
           address: data.address || '',
         });
-        setAvatar(data.avatar || 'https://via.placeholder.com/150');
+        const avatarUrl = data.gender === 'male'
+        ? 'https://res.cloudinary.com/dcvtrregd/image/upload/v1736802678/user_1_vl6pae.png'
+        : 'https://res.cloudinary.com/dcvtrregd/image/upload/v1736802680/user_yp8nup.png';
+      setAvatar(data.avatar || avatarUrl);
       } catch (error) {
         setError('Erro ao carregar perfil do usuário');
       } finally {
@@ -95,6 +99,7 @@ const UpdateProfilePage = () => {
       setError('Erro ao atualizar perfil');
     }
   };
+
 if (isLoading) return <LoadingPopup message="Carregando ..." />;
   if (error) return <p>{error}</p>;
 

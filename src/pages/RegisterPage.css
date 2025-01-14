@@ -57,18 +57,14 @@ body, html {
   font-size: 28px;
   color: var(--text-dark);
   font-weight: bold;
-  margin-bottom: 30px;
+  margin-bottom: 6px;
+  margin-top: -20%;
 }
 
-.register-logo {
-  width: 80px;
-  height: 80px;
-  border: 2px solid var(--gray-border);
-  border-radius: 50%;
-  display: flex;
-  align-items: center;
-  justify-content: center;
-  margin-bottom: 10px;
+.register-logo-image {
+  width: 95%;
+  margin-top: -33%;
+  margin-left: -5%;
 }
 
 /* Formulário */
@@ -165,22 +161,22 @@ body, html {
   .register-header h2 {
     font-size: 20px;
     margin-left: 47px;
+    margin-top: -110px;
   }
 
-  .register-logo {
-    width: 50px;
-    height: 50px;
-    margin-left: 58px;
+  .register-logo-image {
+    width: 61%;
+    margin-top: -21%;
+    margin-left: 3%;
   }
 
   .register-form {
-    width: 90%;
+    width: 56%;
     max-width: 450px;
-    display: flex
-;
-    flex-wrap: wrap;
-    gap: 20px;
+    display: flex;
+    gap: 5px;
     margin-left: 42px;
+    margin-top: -2%;
 }
 
 .register-form input,
@@ -225,7 +221,7 @@ body, html {
 
   .register-container {
     flex: none;
-    width: 110%; /* Faz o formulário ocupar toda a largura */
+    width: 114%; /* Faz o formulário ocupar toda a largura */
     height: 100vh; /* Faz o formulário ocupar toda a altura */
     padding: 20px; /* Ajusta o espaçamento */
     box-shadow: none; /* Remove a sombra */
@@ -233,15 +229,15 @@ body, html {
 
 
   .register-header h2 {
+    margin-top: -19%;
     font-size: 18px;
-    font-size: 20px;
     margin-left: 47px;
   }
 
-  .register-logo {
-    width: 40px;
-    height: 40px;
-    margin-left: 58px;
+  .register-logo-image {
+    width: 104%;
+    margin-top: -33%;
+    margin-left: 3%;
   }
 
   .register-form input,
@@ -255,12 +251,11 @@ body, html {
     font-size: 14px;
   }
   .register-form {
-    width: 90%;
+    width: 76%;
     max-width: 450px;
-    display: flex
-;
+    display: flex;
     flex-wrap: wrap;
-    gap: 20px;
+    gap: 8px;
     margin-left: 42px;
 }
 .login-message {

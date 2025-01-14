@@ -29,6 +29,28 @@ body, html {
   height: 60px; /* Define altura fixa para navbar */
   z-index: 10;
   position: absolute; /* Fixa a navbar no topo da janela */
+
+.logo-image{
+  width: 28%;
+  margin-left: 45%;
+  margin-top: -10px;
+}
+
+a.logo-link{
+  width: 86%;
+}
+
+.user-info {
+  display: flex;
+  align-items: center;
+}
+
+.user-avatar {
+  width: 40px; /* Ajuste o tamanho conforme necessário */
+  height: auto;
+  margin-left: 8px; /* Espaçamento entre o nome do usuário e o avatar */
+}
+
 }
 .logo-link {
   text-decoration: none; /* Remove o sublinhado */
@@ -124,6 +146,11 @@ body, html {
 @media (max-width: 1024px) {
   .navbar {
     padding: 15px 30px; /* Reduz espaço nas laterais */
+    .logo-image {
+      width: 36%;
+      margin-left: 39%;
+      margin-top: -14px;
+  }
   }
 
   .dropdown-menu {
@@ -153,6 +180,16 @@ body, html {
     padding: 28px; /* Padding ainda menor */
     position: absolute; /* Fixa a navbar no topo da janela */
     margin-top: -18px;
+
+    .logo-image{
+      width: 36%;
+      margin-left: 44%;
+      margin-top: -7px;
+    }
+
+    a.logo-link{
+      width: 83%;
+    }
   }
 
   .user-text {
@@ -169,7 +206,7 @@ body, html {
   }
 
   .content-wrapper {
-      margin: 40px 30px 61px;
+      margin: 50px 30px 61px;
       padding: 5px;
       border-radius: 4px;
       width: 93%;
@@ -192,6 +229,19 @@ body, html {
     padding: 20px; /* Padding ainda menor */
     position: absolute; /* Fixa a navbar no topo da janela */
     margin-top: -18px;
+
+    .logo-image{
+      width: 69%;
+      margin-left: -7%;
+      margin-top: -4px;
+    }
+
+    a.logo-link{
+      width: 61%;
+    }
+    .user-avatar {
+      width: 25px;
+    }
   }
 
   .user-text {

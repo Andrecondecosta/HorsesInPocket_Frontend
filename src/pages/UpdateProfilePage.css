@@ -32,7 +32,7 @@
   align-items: center;
   gap: 8px;
   cursor: pointer;
-  margin-bottom: 21px
+  margin-bottom: 45px
 }
 
 .profile-save-button:hover {
@@ -49,8 +49,12 @@
   margin-top: 49px;
   width: 96%;
   margin-left: 10px;
+
 }
 
+.update-profile-image {
+  width: 20%;
+}
 @media (max-width: 768px) {
   .profile-breadcrumb-container .breadcrumbs {
       display: flex;
@@ -67,8 +71,10 @@
   .update-profile-details-container {
       flex-direction: column;
       align-items: center;
-  }
-  .profile-details {
+    }
+
+
+    .profile-details {
     flex: 1 1;
     margin-left: 20px;
     margin-top: 20px;
@@ -113,4 +119,10 @@ margin-bottom: 0px;
   border-radius: 8px;
   margin-top: 37px;
 }
+
+.update-profile-image {
+width: 43%;
+}
+
+
 }
