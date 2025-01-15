@@ -31,13 +31,13 @@ body, html {
   position: absolute; /* Fixa a navbar no topo da janela */
 
 .logo-image{
-  width: 28%;
-  margin-left: 45%;
-  margin-top: -10px;
+  width: 39%;
+  margin-left: 47%;
+  margin-top: -21px;
 }
 
 a.logo-link{
-  width: 86%;
+  width: 75%;
 }
 
 .user-info {
@@ -146,10 +146,15 @@ a.logo-link{
 @media (max-width: 1024px) {
   .navbar {
     padding: 15px 30px; /* Reduz espaço nas laterais */
+
+
     .logo-image {
-      width: 36%;
-      margin-left: 39%;
+      width: 52%;
+      margin-left: 46%;
       margin-top: -14px;
+  }
+  a.logo-link{
+    width: 70%;
   }
   }
 
@@ -182,13 +187,13 @@ a.logo-link{
     margin-top: -18px;
 
     .logo-image{
-      width: 36%;
+      width: 42%;
       margin-left: 44%;
       margin-top: -7px;
     }
 
     a.logo-link{
-      width: 83%;
+      width: 78%;
     }
   }
 

@@ -36,7 +36,9 @@ const MyHorses = () => {
         </div>
         <div className="horses-grid">
           {Array.isArray(horses) &&
-            horses.map((horse) => (
+            horses
+            .sort((a, b) => new Date(b.created_at) - new Date(a.created_at))
+            .map((horse) => (
               <div className="horse-card" key={horse.id}>
                 <div className="horse-image-container">
                   {horse.images && horse.images.length > 0 ? (
