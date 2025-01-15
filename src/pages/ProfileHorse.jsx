@@ -200,8 +200,8 @@ const ProfileHorse = ({ setIsLoggedIn }) => {
               <p>{horse.name}</p>
             </div>
             <div className="info-item">
-              <strong>Age</strong>
-              <p>{horse.age} years</p>
+              <strong>Year of Birth</strong>
+              <p>{horse.age}</p>
             </div>
             <div className="info-item">
               <strong>Gender</strong>

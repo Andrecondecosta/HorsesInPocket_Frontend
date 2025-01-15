@@ -4,6 +4,7 @@ import './NewHorses.css';
 import Layout from '../components/Layout';
 import GenealogyForm from '../components/GenealogyForm';
 import LoadingPopup from '../components/LoadingPopup';
+import YearPicker from '../components/YearPicker';
 
 const NewHorses = ({ setIsLoggedIn }) => {
   const [currentStep, setCurrentStep] = useState(1);
@@ -37,6 +38,10 @@ const NewHorses = ({ setIsLoggedIn }) => {
   const colorRef = useRef(null);
   const trainingLevelRef = useRef(null);
   const imageRef = useRef(null);
+
+  const handleYearChange = (year) => {
+    setNewHorse((prevHorse) => ({ ...prevHorse, age: year }));
+  };
 
   const handleNextStep = () => {
     if (currentStep < 3) setCurrentStep(currentStep + 1);
@@ -316,15 +321,11 @@ const NewHorses = ({ setIsLoggedIn }) => {
               {fieldErrors.name && <p className="error-message">{fieldErrors.name}</p>}
             </div>
             <div className="form-group">
-              <input
-                ref={ageRef}
-                type="number"
-                name="age"
-                placeholder="Age"
-                value={newHorse.age}
-                onChange={handleChange}
-                required
-              />
+            <YearPicker
+              selectedYear={newHorse.age} // Passa o ano selecionado como propriedade
+              onChange={(year) => setNewHorse((prevHorse) => ({ ...prevHorse, age: year }))}
+            />
+
               {fieldErrors.age && <p className="error-message">{fieldErrors.age}</p>}
             </div>
             <div className="form-group">
@@ -336,9 +337,9 @@ const NewHorses = ({ setIsLoggedIn }) => {
                 required
               >
                 <option value="">Gender</option>
-                <option value="gelding">Gelding</option>
-                <option value="mare">Mare</option>
-                <option value="stallion">Stallion</option>
+                <option value="Gelding">Gelding</option>
+                <option value="Mare">Mare</option>
+                <option value="Stallion">Stallion</option>
               </select>
               {fieldErrors.gender && <p className="error-message">{fieldErrors.gender}</p>}
             </div>

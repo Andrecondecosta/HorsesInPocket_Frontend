@@ -254,9 +254,9 @@ const EditHorse = ({ setIsLoggedIn }) => {
                 required
               >
                 <option value="">Gender</option>
-                <option value="gelding">Gelding</option>
-                <option value="mare">Mare</option>
-                <option value="stallion">Stallion</option>
+                <option value="Gelding">Gelding</option>
+                <option value="Mare">Mare</option>
+                <option value="Stallion">Stallion</option>
               </select>
               <select
                 name="color"
