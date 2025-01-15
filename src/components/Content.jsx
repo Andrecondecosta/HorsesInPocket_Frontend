@@ -24,10 +24,11 @@ function Content({ setIsLoggedIn }) {
     <div className='content-container'>
       <Routes>
         <Route path="/login" element={<LoginPage setIsLoggedIn={setIsLoggedIn} />} />
+        <Route path="/" element={<LoginPage setIsLoggedIn={setIsLoggedIn} />} />
         <Route path="/register" element={<RegisterPage />} />
         <Route path="/forgot/password" element={<ForgotPassword />} />
         <Route path="/reset/password/:token" element={<ResetPassword />} />
-        <Route path="/" element={<HomePage />} />
+        <Route path="/home-page" element={<HomePage />} />
         <Route path="/profile" element={<ProtectedRoute element={<ProfilePage setIsLoggedIn={setIsLoggedIn}/>} />} />
         <Route path="/update-profile" element={<ProtectedRoute element={<UpdateProfilePage setIsLoggedIn={setIsLoggedIn}/>} />} />
         <Route path="/myhorses" element={<ProtectedRoute element={<MyHorses setIsLoggedIn={setIsLoggedIn}/>} />} />
