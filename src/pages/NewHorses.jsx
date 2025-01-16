@@ -5,6 +5,7 @@ import Layout from '../components/Layout';
 import GenealogyForm from '../components/GenealogyForm';
 import LoadingPopup from '../components/LoadingPopup';
 import YearPicker from '../components/YearPicker';
+import VideoUploader from '../components/VideoUploader';
 
 const NewHorses = ({ setIsLoggedIn }) => {
   const [currentStep, setCurrentStep] = useState(1);
@@ -235,6 +236,8 @@ const NewHorses = ({ setIsLoggedIn }) => {
         formData.append(`horse[ancestors_attributes][][breed]`, ancestor.breed || '');
       });
 
+
+
       images.forEach((image) => {
         formData.append('horse[images][]', image);
       });
@@ -447,39 +450,7 @@ const NewHorses = ({ setIsLoggedIn }) => {
             </div>
 
             {/* Video */}
-            <div className="upload-block">
-              <h2>Video</h2>
-              <p>Maximum 3 videos, up to 50MB each.</p>
-              <button
-                className="upload-button"
-                onClick={() => document.getElementById('videoUpload').click()}
-              >
-                Choose Video
-              </button>
-              <input
-                type="file"
-                id="videoUpload"
-                multiple
-                accept="video/*"
-                onChange={handleVideoChange}
-                style={{ display: 'none' }}
-              />
-              {error && <p className="error-message">{error}</p>}
-              <div className="video-upload-list">
-                {videos.map((video, index) => (
-                  <div key={index} className="video-upload-item">
-                    <span className="video-name">{video.name}</span>
-                    <button
-                      type="button"
-                      onClick={() => setVideos((prevVideos) => prevVideos.filter((_, i) => i !== index))}
-                      className="remove-video-button"
-                    >
-                      X
-                    </button>
-                  </div>
-                ))}
-              </div>
-            </div>
+              <VideoUploader videos={videos} setVideos={setVideos} setError={setError} />
           </div>
         )}
 

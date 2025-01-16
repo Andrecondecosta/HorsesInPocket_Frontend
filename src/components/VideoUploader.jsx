@@ -1,29 +1,58 @@
-import React from 'react';
+import React, { useState } from 'react';
 
-const VideoUploader = ({ videos, setVideos, setError }) => {
-  const handleVideoChange = (e) => {
+const VideoUploader = ({ videos, setVideos }) => {
+  const [isProcessing, setIsProcessing] = useState(false);
+  const [error, setError] = useState(null);
+
+  const handleVideoChange = async (e) => {
     const files = Array.from(e.target.files);
-    const maxSize = 50 * 1024 * 1024; // 50MB per video
+    const maxFiles = 3;
 
-    const oversizedFiles = files.filter((file) => file.size > maxSize);
-    if (oversizedFiles.length > 0) {
-      setError('Each video must be at most 50MB.');
+    if (files.length + videos.length > maxFiles) {
+      setError(`Você pode enviar no máximo ${maxFiles} vídeos.`);
       return;
     }
 
-    const newVideos = files.filter(
-      (file) =>
-        !videos.some(
-          (existingFile) =>
-            existingFile.name === file.name && existingFile.size === file.size
-        )
-    );
+    setIsProcessing(true);
+    setError(null);
 
-    if (videos.length + newVideos.length > 3) {
-      setError('You can upload a maximum of 3 videos.');
-    } else {
-      setVideos((prevVideos) => [...prevVideos, ...newVideos]);
-      setError(null);
+    try {
+      const token = localStorage.getItem('authToken');
+      if (!token) {
+        throw new Error('Usuário não autenticado. Faça login novamente.');
+      }
+
+      const processedVideos = await Promise.all(
+        files.map(async (file) => {
+          const formData = new FormData();
+          formData.append('file', file);
+
+          const response = await fetch(
+            `${process.env.REACT_APP_API_SERVER_URL}/videos_compress/compress`,
+            {
+              method: 'POST',
+              headers: {
+                Authorization: `Bearer ${token}`,
+              },
+              body: formData,
+            }
+          );
+
+          if (!response.ok) {
+            throw new Error('Erro ao enviar o vídeo para compactação.');
+          }
+
+          const blob = await response.blob();
+          const compactedVideo = new File([blob], file.name, { type: 'video/mp4' });
+          return compactedVideo;
+        })
+      );
+
+      setVideos((prevVideos) => [...prevVideos, ...processedVideos]);
+    } catch (err) {
+      setError(err.message || 'Erro ao processar os vídeos.');
+    } finally {
+      setIsProcessing(false);
     }
   };
 
@@ -32,27 +61,42 @@ const VideoUploader = ({ videos, setVideos, setError }) => {
   };
 
   return (
-    <div>
-      <label className="new-input-label">Videos (up to 3, max 50MB each)</label>
+    <div className="upload-block">
+      <h2>Vídeo</h2>
+      <p>Máximo de 3 vídeos, até 50MB cada.</p>
+      <button
+        className="upload-button"
+        onClick={() => document.getElementById('videoUpload').click()}
+      >
+        Escolher Vídeos
+      </button>
       <input
         type="file"
-        accept="video/mp4,video/x-m4v,video/*"
+        id="videoUpload"
         multiple
+        accept="video/*"
         onChange={handleVideoChange}
+        style={{ display: 'none' }}
       />
-      <div className="video-preview-container">
+      <div className="video-upload-list">
         {videos.map((video, index) => (
-          <div key={index} className="video-preview">
-            <p>{video.name}</p>
+          <div key={index} className="video-upload-item">
+            <video width="100" controls>
+              <source src={URL.createObjectURL(video)} type="video/mp4" />
+              Seu navegador não suporta a reprodução de vídeo.
+            </video>
             <button
-              className="remove-video-button"
+              type="button"
               onClick={() => removeVideo(index)}
+              className="remove-video-button"
             >
-              Remove
+              X
             </button>
           </div>
         ))}
       </div>
+      {isProcessing && <p>Processando vídeos...</p>}
+      {error && <p className="error-message">{error}</p>}
     </div>
   );
 };
