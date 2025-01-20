@@ -287,7 +287,7 @@ textarea {
 /* Container de imagens carregadas */
 /* Lista de arquivos carregados */
 .image-upload-list {
-  max-height: 120px; /* Limita a altura total */
+  /*max-height: 120px; /* Limita a altura total */
   overflow-y: auto; /* Adiciona rolagem vertical */
   padding: 5px;
   margin-top: 10px;
@@ -321,23 +321,23 @@ textarea {
 }
 
 /* Botão para remover a imagem */
-.remove-upload-button {
+/*.remove-upload-button {
   background-color: #f44336;
   color: white;
   border: none;
-  padding: 2px 6px; /* Tamanho reduzido */
-  font-size: 10px; /* Fonte menor */
+  padding: 2px 6px;
+  font-size: 10px;
   border-radius: 4px;
   cursor: pointer;
-  margin-left: 5px; /* Menor espaço entre o nome e o botão */
-}
+  margin-left: 5px;
+}*/
 
-.remove-upload-button:hover {
+/*.remove-upload-button:hover {
   background-color: #d32f2f;
 }
 /* Lista de arquivos carregados - Vídeos */
 .video-upload-list {
-  max-height: 120px; /* Limita a altura total */
+  /*max-height: 120px; /* Limita a altura total */
   overflow-y: auto; /* Adiciona rolagem vertical */
   padding: 5px;
   margin-top: 10px;
@@ -368,22 +368,6 @@ textarea {
   text-overflow: ellipsis; /* Adiciona "..." para nomes longos */
   white-space: nowrap; /* Evita quebra de linha */
   flex: 1; /* O nome ocupa o espaço restante */
-}
-
-/* Botão para remover o vídeo */
-.remove-video-button {
-  background-color: #f44336;
-  color: white;
-  border: none;
-  padding: 2px 6px; /* Tamanho reduzido */
-  font-size: 10px; /* Fonte menor */
-  border-radius: 4px;
-  cursor: pointer;
-  margin-left: 5px; /* Menor espaço entre o nome e o botão */
-}
-
-.remove-video-button:hover {
-  background-color: #d32f2f;
 }
 
 

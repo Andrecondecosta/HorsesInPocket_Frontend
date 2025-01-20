@@ -6,6 +6,7 @@ import GenealogyForm from '../components/GenealogyForm';
 import LoadingPopup from '../components/LoadingPopup';
 import YearPicker from '../components/YearPicker';
 import VideoUploader from '../components/VideoUploader';
+import ImageUploader from '../components/ImageUploader';
 
 const NewHorses = ({ setIsLoggedIn }) => {
   const [currentStep, setCurrentStep] = useState(1);
@@ -29,7 +30,7 @@ const NewHorses = ({ setIsLoggedIn }) => {
   });
   const [images, setImages] = useState([]);
   const [videos, setVideos] = useState([]);
-  const [error, setError] = useState(null);
+  const [setError] = useState(null);
   const [fieldErrors, setFieldErrors] = useState({});
   const [isSubmitting, setIsSubmitting] = useState(false);
   const navigate = useNavigate();
@@ -39,10 +40,6 @@ const NewHorses = ({ setIsLoggedIn }) => {
   const colorRef = useRef(null);
   const trainingLevelRef = useRef(null);
   const imageRef = useRef(null);
-
-  const handleYearChange = (year) => {
-    setNewHorse((prevHorse) => ({ ...prevHorse, age: year }));
-  };
 
   const handleNextStep = () => {
     if (currentStep < 3) setCurrentStep(currentStep + 1);
@@ -87,57 +84,6 @@ const NewHorses = ({ setIsLoggedIn }) => {
     }));
   };
 
-  const handleImageChange = (e) => {
-    const files = Array.from(e.target.files);
-    const maxSize = 10 * 1024 * 1024; // 10MB
-
-    const oversizedFiles = files.filter(file => file.size > maxSize);
-    if (oversizedFiles.length > 0) {
-      setError('Each image must not exceed 10MB.');
-      return;
-    }
-
-    const newFiles = files.filter(file =>
-      !images.some(existingFile =>
-        existingFile.name === file.name && existingFile.size === file.size
-      )
-    );
-
-    if (images.length + newFiles.length > 5) {
-      setError('You can upload a maximum of 5 images.');
-    } else {
-      setImages(prevImages => [...prevImages, ...newFiles]);
-      setError(null);
-    }
-  };
-
-  const handleVideoChange = (e) => {
-    const files = Array.from(e.target.files);
-    const maxSize = 50 * 1024 * 1024; // 50MB per video
-
-    const oversizedFiles = files.filter(file => file.size > maxSize);
-    if (oversizedFiles.length > 0) {
-      setError('Each video must not exceed 50MB.');
-      return;
-    }
-
-    const newVideos = files.filter(file =>
-      !videos.some(existingFile =>
-        existingFile.name === file.name && existingFile.size === file.size
-      )
-    );
-
-    if (videos.length + newVideos.length > 3) {
-      setError('You can upload a maximum of 3 videos.');
-    } else {
-      setVideos(prevVideos => [...prevVideos, ...newVideos]);
-      setError(null);
-    }
-  };
-
-  const removeImage = (indexToRemove) => {
-    setImages((prevImages) => prevImages.filter((_, index) => index !== indexToRemove));
-  };
 
   const heightInHH = (newHorse.height_cm / 0.1016).toFixed(1);
 
@@ -414,41 +360,7 @@ const NewHorses = ({ setIsLoggedIn }) => {
         {currentStep === 2 && (
           <div className="upload-container">
             {/* Image */}
-            <div className="upload-block">
-              <h2>Image</h2>
-              <p>Maximum 5 images, up to 10MB each.</p>
-              <button
-                className="upload-button"
-                onClick={() => document.getElementById('imageUpload').click()}
-              >
-                Choose Image
-              </button>
-              <input
-                ref={imageRef}
-                type="file"
-                id="imageUpload"
-                multiple
-                onChange={handleImageChange}
-                style={{ display: 'none' }}
-              />
-              {fieldErrors.images && <p className="error-message">{fieldErrors.images}</p>}
-              {error && <p className="error-message">{error}</p>}
-              <div className="image-upload-list">
-                {images.map((image, index) => (
-                  <div key={index} className="image-upload-item">
-                    <span className="image-name">{image.name}</span>
-                    <button
-                      type="button"
-                      onClick={() => removeImage(index)}
-                      className="remove-upload-button"
-                    >
-                      X
-                    </button>
-                  </div>
-                ))}
-              </div>
-            </div>
-
+            <ImageUploader  images={images} setImages={setImages} setError={setError} />
             {/* Video */}
               <VideoUploader videos={videos} setVideos={setVideos} setError={setError} />
           </div>
