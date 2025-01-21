@@ -1,26 +1,23 @@
 import React, { useState } from 'react';
 
-const ImageUploader = ({ images, setImages }) => {
+const EditImageUploader = ({ images, setImages, setDeletedImages }) => {
   const [isProcessing, setIsProcessing] = useState(false);
   const [error, setError] = useState(null);
-  const [setNewImages] = useState([]); // Adicione esta linha
-
 
   const handleImageChange = async (e) => {
-
-    // Adiciona os novos arquivos ao estado `newImages`
-    setNewImages((prev) => [...prev, ...files]); // Usando a prop passada
-    setImages((prevImages) => [
-      ...prevImages,
-      ...files.map((file) => ({ file, previewUrl: URL.createObjectURL(file) })),
-    ]);
-
     const files = Array.from(e.target.files);
     const maxFiles = 5;
+    const maxSize = 50 * 1024 * 1024; // 10MB per image
 
-    // Verificar o limite de arquivos
+    // Check the maximum number of files
     if (files.length + images.length > maxFiles) {
-      setError(`Você pode enviar no máximo ${maxFiles} imagens.`);
+      setError(`You can upload a maximum of ${maxFiles} images.`);
+      return;
+    }
+
+    // Check the maximum file size
+    if (files.some((file) => file.size > maxSize)) {
+      setError(`Each image must be no larger than 10MB.`);
       return;
     }
 
@@ -30,10 +27,10 @@ const ImageUploader = ({ images, setImages }) => {
     try {
       const token = localStorage.getItem('authToken');
       if (!token) {
-        throw new Error('Usuário não autenticado. Faça login novamente.');
+        throw new Error('User not authenticated. Please log in again.');
       }
 
-      const processedImages = await Promise.all(
+      const compressedImages = await Promise.all(
         files.map(async (file) => {
           const formData = new FormData();
           formData.append('file', file);
@@ -50,78 +47,80 @@ const ImageUploader = ({ images, setImages }) => {
           );
 
           if (!response.ok) {
-            throw new Error('Erro ao enviar a imagem para compactação.');
+            throw new Error('Error uploading the image for compression.');
           }
 
           const blob = await response.blob();
-          const compactedImage = new File([blob], file.name, { type: file.type });
-          return compactedImage;
+          const compressedImage = new File([blob], file.name, { type: file.type });
+          return compressedImage;
         })
       );
 
-      // Atualizar o estado com as novas imagens processadas
-      setImages((prevImages) => [...prevImages, ...processedImages]);
+      setImages((prevImages) => [...prevImages, ...compressedImages]);
     } catch (err) {
-      setError(err.message || 'Erro ao processar as imagens.');
+      setError(err.message || 'Error processing the images.');
     } finally {
       setIsProcessing(false);
     }
   };
 
   const removeImage = (indexToRemove) => {
+    const imageToRemove = images[indexToRemove];
+    if (typeof imageToRemove === 'string') {
+      // Add existing images to the deleted list
+      setDeletedImages((prev) => [...prev, imageToRemove]);
+    }
+    // Remove the image from the current list
     setImages((prevImages) => prevImages.filter((_, index) => index !== indexToRemove));
   };
 
   return (
-    <div className="upload-block">
-      <h2>Imagens</h2>
-      <p>Máximo de 5 imagens, até 10MB cada.</p>
+    <div className="edit-upload-block">
+      <h2>Images</h2>
+      <p>Maximum of 5 images</p>
       <button
-        className="upload-button"
-        onClick={() => document.getElementById('imageUpload').click()}
+        className="edit-upload-button"
+        onClick={() => document.getElementById('edit-imageUpload').click()}
       >
-        Escolher Imagens
+        Choose Images
       </button>
       <input
         type="file"
-        id="imageUpload"
+        id="edit-imageUpload"
         multiple
-        accept="image/*"
         onChange={handleImageChange}
         style={{ display: 'none' }}
       />
-      <div className="image-upload-list">
+      {error && <p className="edit-error-message">{error}</p>}
+      <div className="edit-image-upload-list">
         {images.map((image, index) => (
-          <div key={index} className="image-upload-item">
+          <div key={index} className="edit-image-upload-item">
             {typeof image === 'string' ? (
-              // Exibir imagens existentes como URLs
               <img
                 src={image}
-                alt={`Imagem existente ${index + 1}`}
+                alt={`Existing ${index + 1}`}
                 width="100"
               />
             ) : (
-              // Exibir imagens novas carregadas como pré-visualização
               <img
                 src={URL.createObjectURL(image)}
-                alt={`Preview ${index + 1}`}
+                alt={`Uploaded ${index + 1}`}
                 width="100"
               />
             )}
             <button
               type="button"
               onClick={() => removeImage(index)}
-              className="remove-image-button"
+              className="edit-remove-upload-button"
             >
               X
             </button>
           </div>
         ))}
       </div>
-      {isProcessing && <p>Processando imagens...</p>}
-      {error && <p className="error-message">{error}</p>}
+      {isProcessing && <p>Processing images...</p>}
     </div>
   );
 };
 
-export default ImageUploader;
+export default EditImageUploader;

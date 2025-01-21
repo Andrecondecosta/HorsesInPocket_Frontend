@@ -3,6 +3,8 @@ import { useParams, useNavigate } from 'react-router-dom';
 import Layout from '../components/Layout';
 import GenealogyForm from '../components/GenealogyForm';
 import LoadingPopup from '../components/LoadingPopup';
+import EditImageUploader from '../components/EditImageUploader';
+import EditVideoUploader from '../components/EditVideoUploader';
 import '../pages/EditHorse.css';
 
 const EditHorse = ({ setIsLoggedIn }) => {
@@ -105,33 +107,6 @@ const EditHorse = ({ setIsLoggedIn }) => {
     }));
   };
 
-  const handleImageChange = (e) => {
-    const files = Array.from(e.target.files);
-    setNewImages((prev) => [...prev, ...files]);
-    setImages((prevImages) => [...prevImages, ...files.map(file => ({ name: file.name }))]);
-  };
-
-  const handleVideoChange = (e) => {
-    const files = Array.from(e.target.files);
-    setNewVideos((prev) => [...prev, ...files]);
-    setVideos((prevVideos) => [...prevVideos, ...files.map(file => ({ name: file.name }))]);
-  };
-
-  const removeImage = (indexToRemove) => {
-    const imageToRemove = images[indexToRemove];
-    if (typeof imageToRemove === 'string') {
-      setDeletedImages((prev) => [...prev, imageToRemove]);
-    }
-    setImages((prevImages) => prevImages.filter((_, index) => index !== indexToRemove));
-  };
-
-  const removeVideo = (indexToRemove) => {
-    const videoToRemove = videos[indexToRemove];
-    if (typeof videoToRemove === 'string') {
-      setDeletedVideos((prev) => [...prev, videoToRemove]);
-    }
-    setVideos((prevVideos) => prevVideos.filter((_, index) => index !== indexToRemove));
-  };
 
   const handleSubmit = async (e) => {
     e.preventDefault();
@@ -161,9 +136,17 @@ const EditHorse = ({ setIsLoggedIn }) => {
       }
     });
 
+    images.forEach((image) => {
+      if (typeof image !== 'string') {
+        formData.append('horse[images][]', image); // Novos arquivos
+      }
+    });
+
     videos.forEach((video) => {
       if (typeof video === 'string') {
-        formData.append('existing_videos[]', video);
+        formData.append('existing_videos[]', video); // URLs existentes
+      } else {
+        formData.append('horse[videos][]', video.file); // Novos arquivos
       }
     });
 
@@ -171,7 +154,7 @@ const EditHorse = ({ setIsLoggedIn }) => {
     newVideos.forEach((video) => formData.append('horse[videos][]', video));
 
     deletedImages.forEach((imageUrl) => formData.append('deleted_images[]', imageUrl));
-    deletedVideos.forEach((videoUrl) => formData.append('deleted_videos[]', videoUrl));
+    deletedVideos.forEach((videoUrl) => formData.append('deleted_videos[]', videoUrl)); // Inclui os vídeos removidos
 
     try {
       const response = await fetch(`${process.env.REACT_APP_API_SERVER_URL}/horses/${id}`, {
@@ -320,84 +303,10 @@ const EditHorse = ({ setIsLoggedIn }) => {
 
         {currentStep === 2 && (
           <div className="edit-upload-container">
-            <div className="edit-upload-block">
-              <h2>Image</h2>
-              <p>Maximum 5 images, up to 10 MB each.</p>
-              <button
-                className="edit-upload-button"
-                onClick={() => document.getElementById('edit-imageUpload').click()}
-              >
-                Choose Image
-              </button>
-              <input
-                type="file"
-                id="edit-imageUpload"
-                multiple
-                onChange={handleImageChange}
-                style={{ display: 'none' }}
-              />
-              {error && <p className="edit-error-message">{error}</p>}
-              <div className="edit-image-upload-list">
-                {images.map((image, index) => (
-                  <div key={index} className="edit-image-upload-item">
-                    {typeof image === 'string' ? (
-                      <a href={image} target="_blank" rel="noopener noreferrer" className="edit-image-url">
-                        {`Image ${index + 1}`}
-                      </a>
-                    ) : (
-                      <span className="edit-image-name">{`Image ${index + 1}`}</span>
-                    )}
-                    <button
-                      type="button"
-                      onClick={() => removeImage(index)}
-                      className="edit-remove-upload-button"
-                    >
-                      X
-                    </button>
-                  </div>
-                ))}
-              </div>
-            </div>
+            <EditImageUploader images={images} setImages={setImages} setDeletedImages={setDeletedImages} />
 
-            <div className="edit-upload-block">
-              <h2>Video</h2>
-              <p>Maximum 3 videos, up to 50 MB each.</p>
-              <button
-                className="edit-upload-button"
-                onClick={() => document.getElementById('edit-videoUpload').click()}
-              >
-                Choose Video
-              </button>
-              <input
-                type="file"
-                id="edit-videoUpload"
-                multiple
-                accept="video/*"
-                onChange={handleVideoChange}
-                style={{ display: 'none' }}
-              />
-              {error && <p className="edit-error-message">{error}</p>}
-              <div className="edit-video-upload-list">
-                {videos.map((video, index) => (
-                  <div key={index} className="edit-video-upload-item">
-                    {typeof video === 'string' ? (
-                      <a href={video} target="_blank" rel="noopener noreferrer" className="edit-video-url">
-                        {`Video ${index + 1}`}
-                      </a>
-                    ) : (
-                      <span className="edit-video-name">{`Video ${index + 1}`}</span>
-                    )}
-                    <button
-                      type="button"
-                      onClick={() => removeVideo(index)}
-                      className="edit-remove-video-button"
-                    >
-                      X
-                    </button>
-                  </div>
-                ))}
-              </div>
-            </div>
+
+            <EditVideoUploader videos={videos} setVideos={setVideos} setDeletedVideos={setDeletedVideos}/>
           </div>
         )}
 
