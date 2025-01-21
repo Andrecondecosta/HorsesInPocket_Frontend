@@ -54,7 +54,6 @@ const RegisterPage = () => {
             alt="HorsesInPocket Logo"
             className="register-logo-image"
           />
-          <h2>Register</h2>
         </div>
 
         {error && <p className="error-message">{error}</p>}

@@ -1,5 +1,5 @@
 import React from 'react';
-import { Routes, Route } from 'react-router-dom';
+import { Routes, Route, Navigate } from 'react-router-dom';
 import LoginPage from '../pages/LoginPage';
 import RegisterPage from '../pages/RegisterPage';
 import DashboardPage from '../pages/DashboardPage';
@@ -20,11 +20,15 @@ import './Content.css';
 
 
 function Content({ setIsLoggedIn }) {
+  const isAuthenticated = localStorage.getItem('authToken');
   return (
     <div className='content-container'>
       <Routes>
         <Route path="/login" element={<LoginPage setIsLoggedIn={setIsLoggedIn} />} />
-        <Route path="/" element={<LoginPage setIsLoggedIn={setIsLoggedIn} />} />
+        <Route
+          path="/"
+          element={isAuthenticated ? <Navigate to="/dashboard" replace /> : <Navigate to="/login" replace />}
+        />
         <Route path="/register" element={<RegisterPage />} />
         <Route path="/forgot/password" element={<ForgotPassword />} />
         <Route path="/reset/password/:token" element={<ResetPassword />} />
