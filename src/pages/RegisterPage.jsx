@@ -3,7 +3,7 @@ import { useNavigate, Link } from 'react-router-dom';
 import { useRegister } from '../hooks/useRegister.js';
 import './RegisterPage.css';
 
-const RegisterPage = ({ setIsLoggedIn }) => {
+const RegisterPage = () => {
   const [firstName, setFirstName] = useState('');
   const [lastName, setLastName] = useState('');
   const [email, setEmail] = useState('');
@@ -13,14 +13,9 @@ const RegisterPage = ({ setIsLoggedIn }) => {
   const [phoneNumber, setPhoneNumber] = useState('');
   const [address, setAddress] = useState('');
   const [gender, setGender] = useState('');
-  const [error, setError] = useState(null);
 
-  const { register, loading} = useRegister();
+  const { register, token, loading, error } = useRegister();
   const navigate = useNavigate();
-
-  const params = new URLSearchParams(window.location.search);
-  const redirectUrl = params.get('redirect');
-  const token = params.get('token'); // Token enviado no link compartilhado
 
   const handleSubmit = async (e) => {
     e.preventDefault();
@@ -35,27 +30,16 @@ const RegisterPage = ({ setIsLoggedIn }) => {
       phone_number: phoneNumber,
       address,
       gender,
-      token,
     };
 
-    try {
-      const success = await register(userData);
+    const receivedToken = await register(userData);
 
-      if (success) {
-        setIsLoggedIn(true);
-
-        // Redireciona para o URL especificado ou página padrão
-        if (redirectUrl) {
-          navigate(redirectUrl);
-        } else {
-          navigate('/received');
-        }
-      }
-    } catch (err) {
-      setError(err.message);
+    if (receivedToken) {
+      navigate('/login');
+    } else {
+      console.error('Registration failed: Token was not received.');
     }
   };
-
 
   return (
     <div className="register-page">
@@ -70,6 +54,7 @@ const RegisterPage = ({ setIsLoggedIn }) => {
             alt="HorsesInPocket Logo"
             className="register-logo-image"
           />
+
         </div>
 
         {error && <p className="error-message">{error}</p>}

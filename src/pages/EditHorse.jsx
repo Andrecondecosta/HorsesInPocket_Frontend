@@ -1,4 +1,4 @@
-import React, { useState, useEffect } from 'react';
+import React, { useState, useEffect} from 'react';
 import { useParams, useNavigate } from 'react-router-dom';
 import Layout from '../components/Layout';
 import GenealogyForm from '../components/GenealogyForm';
@@ -33,13 +33,11 @@ const EditHorse = ({ setIsLoggedIn }) => {
   });
   const [images, setImages] = useState([]);
   const [videos, setVideos] = useState([]);
-  const [error, setError] = useState(null);
-  const [isLoading, setIsLoading] = useState(true);
   const [isSubmitting, setIsSubmitting] = useState(false);
   const [deletedImages, setDeletedImages] = useState([]);
   const [deletedVideos, setDeletedVideos] = useState([]);
-  const [newImages, setNewImages] = useState([]);
-  const [newVideos, setNewVideos] = useState([]);
+  const [newImages] = useState([]);
+  const [newVideos] = useState([]);
   const [existingVideos, setExistingVideos] = useState([]);
   const [filteredOptions, setFilteredOptions] = useState([]);
   const [breedInput, setBreedInput] = useState('');
@@ -142,9 +140,6 @@ const EditHorse = ({ setIsLoggedIn }) => {
 
       } catch (error) {
         console.error('Error loading horse data:', error);
-        setError('Failed to load horse data');
-      } finally {
-        setIsLoading(false);
       }
     };
 
