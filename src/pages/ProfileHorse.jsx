@@ -163,7 +163,7 @@ const ProfileHorse = ({ setIsLoggedIn }) => {
             <button className="delete-button" onClick={() => setShowDeleteModal(true)}>
               <FaTrash />
             </button>
-            <button className="share-button">
+            <button className="share-button" onClick={() => setShowShareModal(true)}>
               <FaShareAlt />
             </button>
           </div>
