@@ -19,7 +19,6 @@ const ProfileHorse = ({ setIsLoggedIn }) => {
   const [isLoading, setIsLoading] = useState(true);
   const [error, setError] = useState(null);
   const [readonly, setReadonly] = useState(false);
-  const [shareEmail, setShareEmail] = useState('');
   const [showShareModal, setShowShareModal] = useState(false);
   const [showDeleteModal, setShowDeleteModal] = useState(false);
   const [deleteMessage, setDeleteMessage] = useState("");
@@ -67,28 +66,6 @@ const ProfileHorse = ({ setIsLoggedIn }) => {
     }
   }, [id, location.search, token]);
 
-  const handleShare = async () => {
-    try {
-      const response = await fetch(`${process.env.REACT_APP_API_SERVER_URL}/horses/${id}/share`, {
-        method: 'POST',
-        headers: {
-          'Content-Type': 'application/json',
-          'Authorization': `Bearer ${token}`,
-        },
-        body: JSON.stringify({ email: shareEmail }),
-      });
-
-      if (!response.ok) {
-        throw new Error('Failed to share horse');
-      }
-
-      alert('Horse shared successfully');
-      setShareEmail('');
-      setShowShareModal(false);
-    } catch (error) {
-      setError('Failed to share horse');
-    }
-  };
 
   const handleClickOutside = (event) => {
     if (menuRef.current && !menuRef.current.contains(event.target)) {
@@ -186,7 +163,7 @@ const ProfileHorse = ({ setIsLoggedIn }) => {
             <button className="delete-button" onClick={() => setShowDeleteModal(true)}>
               <FaTrash />
             </button>
-            <button className="share-button" onClick={() => setShowShareModal(true)}>
+            <button className="share-button">
               <FaShareAlt />
             </button>
           </div>
@@ -220,6 +197,14 @@ const ProfileHorse = ({ setIsLoggedIn }) => {
               <p>{horse.piroplasmosis ? 'Yes' : 'No'}</p>
             </div>
             <div className="info-item">
+              <strong>Breed</strong>
+              <p>{horse.breed || "Not specified"}</p>
+            </div>
+            <div className="info-item">
+              <strong>Breeder</strong>
+              <p>{horse.breeder || "Not specified"}</p>
+            </div>
+            <div className="info-item">
               <strong>Training Level</strong>
               <p>{horse.training_level}</p>
             </div>
@@ -231,6 +216,7 @@ const ProfileHorse = ({ setIsLoggedIn }) => {
             <p>{horse.description}</p>
           </div>
         </div>
+
 
         {/* Images and Videos */}
         <div className="profile-gallery">

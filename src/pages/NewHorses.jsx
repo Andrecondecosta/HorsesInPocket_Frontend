@@ -19,6 +19,8 @@ const NewHorses = ({ setIsLoggedIn }) => {
     color: '',
     training_level: '',
     piroplasmosis: false,
+    breed: "",
+    breeder: "",
   });
   const [ancestors, setAncestors] = useState({
     father: {},
@@ -40,6 +42,100 @@ const NewHorses = ({ setIsLoggedIn }) => {
   const colorRef = useRef(null);
   const trainingLevelRef = useRef(null);
   const imageRef = useRef(null);
+  const [filteredOptions, setFilteredOptions] = useState([]);
+  const [breedInput, setBreedInput] = useState(newHorse.breed || "");
+  const [showDropdown, setShowDropdown] = useState(false);
+
+  const breeds = [
+    'Akhal-Teke',
+    'American Cream Draft',
+    'American Paint Horse',
+    'American Quarter Horse',
+    'American Saddlebred',
+    'Andalusian',
+    'Appaloosa',
+    'Arabian',
+    'Ardennes',
+    'Azteca',
+    'Bashkir Curly',
+    'Belgian Draft',
+    'Brumby',
+    'Budyonny',
+    'Canadian Horse',
+    'Caspian',
+    'Cleveland Bay',
+    'Clydesdale',
+    'Criollo',
+    'Dutch Warmblood',
+    'Exmoor Pony',
+    'Fell Pony',
+    'Friesian',
+    'Gypsy Vanner',
+    'Hackney Horse',
+    'Haflinger',
+    'Hanoverian',
+    'Highland Pony',
+    'Holsteiner',
+    'Icelandic Horse',
+    'Irish Draught',
+    'Knabstrupper',
+    'Lipizzaner',
+    'Lusitano',
+    'Marwari',
+    'Miniature Horse',
+    'Missouri Fox Trotter',
+    'Morgan',
+    'Mustang',
+    'Nokota Horse',
+    'Oldenburg',
+    'Paso Fino',
+    'Percheron',
+    'Peruvian Paso',
+    'Pinto',
+    'Pony of the Americas',
+    'Przewalski’s Horse',
+    'Quarter Horse',
+    'Rocky Mountain Horse',
+    'Shetland Pony',
+    'Shire',
+    'Suffolk Punch',
+    'Tennessee Walking Horse',
+    'Thoroughbred',
+    'Trakehner',
+    'Welsh Pony',
+    'Westphalian',
+    'Zangersheide',
+    'Other'
+  ];
+
+  const handleBreedInputChange = (e) => {
+    const inputValue = e.target.value;
+    setBreedInput(inputValue);
+
+    if (inputValue.trim() === "") {
+      setShowDropdown(false); // Não exibe o dropdown se o input estiver vazio
+      setFilteredOptions([]);
+      return;
+    }
+
+    // Filtra as opções que contêm o texto digitado (case insensitive)
+    const filtered = breeds.filter((option) =>
+      option.toLowerCase().includes(inputValue.toLowerCase())
+    );
+    setFilteredOptions(filtered);
+    setShowDropdown(filtered.length > 0);
+  };
+
+  const handleOptionClick = (option) => {
+    setBreedInput(option); // Define o valor no input
+    setNewHorse((prevHorse) => ({
+      ...prevHorse,
+      breed: option, // Atualiza o estado do cavalo
+    }));
+    setFilteredOptions([]); // Fecha o dropdown
+  };
+
+
 
   const handleNextStep = () => {
     if (currentStep < 3) setCurrentStep(currentStep + 1);
@@ -173,6 +269,8 @@ const NewHorses = ({ setIsLoggedIn }) => {
       formData.append('horse[color]', newHorse.color);
       formData.append('horse[training_level]', newHorse.training_level);
       formData.append('horse[piroplasmosis]', newHorse.piroplasmosis);
+      formData.append('horse[breed]', newHorse.breed);
+      formData.append('horse[breeder]', newHorse.breeder);
 
       Object.keys(ancestors).forEach((relation) => {
         const ancestor = ancestors[relation];
@@ -304,6 +402,40 @@ const NewHorses = ({ setIsLoggedIn }) => {
                 <option value="Isabella">Isabella</option>
               </select>
               {fieldErrors.color && <p className="error-message">{fieldErrors.color}</p>}
+            </div>
+
+            {/* Breed and Breeder */}
+            <div className="form-group">
+              <input
+                type="text"
+                value={breedInput}
+                onChange={handleBreedInputChange}
+                placeholder="Type or select a breed"
+                className="autocomplete-input"
+              />
+
+              {/* Dropdown com as sugestões */}
+              {filteredOptions.length > 0 && (
+                <ul className="autocomplete-dropdown">
+                  {filteredOptions.map((option, index) => (
+                    <li
+                      key={index}
+                      onClick={() => handleOptionClick(option)} // Seleciona a opção
+                      className="autocomplete-option"
+                    >
+                      {option}
+                    </li>
+                  ))}
+                </ul>
+              )}
+            </div>
+
+            <div className="form-group">
+              <input type="text"
+              name="breeder"
+               placeholder="Breeder"
+              value={newHorse.breeder}
+              onChange={handleChange} />
             </div>
 
             {/* Second row: Height slider and Piroplasmosis */}

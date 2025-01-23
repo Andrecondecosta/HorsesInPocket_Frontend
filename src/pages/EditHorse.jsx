@@ -20,6 +20,8 @@ const EditHorse = ({ setIsLoggedIn }) => {
     color: '',
     training_level: '',
     piroplasmosis: false,
+    breed: '',
+    breeder: '',
   });
   const [ancestors, setAncestors] = useState({
     father: {},
@@ -39,6 +41,72 @@ const EditHorse = ({ setIsLoggedIn }) => {
   const [newImages, setNewImages] = useState([]);
   const [newVideos, setNewVideos] = useState([]);
   const [existingVideos, setExistingVideos] = useState([]);
+  const [filteredOptions, setFilteredOptions] = useState([]);
+  const [breedInput, setBreedInput] = useState('');
+  const [showDropdown, setShowDropdown] = useState(false);
+
+  const breeds = [
+    'Akhal-Teke',
+    'American Cream Draft',
+    'American Paint Horse',
+    'American Quarter Horse',
+    'American Saddlebred',
+    'Andalusian',
+    'Appaloosa',
+    'Arabian',
+    'Ardennes',
+    'Azteca',
+    'Bashkir Curly',
+    'Belgian Draft',
+    'Brumby',
+    'Budyonny',
+    'Canadian Horse',
+    'Caspian',
+    'Cleveland Bay',
+    'Clydesdale',
+    'Criollo',
+    'Dutch Warmblood',
+    'Exmoor Pony',
+    'Fell Pony',
+    'Friesian',
+    'Gypsy Vanner',
+    'Hackney Horse',
+    'Haflinger',
+    'Hanoverian',
+    'Highland Pony',
+    'Holsteiner',
+    'Icelandic Horse',
+    'Irish Draught',
+    'Knabstrupper',
+    'Lipizzaner',
+    'Lusitano',
+    'Marwari',
+    'Miniature Horse',
+    'Missouri Fox Trotter',
+    'Morgan',
+    'Mustang',
+    'Nokota Horse',
+    'Oldenburg',
+    'Paso Fino',
+    'Percheron',
+    'Peruvian Paso',
+    'Pinto',
+    'Pony of the Americas',
+    'Przewalski’s Horse',
+    'Quarter Horse',
+    'Rocky Mountain Horse',
+    'Shetland Pony',
+    'Shire',
+    'Suffolk Punch',
+    'Tennessee Walking Horse',
+    'Thoroughbred',
+    'Trakehner',
+    'Welsh Pony',
+    'Westphalian',
+    'Zangersheide',
+    'Other'
+  ];
+
 
   useEffect(() => {
     const fetchHorse = async () => {
@@ -83,6 +151,33 @@ const EditHorse = ({ setIsLoggedIn }) => {
     fetchHorse();
   }, [id]);
 
+  const handleBreedInputChange = (e) => {
+    const inputValue = e.target.value;
+    setBreedInput(inputValue);
+
+    if (inputValue.trim() === "") {
+      setShowDropdown(false);
+      setFilteredOptions([]);
+      return;
+    }
+
+    const filtered = breeds.filter((option) =>
+      option.toLowerCase().includes(inputValue.toLowerCase())
+    );
+    setFilteredOptions(filtered);
+    setShowDropdown(filtered.length > 0);
+  };
+
+  const handleOptionClick = (option) => {
+    setBreedInput(option);
+    setHorse((prevHorse) => ({
+      ...prevHorse,
+      breed: option,
+    }));
+    setFilteredOptions([]);
+  };
+
+
   const handleNextStep = () => {
     setCurrentStep((prevStep) => Math.min(prevStep + 1, 3));
   };
@@ -98,6 +193,7 @@ const EditHorse = ({ setIsLoggedIn }) => {
       [name]: type === 'checkbox' ? checked : value,
     }));
   };
+
 
   const handleHeightChange = (e) => {
     const valueInMeters = parseFloat(e.target.value);
@@ -129,6 +225,8 @@ const EditHorse = ({ setIsLoggedIn }) => {
     formData.append('horse[color]', horse.color);
     formData.append('horse[training_level]', horse.training_level);
     formData.append('horse[piroplasmosis]', horse.piroplasmosis);
+    formData.append('horse[breed]', horse.breed);
+    formData.append('horse[breeder]', horse.breeder);
 
     images.forEach((image) => {
       if (typeof image === 'string') {
@@ -256,13 +354,36 @@ const EditHorse = ({ setIsLoggedIn }) => {
                 <option value="Palomino">Palomino</option>
                 <option value="Isabella">Isabella</option>
               </select>
+              <div className="form-group">
+            <input
+              type="text"
+              value={breedInput}
+              onChange={handleBreedInputChange}
+              placeholder="Type or select a breed"
+              className="autocomplete-input"
+            />
+            {showDropdown && (
+              <ul className="autocomplete-dropdown">
+                {filteredOptions.map((option, index) => (
+                  <li
+                    key={index}
+                    onClick={() => handleOptionClick(option)}
+                    className="autocomplete-option"
+                  >
+                    {option}
+                  </li>
+                ))}
+              </ul>
+            )}
+          </div>
               <input
                 type="text"
-                name="training_level"
+                name="breeder"
                 className="edit-input"
-                placeholder="Training Level"
-                value={horse.training_level}
+                placeholder="Breeder"
+                value={horse.breeder}
                 onChange={handleChange}
+                required
               />
               <div className="edit-piroplasmosis-label">
                 <label>Piroplasmosis</label>

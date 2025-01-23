@@ -3,7 +3,7 @@ import { useNavigate, Link } from 'react-router-dom';
 import { useRegister } from '../hooks/useRegister.js';
 import './RegisterPage.css';
 
-const RegisterPage = () => {
+const RegisterPage = ({ setIsLoggedIn }) => {
   const [firstName, setFirstName] = useState('');
   const [lastName, setLastName] = useState('');
   const [email, setEmail] = useState('');
@@ -13,9 +13,14 @@ const RegisterPage = () => {
   const [phoneNumber, setPhoneNumber] = useState('');
   const [address, setAddress] = useState('');
   const [gender, setGender] = useState('');
+  const [error, setError] = useState(null);
 
-  const { register, token, loading, error } = useRegister();
+  const { register, loading} = useRegister();
   const navigate = useNavigate();
+
+  const params = new URLSearchParams(window.location.search);
+  const redirectUrl = params.get('redirect');
+  const token = params.get('token'); // Token enviado no link compartilhado
 
   const handleSubmit = async (e) => {
     e.preventDefault();
@@ -30,16 +35,27 @@ const RegisterPage = () => {
       phone_number: phoneNumber,
       address,
       gender,
+      token,
     };
 
-    const receivedToken = await register(userData);
+    try {
+      const success = await register(userData);
 
-    if (receivedToken) {
-      navigate('/login');
-    } else {
-      console.error('Registration failed: Token was not received.');
+      if (success) {
+        setIsLoggedIn(true);
+
+        // Redireciona para o URL especificado ou página padrão
+        if (redirectUrl) {
+          navigate(redirectUrl);
+        } else {
+          navigate('/received');
+        }
+      }
+    } catch (err) {
+      setError(err.message);
     }
   };
+
 
   return (
     <div className="register-page">

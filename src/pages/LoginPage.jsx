@@ -14,12 +14,23 @@ const LoginPage = ({ setIsLoggedIn }) => {
   const handleSubmit = async (e) => {
     e.preventDefault();
     await login(email, password);
+
     if (localStorage.getItem('authToken')) {
       setIsLoggedIn(true);
-      const redirectUrl = new URLSearchParams(window.location.search).get('redirect') || '/dashboard';
-      navigate(redirectUrl);
+
+      // Captura o token ou redirecionamento da URL
+      const params = new URLSearchParams(window.location.search);
+      const redirectUrl = params.get('redirect');
+
+      if (redirectUrl) {
+        navigate(redirectUrl); // Redireciona para o link com o token
+      } else {
+        navigate('/dashboard'); // Redireciona para o dashboard padrão
+      }
     }
   };
+
+
 
   return (
     <div className="login-page">

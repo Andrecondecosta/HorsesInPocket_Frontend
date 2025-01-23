@@ -3,22 +3,11 @@ import React, { useState } from 'react';
 const ImageUploader = ({ images, setImages }) => {
   const [isProcessing, setIsProcessing] = useState(false);
   const [error, setError] = useState(null);
-  const [setNewImages] = useState([]); // Adicione esta linha
-
 
   const handleImageChange = async (e) => {
-
-    // Adiciona os novos arquivos ao estado `newImages`
-    setNewImages((prev) => [...prev, ...files]); // Usando a prop passada
-    setImages((prevImages) => [
-      ...prevImages,
-      ...files.map((file) => ({ file, previewUrl: URL.createObjectURL(file) })),
-    ]);
-
     const files = Array.from(e.target.files);
     const maxFiles = 5;
 
-    // Verificar o limite de arquivos
     if (files.length + images.length > maxFiles) {
       setError(`Você pode enviar no máximo ${maxFiles} imagens.`);
       return;
@@ -59,7 +48,6 @@ const ImageUploader = ({ images, setImages }) => {
         })
       );
 
-      // Atualizar o estado com as novas imagens processadas
       setImages((prevImages) => [...prevImages, ...processedImages]);
     } catch (err) {
       setError(err.message || 'Erro ao processar as imagens.');
@@ -93,21 +81,11 @@ const ImageUploader = ({ images, setImages }) => {
       <div className="image-upload-list">
         {images.map((image, index) => (
           <div key={index} className="image-upload-item">
-            {typeof image === 'string' ? (
-              // Exibir imagens existentes como URLs
-              <img
-                src={image}
-                alt={`Imagem existente ${index + 1}`}
-                width="100"
-              />
-            ) : (
-              // Exibir imagens novas carregadas como pré-visualização
-              <img
-                src={URL.createObjectURL(image)}
-                alt={`Preview ${index + 1}`}
-                width="100"
-              />
-            )}
+            <img
+              src={URL.createObjectURL(image)}
+              alt={`Preview ${index + 1}`}
+              width="100"
+            />
             <button
               type="button"
               onClick={() => removeImage(index)}

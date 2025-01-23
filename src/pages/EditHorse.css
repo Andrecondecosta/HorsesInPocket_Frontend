@@ -413,7 +413,7 @@
     width: 100%; /* Garante que o campo ocupe toda a célula */
     padding: 8px; /* Espaçamento interno */
     font-size: 0.9rem; /* Ajusta o tamanho da fonte */
-    border: 1px solid #47663b; /* Borda uniforme */
+    border: 2px solid #47663b; /* Borda uniforme */
     border-radius: 4px; /* Bordas arredondadas */
     box-sizing: border-box; /* Garante que pa entrada ocupa uma célula */
   }

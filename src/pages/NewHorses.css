@@ -376,6 +376,55 @@ textarea {
   font-size: 12px;
   margin-top: 5px;
 }
+/* Estilo do contêiner de autocomplete */
+.form-group {
+  position: relative;
+  width: 100%;
+}
+
+.autocomplete-input {
+  width: 100%;
+  padding: 10px;
+  border: 1px solid #8eb486;
+  border-radius: 6px;
+  font-size: 1rem;
+  box-sizing: border-box;
+}
+
+/* Estilo do dropdown */
+.autocomplete-dropdown {
+  position: absolute;
+  top: 100%;
+  left: 0;
+  right: 0;
+  background-color: white;
+  border: 1px solid #8eb486;
+  border-radius: 0 0 6px 6px; /* Apenas cantos inferiores arredondados */
+  z-index: 1000;
+  max-height: 200px; /* Altura máxima com scroll */
+  overflow-y: auto;
+  box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
+}
+
+/* Estilo de cada opção */
+.autocomplete-option {
+  padding: 10px;
+  font-size: 0.7rem;
+  color: #333;
+  cursor: pointer;
+  transition: background-color 0.2s ease, color 0.2s ease;
+}
+
+.autocomplete-option:hover {
+  background-color: #f5f5f5; /* Fundo ao passar o rato */
+  color: #47663B; /* Cor do texto ao passar o rato */
+}
+
+/* Adicional para o dropdown quando vazio */
+.autocomplete-dropdown:empty {
+  display: none;
+}
+
 
 /* Responsividade */
 
@@ -423,7 +472,7 @@ textarea {
     width: 100%; /* Garante que o campo ocupe toda a célula */
     padding: 8px; /* Espaçamento interno */
     font-size: 0.9rem; /* Ajusta o tamanho da fonte */
-    border: 1px solid #47663b; /* Borda uniforme */
+    border: 2px solid #47663b; /* Borda uniforme */
     border-radius: 4px; /* Bordas arredondadas */
     box-sizing: border-box; /* Garante que padding não afeta o tamanho */
   }
