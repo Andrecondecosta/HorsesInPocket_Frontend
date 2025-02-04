@@ -64,7 +64,7 @@ const SavePaymentMethodForm = ({ selectedPlan, onPaymentSuccess }) => {
         Selected plan: <strong>{selectedPlan?.name}</strong> - {selectedPlan?.price}
       </p>
 
-      <CardElement className="card-input" />
+      <CardElement options={{ hidePostalCode: true }} className="card-input" />
 
       <div className="payment-buttons">
         <button className="payment-button" onClick={handlePayment}>

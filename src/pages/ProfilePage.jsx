@@ -3,7 +3,7 @@ import { FaEdit } from "react-icons/fa";
 import { Link } from "react-router-dom";
 import Layout from "../components/Layout";
 import LoadingPopup from "../components/LoadingPopup";
-import SavePaymentMethod from "../components/SavePaymentMethod"; // 🆕 Importando o Componente de Pagamento
+import SavePaymentMethod from "../components/SavePaymentMethod"; // 🆕 Importing the Payment Component
 import "./ProfilePage.css";
 import SubscriptionPlans from "../components/SubscriptionPlans";
 
@@ -21,7 +21,7 @@ const ProfilePage = () => {
   const [error, setError] = useState(null);
   const [showPlanPopup, setShowPlanPopup] = useState(false);
   const [showPaymentPopup, setShowPaymentPopup] = useState(false);
-  const [selectedPlan, setSelectedPlan] = useState(null); // 🔥 Estado para armazenar o plano selecionado
+  const [selectedPlan, setSelectedPlan] = useState(null); // State to store the selected plan
   const token = localStorage.getItem("authToken");
 
   useEffect(() => {
@@ -35,10 +35,10 @@ const ProfilePage = () => {
           },
         });
 
-        if (!response.ok) throw new Error("Erro ao carregar perfil");
+        if (!response.ok) throw new Error("Error loading profile");
 
         const data = await response.json();
-        console.log("🔍 Dados do usuário recebidos:", data); // 🔥 DEBUG
+        console.log("🔍 Received user data:", data); // DEBUG
         setUser(data);
 
         const planResponse = await fetch(`${process.env.REACT_APP_API_SERVER_URL}/get_user_plan`, {
@@ -49,13 +49,13 @@ const ProfilePage = () => {
           },
         });
 
-        if (!planResponse.ok) throw new Error("Erro ao carregar plano");
+        if (!planResponse.ok) throw new Error("Error loading plan");
 
         const planData = await planResponse.json();
-        console.log("📢 Plano recebido:", planData); // 🔥 DEBUG
+        console.log("📢 Received plan:", planData); // DEBUG
         setPlan(planData.plan);
       } catch (error) {
-        setError("Erro ao carregar dados do usuário");
+        setError("Error loading user data");
       } finally {
         setIsLoading(false);
       }
@@ -64,14 +64,11 @@ const ProfilePage = () => {
     if (token) {
       fetchProfile();
     }
-  }, [token, user?.subscription_canceled]); // ✅ Agora recarrega corretamente
-
-
-
+  }, [token, user?.subscription_canceled]); // Now reloads correctly
 
   const handleSelectPlan = async (plan) => {
     if (!plan) {
-      alert("Plano inválido selecionado.");
+      alert("Invalid plan selected.");
       return;
     }
 
@@ -84,36 +81,36 @@ const ProfilePage = () => {
       try {
         const response = await fetch(`${process.env.REACT_APP_API_SERVER_URL}/change_plan`, {
           method: "POST",
-          body: JSON.stringify({ plan: plan.name }), // 🔥 Enviando o plano correto?
+          body: JSON.stringify({ plan: plan.name }), // Sending the correct plan?
           headers: {
             "Content-Type": "application/json",
             Authorization: `Bearer ${token}`,
           },
         });
 
-        if (!response.ok) throw new Error("Erro ao ativar plano gratuito.");
+        if (!response.ok) throw new Error("Error activating free plan.");
 
-        alert(`Plano ${plan.name} ativado!`);
+        alert(`Plan ${plan.name} activated!`);
         setPlan(plan.name);
         setUser((prevUser) => ({
           ...prevUser,
-          subscription_canceled: false, // ✅ Garantindo atualização local
+          subscription_canceled: false, // Ensuring local update
         }));
         setShowPlanPopup(false);
       } catch (error) {
-        alert("Erro ao ativar plano gratuito.");
+        alert("Error activating free plan.");
       }
     }
   };
 
   const handlePaymentSuccess = (newPlan) => {
-  setShowPaymentPopup(false);
-  setPlan(newPlan);
-  window.location.reload(); // 🔥 Atualiza a página para pegar os dados certos
-};
+    setShowPaymentPopup(false);
+    setPlan(newPlan);
+    window.location.reload(); // Refresh the page to get the correct data
+  };
 
   const handleCancelSubscription = async () => {
-    if (!window.confirm("Tem certeza que deseja cancelar sua assinatura?")) return;
+    if (!window.confirm("Are you sure you want to cancel your subscription?")) return;
 
     try {
       const res = await fetch(`${process.env.REACT_APP_API_SERVER_URL}/payments/cancel_subscription`, {
@@ -127,16 +124,15 @@ const ProfilePage = () => {
       const data = await res.json();
       if (res.ok) {
         alert(data.message);
-        window.location.reload(); // 🔄 Recarrega a página inteira
+        window.location.reload(); // Reloads the entire page
       } else {
         alert(data.error);
       }
     } catch (error) {
-      console.error("Erro ao cancelar a assinatura:", error);
-      alert("Erro ao cancelar a assinatura.");
+      console.error("Error canceling subscription:", error);
+      alert("Error canceling subscription.");
     }
   };
-
 
   if (isLoading) return <LoadingPopup message="Loading ..." />;
   if (error) return <p>{error}</p>;
@@ -160,7 +156,10 @@ const ProfilePage = () => {
           {/* Profile image */}
           <div className="profile-image">
             <img
-              src={user.avatar || "https://res.cloudinary.com/dcvtrregd/image/upload/v1736802678/user_1_vl6pae.png"}
+              src={
+                user.avatar ||
+                "https://res.cloudinary.com/dcvtrregd/image/upload/v1736802678/user_1_vl6pae.png"
+              }
               alt="Profile Picture"
             />
           </div>
@@ -183,35 +182,47 @@ const ProfilePage = () => {
               <strong>Address:</strong> {user.address || "Not specified"}
             </p>
             <div className="subscription-container">
-            <div className="subscription-header">
-              <p><strong>Plano:</strong> {plan}</p>
-              {user?.subscription_end && new Date(user.subscription_end) > new Date() && !user?.subscription_canceled && (
-                <p className="subscription-status">
-                  <strong>Expira em:</strong> {new Date(user.subscription_end).toLocaleDateString()}
+              <div className="subscription-header">
+                <p>
+                  <strong>Plan:</strong> {plan}
+                </p>
+                {user?.subscription_end &&
+                  new Date(user.subscription_end) > new Date() &&
+                  !user?.subscription_canceled && (
+                    <p className="subscription-status">
+                      <strong>Expires on:</strong>{" "}
+                      {new Date(user.subscription_end).toLocaleDateString()}
+                    </p>
+                  )}
+                {user?.plan !== "Basic" &&
+                  user?.subscription_end &&
+                  new Date(user.subscription_end) > new Date() &&
+                  !user?.subscription_canceled && (
+                    <button onClick={handleCancelSubscription} className="cancel-btn">
+                      Cancel Subscription
+                    </button>
+                  )}
+              </div>
+
+              {user?.plan !== "Basic" && user?.subscription_canceled && (
+                <p className="subscription-warning">
+                  🚨 Your subscription has been canceled and{" "}
+                  <strong>will not be renewed after</strong>{" "}
+                  {new Date(user.subscription_end).toLocaleDateString()}.
                 </p>
               )}
-              {user?.plan !== "Basic" && user?.subscription_end && new Date(user.subscription_end) > new Date() && !user?.subscription_canceled && (
-                <button onClick={handleCancelSubscription} className="cancel-btn">
-                  Cancelar Assinatura
-                </button>
-              )}
+
+              <button onClick={() => setShowPlanPopup(true)} className="upgrade-btn">
+                Upgrade Plan
+              </button>
             </div>
-
-            {user?.plan !== "Basic" && user?.subscription_canceled && (
-              <p className="subscription-warning">
-                🚨 Sua assinatura foi cancelada e <strong>não será renovada após</strong> {new Date(user.subscription_end).toLocaleDateString()}.
-              </p>
-            )}
-
-            <button onClick={() => setShowPlanPopup(true)} className="upgrade-btn">
-              🔼 Upgrade de Plano
-            </button>
-
-          </div>
             {showPlanPopup && (
               <div className="popup-overlay">
                 <div className="popup-content">
-                  <SubscriptionPlans onSelectPlan={handleSelectPlan} onClose={() => setShowPlanPopup(false)} />
+                  <SubscriptionPlans
+                    onSelectPlan={handleSelectPlan}
+                    onClose={() => setShowPlanPopup(false)}
+                  />
                 </div>
               </div>
             )}
@@ -219,11 +230,10 @@ const ProfilePage = () => {
             {showPaymentPopup && selectedPlan && (
               <div className="popup-overlay">
                 <div className="popup-content1">
-                <SavePaymentMethod
-  selectedPlan={selectedPlan}
-  onPaymentSuccess={() => handlePaymentSuccess(selectedPlan.name)}
-/>
-
+                  <SavePaymentMethod
+                    selectedPlan={selectedPlan}
+                    onPaymentSuccess={() => handlePaymentSuccess(selectedPlan.name)}
+                  />
                 </div>
               </div>
             )}
