@@ -1,0 +1,151 @@
+.plans-container {
+  text-align: center;
+  padding: 40px;
+  background-color: #f8f8f8;
+}
+
+.plans-title {
+  font-size: 24px;
+  font-weight: bold;
+  color: #333;
+  margin-bottom: 20px;
+}
+
+/* Layout flexível dos cartões */
+.plans-row {
+  display: flex;
+  justify-content: center;
+  align-items: stretch;
+  gap: 15px;
+  flex-wrap: wrap; /* Permite quebrar linha quando não couber */
+  padding: 10px;
+}
+
+/* Estilização dos cartões */
+.plan-card {
+  background: white;
+  border-radius: 10px;
+  padding: 15px;
+  border: 1px solid #ddd;
+  box-shadow: 0px 3px 8px rgba(0, 0, 0, 0.1);
+  transition: transform 0.3s ease, box-shadow 0.3s ease;
+  flex: 1;
+  max-width: 250px;
+  min-width: 180px;
+}
+
+.plan-card:hover {
+  transform: translateY(-5px);
+  box-shadow: 0px 6px 12px rgba(0, 0, 0, 0.2);
+}
+
+.plan-name {
+  font-size: 18px;
+  font-weight: bold;
+  margin-bottom: 8px;
+}
+
+.plan-price {
+  font-size: 16px;
+  color: #47663B;
+  margin-bottom: 8px;
+}
+
+.plan-features {
+  list-style: none;
+  padding: 0;
+  margin-bottom: 10px;
+}
+
+.plan-features li {
+  font-size: 13px;
+  color: #666;
+  padding: 3px 0;
+}
+
+.select-plan-btn {
+  background-color: #47663B;
+  color: white;
+  padding: 8px 14px;
+  border: none;
+  border-radius: 6px;
+  font-size: 12px;
+  cursor: pointer;
+  transition: background-color 0.3s ease;
+}
+
+.select-plan-btn:hover {
+  background-color: #3b5731;
+}
+
+.cancel-btn {
+  background: none;
+  border: none;
+  font-size: 14px;
+  color: #999;
+  cursor: pointer;
+  margin-top: 15px;
+}
+
+.cancel-btn:hover {
+  color: #666;
+}
+/* SubscriptionPlans.css */
+.plan-card.active-plan {
+  background-color: #4CAF50; /* Cor verde */
+  color: white;
+  border: 2px solid #388E3C;
+}
+
+
+/* Responsividade */
+@media (max-width: 1024px) {
+  .plan-card {
+    max-width: 220px;
+  }
+}
+
+@media (max-width: 768px) {
+  .plan-card {
+    max-width: 180px;
+    padding: 12px;
+  }
+
+  .plan-name {
+    font-size: 16px;
+  }
+
+  .plan-price {
+    font-size: 14px;
+  }
+
+  .select-plan-btn {
+    font-size: 11px;
+    padding: 6px 12px;
+  }
+}
+
+@media (max-width: 480px) {
+  .plans-row {
+    flex-direction: column;
+    align-items: center;
+  }
+
+  .plan-card {
+    max-width: 90%;
+    padding: 10px;
+  }
+
+  .plan-name {
+    font-size: 15px;
+  }
+
+  .plan-price {
+    font-size: 13px;
+  }
+
+  .select-plan-btn {
+    font-size: 10px;
+    padding: 5px 10px;
+  }
+}

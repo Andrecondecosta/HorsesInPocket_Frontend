@@ -9,7 +9,7 @@ const ImageUploader = ({ images, setImages }) => {
     const maxFiles = 5;
 
     if (files.length + images.length > maxFiles) {
-      setError(`Você pode enviar no máximo ${maxFiles} imagens.`);
+      setError(`You can upload a maximum of ${maxFiles} images.`);
       return;
     }
 
@@ -19,7 +19,7 @@ const ImageUploader = ({ images, setImages }) => {
     try {
       const token = localStorage.getItem('authToken');
       if (!token) {
-        throw new Error('Usuário não autenticado. Faça login novamente.');
+        throw new Error('User not authenticated. Please log in again.');
       }
 
       const processedImages = await Promise.all(
@@ -39,7 +39,7 @@ const ImageUploader = ({ images, setImages }) => {
           );
 
           if (!response.ok) {
-            throw new Error('Erro ao enviar a imagem para compactação.');
+            throw new Error('Error sending image for compression.');
           }
 
           const blob = await response.blob();
@@ -50,7 +50,7 @@ const ImageUploader = ({ images, setImages }) => {
 
       setImages((prevImages) => [...prevImages, ...processedImages]);
     } catch (err) {
-      setError(err.message || 'Erro ao processar as imagens.');
+      setError(err.message || 'Error processing images.');
     } finally {
       setIsProcessing(false);
     }
@@ -62,13 +62,13 @@ const ImageUploader = ({ images, setImages }) => {
 
   return (
     <div className="upload-block">
-      <h2>Imagens</h2>
-      <p>Máximo de 5 imagens, até 10MB cada.</p>
+      <h2>Images</h2>
+      <p>Maximum of 5 images.</p>
       <button
         className="upload-button"
         onClick={() => document.getElementById('imageUpload').click()}
       >
-        Escolher Imagens
+        Choose Images
       </button>
       <input
         type="file"
@@ -96,7 +96,7 @@ const ImageUploader = ({ images, setImages }) => {
           </div>
         ))}
       </div>
-      {isProcessing && <p>Processando imagens...</p>}
+      {isProcessing && <p>Processing images...</p>}
       {error && <p className="error-message">{error}</p>}
     </div>
   );

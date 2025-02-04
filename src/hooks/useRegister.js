@@ -24,6 +24,9 @@ export const useRegister = () => {
         throw new Error(data.errors?.join(', ') || 'Falha ao registrar usuário');
       }
 
+      localStorage.setItem("authToken", data.token);
+      localStorage.setItem("hasSeenPopup", "newUser"); // 🔥 Marca como novo usuário
+
       setToken(data.token);
       return data.token; // Retorna o token explicitamente
     } catch (err) {

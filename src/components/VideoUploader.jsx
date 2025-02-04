@@ -9,7 +9,7 @@ const VideoUploader = ({ videos, setVideos }) => {
     const maxFiles = 3;
 
     if (files.length + videos.length > maxFiles) {
-      setError(`Você pode enviar no máximo ${maxFiles} vídeos.`);
+      setError(`You can upload a maximum of ${maxFiles} videos.`);
       return;
     }
 
@@ -19,7 +19,7 @@ const VideoUploader = ({ videos, setVideos }) => {
     try {
       const token = localStorage.getItem('authToken');
       if (!token) {
-        throw new Error('Usuário não autenticado. Faça login novamente.');
+        throw new Error('User not authenticated. Please log in again.');
       }
 
       const processedVideos = await Promise.all(
@@ -39,7 +39,7 @@ const VideoUploader = ({ videos, setVideos }) => {
           );
 
           if (!response.ok) {
-            throw new Error('Erro ao enviar o vídeo para compactação.');
+            throw new Error('Error sending video for compression.');
           }
 
           const blob = await response.blob();
@@ -50,7 +50,7 @@ const VideoUploader = ({ videos, setVideos }) => {
 
       setVideos((prevVideos) => [...prevVideos, ...processedVideos]);
     } catch (err) {
-      setError(err.message || 'Erro ao processar os vídeos.');
+      setError(err.message || 'Error processing videos.');
     } finally {
       setIsProcessing(false);
     }
@@ -62,13 +62,13 @@ const VideoUploader = ({ videos, setVideos }) => {
 
   return (
     <div className="upload-block">
-      <h2>Vídeo</h2>
-      <p>Máximo de 3 vídeos, até 50MB cada.</p>
+      <h2>Video</h2>
+      <p>Maximum of 3 videos.</p>
       <button
         className="upload-button"
         onClick={() => document.getElementById('videoUpload').click()}
       >
-        Escolher Vídeos
+        Choose Videos
       </button>
       <input
         type="file"
@@ -83,7 +83,7 @@ const VideoUploader = ({ videos, setVideos }) => {
           <div key={index} className="video-upload-item">
             <video width="100" controls>
               <source src={URL.createObjectURL(video)} type="video/mp4" />
-              Seu navegador não suporta a reprodução de vídeo.
+              Your browser does not support video playback.
             </video>
             <button
               type="button"
@@ -95,7 +95,7 @@ const VideoUploader = ({ videos, setVideos }) => {
           </div>
         ))}
       </div>
-      {isProcessing && <p>Processando vídeos...</p>}
+      {isProcessing && <p>Processing videos...</p>}
       {error && <p className="error-message">{error}</p>}
     </div>
   );
