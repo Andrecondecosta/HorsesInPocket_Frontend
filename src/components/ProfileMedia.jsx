@@ -51,6 +51,9 @@ const ProfileMedia = ({ images, videos }) => {
             controls
             className="media-item"
             src={videos[selectedVideoIndex]}
+            controlsList="nodownload" // Prevents download button in supported browsers
+        onContextMenu={(e) => e.preventDefault()} // Disables right-click save
+        disablePictureInPicture // Disables Picture-in-Picture (PiP)
           />
           <div className="pagination-dots">
             {videos.map((_, index) => (

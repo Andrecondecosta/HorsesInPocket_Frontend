@@ -6,20 +6,22 @@ const WelcomePopup = ({ onClose }) => {
     <div className="welcome">
       <div className="popup-overlay">
         <div className="popup-container">
-          <h2>🎉 Bem-vindo ao HorseHub! 🐴</h2>
-          <p>Você ganhou <strong>3 meses grátis</strong> do plano <strong>Ultimate</strong>!</p>
+          <h2>🎉 Welcome to HorseHub! 🐴</h2>
+          <p>
+            You have earned <strong>3 months free</strong> of the <strong>Ultimate</strong> plan!
+          </p>
           <ul className="popup-features">
-            <li>✅ Cavalos Ilimitados</li>
-            <li>✅ Partilhas Ilimitadas</li>
-            <li>✅ Acesso total a todos os recursos</li>
+            <li>✅ Unlimited Horses</li>
+            <li>✅ Unlimited Shares</li>
+            <li>✅ Full access to all features</li>
           </ul>
           <p>
-            Aproveite essa oportunidade e explore todos os recursos exclusivos.
+            Take advantage of this opportunity and explore all the exclusive features.
           </p>
 
           <div className="popup-actions">
             <button className="explore-btn" onClick={onClose}>
-              Explorar Agora 🚀
+              Explore Now 🚀
             </button>
           </div>
         </div>
