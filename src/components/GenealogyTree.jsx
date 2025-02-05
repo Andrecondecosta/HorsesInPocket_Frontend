@@ -47,8 +47,8 @@ const GenealogyTree = ({ horse }) => {
         {/* Grandparents generation */}
         <div className="generation grandparents">
           {renderAncestor('paternal_grandfather', 'Paternal Grandfather')}
-          {renderAncestor('paternal_grandmother', 'Paternal Grandmother')}
           {renderAncestor('maternal_grandfather', 'Maternal Grandfather')}
+          {renderAncestor('paternal_grandmother', 'Paternal Grandmother')}
           {renderAncestor('maternal_grandmother', 'Maternal Grandmother')}
         </div>
       </div>
