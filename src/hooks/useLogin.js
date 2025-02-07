@@ -5,7 +5,7 @@ export const useLogin = () => {
   const [error, setError] = useState(null);
   const [token, setToken] = useState(null);
 
-  const login = async (email, password) => {
+  const login = async (email, password, sharedToken) => {  // Adicione o parâmetro sharedToken
     setLoading(true);
     setError(null);
 
@@ -15,7 +15,7 @@ export const useLogin = () => {
         headers: {
           'Content-Type': 'application/json',
         },
-        body: JSON.stringify({ email, password }),
+        body: JSON.stringify({ email, password, shared_token: sharedToken }),  // Envia o sharedToken no corpo
       });
 
       const data = await response.json();

@@ -1,4 +1,4 @@
-import React, { useState } from 'react';
+import React, { useState, useEffect } from 'react';
 import { useNavigate, Link } from 'react-router-dom';
 import { useLogin } from '../hooks/useLogin';
 import './LoginPage.css';
@@ -8,29 +8,47 @@ const LoginPage = ({ setIsLoggedIn }) => {
   const [email, setEmail] = useState('');
   const [password, setPassword] = useState('');
   const [showPassword, setShowPassword] = useState(false);
+  const [sharedToken, setSharedToken] = useState(null); // Estado para o shared_token
   const { login, loading, error } = useLogin();
   const navigate = useNavigate();
 
+  // Captura o shared_token da URL
+  useEffect(() => {
+    const params = new URLSearchParams(window.location.search);
+    const tokenFromUrl = params.get('token');
+    if (tokenFromUrl) {
+      setSharedToken(tokenFromUrl); // Armazena o token no estado
+      console.log("Captured shared_token:", tokenFromUrl); // Verifica se o token está correto
+    }
+  }, []);
+
   const handleSubmit = async (e) => {
     e.preventDefault();
-    await login(email, password);
+
+    const loginData = {
+      email,
+      password,
+      shared_token: sharedToken,  // Envia o shared_token capturado
+    };
+
+    console.log("Login Data being sent:", loginData); // Verifica se o token está a ser enviado
+
+    await login(email, password, sharedToken);  // Passa o shared_token para a função de login
 
     if (localStorage.getItem('authToken')) {
       setIsLoggedIn(true);
 
-      // Captura o token ou redirecionamento da URL
+      // Captura o parâmetro "redirect" para redirecionar
       const params = new URLSearchParams(window.location.search);
       const redirectUrl = params.get('redirect');
 
       if (redirectUrl) {
-        navigate(redirectUrl); // Redireciona para o link com o token
+        navigate(redirectUrl); // Redireciona para o link com o token ou para onde for necessário
       } else {
         navigate('/dashboard'); // Redireciona para o dashboard padrão
       }
     }
   };
-
-
 
   return (
     <div className="login-page">

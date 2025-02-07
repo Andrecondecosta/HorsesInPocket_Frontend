@@ -5,7 +5,7 @@ export const useRegister = () => {
   const [error, setError] = useState(null);
   const [token, setToken] = useState(null);
 
-  const register = async (userData) => {
+  const register = async (userData, sharedToken) => {
     setLoading(true);
     setError(null);
 
@@ -15,7 +15,10 @@ export const useRegister = () => {
         headers: {
           'Content-Type': 'application/json',
         },
-        body: JSON.stringify({ user: userData }),  // Enviando os dados corretamente
+        body: JSON.stringify({
+          user: userData,  // Enviando os dados do usuário
+          shared_token: sharedToken,  // Enviando o token compartilhado
+        }),
       });
 
       const data = await response.json();

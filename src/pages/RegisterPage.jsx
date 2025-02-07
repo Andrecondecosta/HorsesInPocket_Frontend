@@ -1,5 +1,5 @@
-import React, { useState } from 'react';
-import { useNavigate, Link } from 'react-router-dom';
+import React, { useState, useEffect } from 'react';
+import { useNavigate, Link} from 'react-router-dom';
 import { useRegister } from '../hooks/useRegister.js';
 import './RegisterPage.css';
 
@@ -13,9 +13,18 @@ const RegisterPage = () => {
   const [phoneNumber, setPhoneNumber] = useState('');
   const [address, setAddress] = useState('');
   const [gender, setGender] = useState('');
+  const [sharedToken, setSharedToken] = useState(null); // Estado para armazenar o token compartilhado
 
   const { register, token, loading, error } = useRegister();
   const navigate = useNavigate();
+
+  // Captura o token da URL quando a página de registro é carregada
+  useEffect(() => {
+    const urlParams = new URLSearchParams(window.location.search);
+    const tokenFromURL = urlParams.get('token');
+    console.log('Captured token from URL:', tokenFromURL); // Log para verificar se o token está correto
+    setSharedToken(tokenFromURL); // Atualiza o estado com o token da URL
+  }, []);
 
   const handleSubmit = async (e) => {
     e.preventDefault();
@@ -32,7 +41,8 @@ const RegisterPage = () => {
       gender,
     };
 
-    const receivedToken = await register(userData);
+    // Enviar o token de compartilhamento junto com os dados do usuário
+    const receivedToken = await register(userData, sharedToken); // Passando o token compartilhado para a requisição
 
     if (receivedToken) {
       navigate('/login');
@@ -40,6 +50,7 @@ const RegisterPage = () => {
       console.error('Registration failed: Token was not received.');
     }
   };
+
 
   return (
     <div className="register-page">
@@ -54,7 +65,6 @@ const RegisterPage = () => {
             alt="HorsesInPocket Logo"
             className="register-logo-image"
           />
-
         </div>
 
         {error && <p className="error-message">{error}</p>}

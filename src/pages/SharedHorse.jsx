@@ -1,51 +1,46 @@
-import React, { useEffect, useState } from 'react';
+import React, { useEffect, useRef } from 'react';
 import { useParams, useNavigate } from 'react-router-dom';
 
 const SharedHorse = () => {
-  const { token } = useParams(); // Capture the token from the URL
+  const { token } = useParams();
   const navigate = useNavigate();
-  const [error, setError] = useState(null);
-  const [loading, setLoading] = useState(true);
+  const hasFetched = useRef(false); // Flag para garantir que a requisição só ocorra uma vez
 
   useEffect(() => {
-    const handleSharedLink = async () => {
-      const authToken = localStorage.getItem('authToken');
-      if (!authToken) {
-        // Redirect to login if not authenticated
-        navigate(`/login?redirect=/horses/shared/${token}`);
-        return;
-      }
+    if (hasFetched.current) return; // Impede a execução duplicada
 
-      try {
-        const response = await fetch(
-          `${process.env.REACT_APP_API_SERVER_URL}/horses/shared/${token}`,
-          {
-            headers: {
-              Authorization: `Bearer ${authToken}`,
-            },
+    hasFetched.current = true; // Marca que já foi executado
+
+    const authToken = localStorage.getItem('authToken');
+    const tokenFromUrl = token; // Pega o token da URL
+
+    if (authToken && tokenFromUrl) {
+      // Se já estiver logado, faz a requisição para adicionar o cavalo aos recebidos
+      fetch(`${process.env.REACT_APP_API_SERVER_URL}/horses/shared/${tokenFromUrl}`, {
+        headers: {
+          'Authorization': `Bearer ${authToken}`,
+        },
+      })
+        .then((response) => response.json())
+        .then((data) => {
+          if (data.error) {
+            alert(data.error);
+          } else {
+            // Redireciona para a página de recebidos
+            navigate('/received');
           }
-        );
+        })
+        .catch((err) => alert(`Erro ao processar o link: ${err.message}`));
+    } else if (!authToken && tokenFromUrl) {
+      // Se não estiver logado, redireciona para o welcome antes do login
+      navigate(`/welcome?redirect=/login&token=${tokenFromUrl}`);
+    } else {
+      // Se não houver token, redireciona para o login diretamente
+      navigate(`/login`);
+    }
+  }, [token, navigate]); // Dependências de token e navigate para garantir execução correta
 
-        if (!response.ok) {
-          const errorData = await response.json();
-          throw new Error(errorData.error || 'Failed to process the link.');
-        }
-
-        // Redirect to the "received" page on success
-        navigate('/received');
-      } catch (err) {
-        setError(err.message);
-      } finally {
-        setLoading(false);
-      }
-    };
-
-    handleSharedLink();
-  }, [token, navigate]);
-
-  if (loading) return <p>Processing the link...</p>;
-  if (error) return <p className="error-message">{error}</p>;
-  return null;
+  return <p>A processar o link...</p>;
 };
 
 export default SharedHorse;

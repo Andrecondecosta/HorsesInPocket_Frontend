@@ -16,6 +16,7 @@ import SharedHorse from '../pages/SharedHorse';
 import AdminDashboard from '../pages/AdminDashboard';
 import ForgotPassword from '../pages/ForgotPassword';
 import ResetPassword from '../pages/ResetPassword';
+import WelcomePage from '../pages/WelcomePage';
 import './Content.css';
 
 
@@ -30,6 +31,7 @@ function Content({ setIsLoggedIn }) {
           element={isAuthenticated ? <Navigate to="/dashboard" replace /> : <Navigate to="/login" replace />}
         />
         <Route path="/register" element={<RegisterPage />} />
+        <Route path="/welcome" element={<WelcomePage />} />
         <Route path="/forgot/password" element={<ForgotPassword />} />
         <Route path="/reset/password/:token" element={<ResetPassword />} />
         <Route path="/home-page" element={<HomePage />} />
