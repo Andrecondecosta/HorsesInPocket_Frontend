@@ -4,17 +4,49 @@ import './ShareHorse.css';
 
 const ShareHorse = ({ horseId, onClose }) => {
   const [shareLink, setShareLink] = useState('');
+  const [horse, setHorse] = useState(null);
   const [isLoading, setIsLoading] = useState(true);
   const [error, setError] = useState(null);
   const [email, setEmail] = useState('');
   const [emailSuccess, setEmailSuccess] = useState(null);
 
+
   const token = localStorage.getItem('authToken');
   const API_URL = process.env.REACT_APP_API_SERVER_URL;
 
-  // Generate the share link
+  useEffect(() => {
+    const fetchHorseData = async () => {
+      try {
+        const response = await fetch(`${API_URL}/horses/${horseId}`, {
+          method: 'GET',
+          headers: {
+            'Content-Type': 'application/json',
+            Authorization: `Bearer ${token}`,
+          },
+        });
+
+        if (!response.ok) {
+          throw new Error('Erro ao carregar os dados do cavalo.');
+        }
+
+        const data = await response.json();
+
+        // ✅ Garante que as imagens vêm corretamente
+        const horseImageUrl = data.images?.length > 0 ? data.images[0] : '';
+
+        setHorse({ ...data, imageUrl: horseImageUrl });
+      } catch (err) {
+        setError(err.message);
+      }
+    };
+
+    fetchHorseData();
+  }, [horseId, API_URL, token]);
+
   useEffect(() => {
     const generateShareLink = async () => {
+      if (!horse) return;
+
       setIsLoading(true);
       setError(null);
 
@@ -29,12 +61,17 @@ const ShareHorse = ({ horseId, onClose }) => {
         });
 
         if (!response.ok) {
-          const errorData = await response.json();
-          throw new Error(errorData.error || 'Failed to generate share link');
+          throw new Error('Erro ao gerar o link de compartilhamento.');
         }
 
         const data = await response.json();
-        setShareLink(data.link);
+
+        // 🔗 Criando a URL com a imagem e nome do cavalo
+        const horseImage = encodeURIComponent(horse.imageUrl || '');
+        const horseName = encodeURIComponent(horse.name || '');
+        const fullShareLink = `${data.link}&horseImage=${horseImage}&horseName=${horseName}`;
+
+        setShareLink(fullShareLink);
       } catch (err) {
         setError(err.message);
       } finally {
@@ -42,13 +79,15 @@ const ShareHorse = ({ horseId, onClose }) => {
       }
     };
 
-    generateShareLink();
-  }, [horseId, API_URL, token]);
+    if (horse) {
+      generateShareLink();
+    }
+  }, [horse, horseId, API_URL, token]);
 
-  // Function to share via email
+  // 🔹 Compartilhar por email
   const shareByEmail = async () => {
     if (!email || !/\S+@\S+\.\S+/.test(email)) {
-      setError('Please enter a valid email.');
+      setError('Digite um email válido.');
       return;
     }
 
@@ -67,10 +106,10 @@ const ShareHorse = ({ horseId, onClose }) => {
 
       if (!response.ok) {
         const errorData = await response.json();
-        throw new Error(errorData.error || 'Failed to share via email');
+        throw new Error(errorData.error || 'Erro ao compartilhar via email.');
       }
 
-      setEmailSuccess(`Horse successfully shared with ${email}`);
+      setEmailSuccess(`Cavalo compartilhado com sucesso com ${email}`);
       setEmail('');
     } catch (err) {
       setError(err.message);
@@ -79,57 +118,49 @@ const ShareHorse = ({ horseId, onClose }) => {
 
   return (
     <>
-      {/* Dark gray background */}
       <div className="modal-overlay"></div>
 
-      {/* Share modal */}
       <div className="share-modal">
         {isLoading ? (
-          <p>Generating share link...</p>
+          <p>Gerando link de compartilhamento...</p>
         ) : error ? (
           <p className="error-message">{error}</p>
         ) : (
           <>
             <div className="share-header">
-              <h2>Share Horse</h2>
+              <h2>Compartilhar Cavalo</h2>
               <div className="share-options">
                 <button
                   className="copy-button"
                   onClick={() => {
                     navigator.clipboard.writeText(shareLink);
-                    alert('Link copied!');
+                    alert('Link copiado!');
                   }}
-                  aria-label="Copy share link"
                 >
-                  <FaLink /> Copy Link
+                  <FaLink /> Copiar Link
                 </button>
                 <button
                   className="whatsapp-button"
                   onClick={() =>
-                    window.open(`https://wa.me/?text=${encodeURIComponent(shareLink)}`, '_blank')
+                    window.open(`https://wa.me/?text=*${horse?.name}* foi compartilhado com você!%0A🔗 ${encodeURIComponent(shareLink)}`, '_blank')
                   }
-                  aria-label="Share on WhatsApp"
                 >
                   <FaWhatsapp /> WhatsApp
                 </button>
               </div>
             </div>
 
+            {/* 🔹 Campo para enviar por email */}
             <input
               type="email"
-              placeholder="Enter email"
+              placeholder="Digite o email"
               value={email}
               onChange={(e) => setEmail(e.target.value)}
-              aria-label="Email input field"
             />
             <div className="email-close-button">
               {emailSuccess && <p className="success-message">{emailSuccess}</p>}
-              <button className="close-button" onClick={onClose} aria-label="Close modal">
-                Cancel
-              </button>
-              <button className="email-button" onClick={shareByEmail} aria-label="Share via email">
-                Share
-              </button>
+              <button className="close-button" onClick={onClose}>Cancelar</button>
+              <button className="email-button" onClick={shareByEmail}>Compartilhar</button>
             </div>
           </>
         )}

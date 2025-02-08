@@ -3,83 +3,61 @@
   justify-content: center;
   align-items: center;
   height: 100vh;
-  background: #f8f9fa;
+  background-color: #f9f9f9;
+  padding: 20px;
 }
 
 .welcome-card {
   background: white;
-  padding: 30px;
+  padding: 25px;
   border-radius: 10px;
-  box-shadow: 0 4px 10px rgba(0, 0, 0, 0.1);
+  box-shadow: 0px 4px 10px rgba(0, 0, 0, 0.1);
   text-align: center;
   max-width: 400px;
-}
-
-.welcome-card h2 {
-  color: #47663B;
-}
-
-.welcome-card span {
-  font-weight: bold;
-  color: #2D472C;
+  width: 100%;
 }
 
 .welcome-message {
   font-size: 16px;
   color: #555;
-  margin-bottom: 15px;
+  margin-bottom: 20px;
+  margin-top: 15px;
 }
 
 .horse-image-container {
-  display: flex;
-  justify-content: center;
-  margin-bottom: 15px;
+  margin: 20px 0;
 }
 
 .horse-image {
   width: 100%;
-  max-height: 180px;
-  object-fit: cover;
-  border-radius: 10px;
+  height: auto;
+  border-radius: 8px;
 }
 
 .horse-name {
-  font-size: 18px;
+  font-size: 20px;
   font-weight: bold;
-  color: #47663B;
   margin-bottom: 15px;
 }
 
-.button-group {
-  display: flex;
-  flex-direction: column;
-  gap: 10px;
+.welcome-options {
+  margin-top: 20px;
 }
 
-.login-button, .register-button {
-  width: 100%;
-  padding: 12px;
-  font-size: 16px;
-  border-radius: 6px;
+.welcome-text {
+  font-size: 14px;
+  color: #333;
+  margin-bottom: 15px;
+}
+
+.link-text {
+  color: #47663B;
+  font-weight: bold;
   cursor: pointer;
-  border: none;
-  transition: 0.3s ease;
+  text-decoration: underline;
+  transition: color 0.3s ease;
 }
 
-.login-button {
-  background-color: #47663B;
-  color: white;
-}
-
-.login-button:hover {
-  background-color: #2D472C;
-}
-
-.register-button {
-  background-color: #8EB486;
-  color: white;
-}
-
-.register-button:hover {
-  background-color: #6D9B6B;
+.link-text:hover {
+  color: #3a5730;
 }
