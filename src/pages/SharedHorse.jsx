@@ -2,50 +2,49 @@ import React, { useEffect, useRef } from 'react';
 import { useParams, useNavigate } from 'react-router-dom';
 
 const SharedHorse = () => {
-  const { token } = useParams();
+  const { token } = useParams();  // Captura o token da URL
   const navigate = useNavigate();
-  const hasFetched = useRef(false); // Flag para garantir que a requisição só ocorra uma vez
+  const hasFetched = useRef(false);  // Flag para garantir que a requisição só ocorra uma vez
 
   useEffect(() => {
-    const authToken = localStorage.getItem('authToken');
-    const tokenFromUrl = token;  // Pega o token da URL
+    if (hasFetched.current) return; // Impede a execução duplicada
+    hasFetched.current = true; // Marca que já foi executado
 
-    console.log("Token da URL:", tokenFromUrl);  // Log do token da URL
-    console.log("Token de Autenticação:", authToken);  // Log do token de autenticação
+    const authToken = localStorage.getItem('authToken'); // Token de autenticação
+    const tokenFromUrl = token; // Captura o token da URL
+
+    console.log('Token da URL:', tokenFromUrl); // Verificação se o token está correto
 
     if (authToken && tokenFromUrl) {
-      // Se já estiver logado, faz a requisição para adicionar o cavalo aos "recebidos"
+      // Se o usuário estiver logado, faz a requisição para o backend apenas com o token
       fetch(`${process.env.REACT_APP_API_SERVER_URL}/horses/shared/${tokenFromUrl}`, {
         headers: {
-          'Authorization': `Bearer ${authToken}`,  // Envia o token de autenticação
+          'Authorization': `Bearer ${authToken}`,  // Passando o token de autenticação
         },
       })
         .then((response) => {
-          console.log('Resposta da API:', response);  // Log da resposta da API
+          console.log('Resposta da API:', response); // Verificação da resposta da API
           return response.json();
         })
         .then((data) => {
-          console.log('Dados da API:', data);  // Log dos dados recebidos da API
           if (data.error) {
-            alert(data.error); // Exibe um erro caso ocorra
+            alert(data.error); // Exibe erro caso ocorra
           } else {
-            // Se o cavalo foi adicionado com sucesso, redireciona para a página de recebidos
+            // Se tudo der certo, redireciona para a página de recebidos
             navigate('/received');
           }
         })
         .catch((err) => {
-          console.error('Erro ao processar o link:', err);  // Log do erro
-          alert(`Erro ao processar o link: ${err.message}`);
+          console.error('Erro ao processar o link:', err); // Exibe erro caso a requisição falhe
+          alert('Erro ao processar o link');
         });
     } else if (!authToken && tokenFromUrl) {
-      // Se não estiver logado, redireciona para a página de login
-      console.log('Usuário não logado, redirecionando para login...');
+      // Se não estiver logado, redireciona para o login
       navigate(`/welcome?redirect=/received&token=${tokenFromUrl}`);
     }
-  }, [token, navigate]);  // Dependências do useEffect: token e navigate
+  }, [token, navigate]);
 
-
-  return <p>A processar o link...</p>;
+  return <p>A processar o link...</p>; // Exibição enquanto o link está sendo processado
 };
 
 export default SharedHorse;
