@@ -6,45 +6,41 @@ const SharedHorse = () => {
   const navigate = useNavigate();
   const hasFetched = useRef(false); // Flag para garantir que a requisição só ocorra uma vez
 
+  const cleanToken = token.split("?")[0];
+
   useEffect(() => {
-    if (hasFetched.current) return; // Impede a execução duplicada
+    if (hasFetched.current) return;
 
-    hasFetched.current = true; // Marca que já foi executado
+    hasFetched.current = true;
 
-    // Captura o token de autenticação armazenado no localStorage
     const authToken = localStorage.getItem('authToken');
-    const tokenFromUrl = token; // Pega o token da URL
 
-    console.log("Token da URL:", tokenFromUrl); // Log para verificar o token capturado na URL
-    console.log("Token de Autenticação:", authToken); // Log para verificar o token de autenticação capturado
+    console.log("Token capturado da URL:", cleanToken); // ✅ Só o token
+    console.log("Token de Autenticação:", authToken);
 
-    if (authToken && tokenFromUrl) {
-      // Se já estiver logado, faz a requisição para adicionar o cavalo aos "recebidos"
-      fetch(`${process.env.REACT_APP_API_SERVER_URL}/horses/shared/${tokenFromUrl}`, {
+    if (authToken && cleanToken) {
+      fetch(`${process.env.REACT_APP_API_SERVER_URL}/horses/shared/${cleanToken}`, {
         headers: {
-          'Authorization': `Bearer ${authToken}`,  // Envia o token de autenticação
+          'Authorization': `Bearer ${authToken}`,
         },
       })
         .then((response) => response.json())
         .then((data) => {
-          console.log("Resposta da API:", data); // Log para verificar a resposta da API
+          console.log("Resposta da API:", data);
           if (data.error) {
-            alert(data.error); // Exibe um erro caso ocorra
+            alert(data.error);
           } else {
-            // Se o cavalo foi adicionado com sucesso, redireciona para a página de recebidos
             navigate('/received');
           }
         })
         .catch((err) => {
-          console.log("Erro na requisição:", err); // Log para capturar o erro de requisição
+          console.log("Erro na requisição:", err);
           alert(`Erro ao processar o link: ${err.message}`);
         });
-    } else if (!authToken && tokenFromUrl) {
-      // Se não estiver logado, redireciona para a página de login
-      console.log("Usuário não logado, redirecionando para login...");
-      navigate(`/welcome?redirect=/received&token=${tokenFromUrl}`);
+    } else if (!authToken && cleanToken) {
+      navigate(`/welcome?redirect=/received&token=${cleanToken}`);
     }
-  }, [token, navigate]);
+  }, [cleanToken, navigate]);
 
   return <p>A processar o link...</p>;
 };
