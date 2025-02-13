@@ -1,21 +1,22 @@
 import React, { useEffect, useRef } from 'react';
-import { useParams, useNavigate } from 'react-router-dom';
+import { useParams, useNavigate, useLocation } from 'react-router-dom';
 
 const SharedHorse = () => {
-  const { token } = useParams();
+  const { token } = useParams(); // Captura o token da URL
   const navigate = useNavigate();
-  const hasFetched = useRef(false); // Flag para garantir que a requisição só ocorra uma vez
+  const hasFetched = useRef(false);
+  const location = useLocation(); // Captura toda a URL incluindo query params
 
-  const cleanToken = token.split("?")[0];
+  // 🔍 Extração correta do token SEM parâmetros extra
+  const cleanToken = token ? token.split("&")[0] : "";
 
   useEffect(() => {
     if (hasFetched.current) return;
-
     hasFetched.current = true;
 
     const authToken = localStorage.getItem('authToken');
 
-    console.log("Token capturado da URL:", cleanToken); // ✅ Só o token
+    console.log("Token correto capturado da URL:", cleanToken); // ✅ Deve imprimir só o token puro
     console.log("Token de Autenticação:", authToken);
 
     if (authToken && cleanToken) {
