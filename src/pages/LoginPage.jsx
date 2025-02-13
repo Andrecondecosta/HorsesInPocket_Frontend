@@ -42,6 +42,8 @@ const LoginPage = ({ setIsLoggedIn }) => {
       const params = new URLSearchParams(window.location.search);
       const redirectUrl = params.get('redirect');
 
+      console.log("Redirecting to:", redirectUrl);  // Verifica o URL de redirecionamento
+
       if (redirectUrl) {
         navigate(redirectUrl); // Redireciona para o link com o token ou para onde for necessário
       } else {
