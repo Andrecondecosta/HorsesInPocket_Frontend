@@ -11,8 +11,12 @@ const SharedHorse = () => {
 
     hasFetched.current = true; // Marca que já foi executado
 
+    // Captura o token de autenticação armazenado no localStorage
     const authToken = localStorage.getItem('authToken');
     const tokenFromUrl = token; // Pega o token da URL
+
+    console.log("Token da URL:", tokenFromUrl); // Log para verificar o token capturado na URL
+    console.log("Token de Autenticação:", authToken); // Log para verificar o token de autenticação capturado
 
     if (authToken && tokenFromUrl) {
       // Se já estiver logado, faz a requisição para adicionar o cavalo aos "recebidos"
@@ -23,6 +27,7 @@ const SharedHorse = () => {
       })
         .then((response) => response.json())
         .then((data) => {
+          console.log("Resposta da API:", data); // Log para verificar a resposta da API
           if (data.error) {
             alert(data.error); // Exibe um erro caso ocorra
           } else {
@@ -30,13 +35,14 @@ const SharedHorse = () => {
             navigate('/received');
           }
         })
-        .catch((err) => alert(`Erro ao processar o link: ${err.message}`));
+        .catch((err) => {
+          console.log("Erro na requisição:", err); // Log para capturar o erro de requisição
+          alert(`Erro ao processar o link: ${err.message}`);
+        });
     } else if (!authToken && tokenFromUrl) {
       // Se não estiver logado, redireciona para a página de login
+      console.log("Usuário não logado, redirecionando para login...");
       navigate(`/welcome?redirect=/received&token=${tokenFromUrl}`);
-    } else {
-      // Caso o usuário já esteja logado e o token não seja encontrado, redireciona para o login
-      navigate(`/login`);
     }
   }, [token, navigate]);
 
