@@ -7,12 +7,8 @@ const SharedHorse = () => {
   const hasFetched = useRef(false); // Flag para garantir que a requisição só ocorra uma vez
 
   useEffect(() => {
-    if (hasFetched.current) return; // Impede a execução duplicada
-
-    hasFetched.current = true; // Marca que já foi executado
-
     const authToken = localStorage.getItem('authToken');
-    const tokenFromUrl = token; // Pega o token da URL
+    const tokenFromUrl = token;  // Pega o token da URL
 
     console.log("Token da URL:", tokenFromUrl);  // Log do token da URL
     console.log("Token de Autenticação:", authToken);  // Log do token de autenticação
@@ -47,6 +43,7 @@ const SharedHorse = () => {
       navigate(`/welcome?redirect=/received&token=${tokenFromUrl}`);
     }
   }, [token, navigate]);  // Dependências do useEffect: token e navigate
+
 
   return <p>A processar o link...</p>;
 };
