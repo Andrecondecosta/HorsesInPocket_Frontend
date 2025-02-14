@@ -2,16 +2,16 @@ import React, { useEffect, useRef } from 'react';
 import { useParams, useNavigate, useLocation } from 'react-router-dom';
 
 const SharedHorse = () => {
-  const { token } = useParams(); // Mantemos o useParams() para não perder a lógica de autenticação
+  const { token } = useParams();
   const navigate = useNavigate();
   const hasFetched = useRef(false);
-  const location = useLocation(); // Captura a URL completa
+  const location = useLocation();
 
-  // 🔍 Captura primeiro a URL inteira antes de processar o token
+  // 🔍 Captura a URL completa como está recebida
   const fullUrl = `${location.pathname}${location.search}`;
   console.log("URL completa recebida:", fullUrl);
 
-  // 🔍 Garante que o token está limpo e correto
+  // 🔍 Extrai o token corretamente
   const cleanToken = token ? token.split("&")[0].split("?")[0] : "";
   console.log("Token correto capturado:", cleanToken);
 
@@ -48,10 +48,10 @@ const SharedHorse = () => {
           alert(`Erro ao processar o link: ${err.message}`);
         });
     } else if (!authToken && cleanToken) {
-      console.log("Usuário não logado, redirecionando para welcome com parâmetros completos...");
+      console.log("Usuário não logado, redirecionando para welcome com a URL completa...");
 
-      // 🔥 Redirecionar para welcome mantendo os parâmetros
-      const redirectUrl = `/welcome?redirect=/received&token=${cleanToken}${location.search}`;
+      // 🔥 Redirecionar para welcome usando a URL COMPLETA recebida
+      const redirectUrl = `/welcome?redirect=${encodeURIComponent(fullUrl)}`;
 
       console.log("Redirecionando para:", redirectUrl);
       navigate(redirectUrl);
