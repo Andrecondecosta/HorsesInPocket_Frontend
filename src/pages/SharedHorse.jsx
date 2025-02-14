@@ -22,7 +22,7 @@ const SharedHorse = () => {
     const authToken = localStorage.getItem('authToken');
 
     console.log("Token correto capturado da URL:", cleanToken);
-    console.log("Parâmetros extras capturados:", location.search);
+    console.log("Parâmetros extras capturados:", location.search, "| horseImage:", horseImage, "| horseName:", horseName);
 
     if (authToken && cleanToken) {
       fetch(`${process.env.REACT_APP_API_SERVER_URL}/horses/shared/${cleanToken}`, {
