@@ -54,8 +54,8 @@ const SharedHorse = () => {
     } else if (!authToken && cleanToken) {
       console.log("Usuário não logado, redirecionando para welcome com a URL completa...");
 
-      // 🔥 Redirecionar para welcome mantendo os parâmetros corrigidos
-      const redirectUrl = `/welcome?redirect=${encodeURIComponent(correctedUrl)}`;
+      // 🔥 Removemos encodeURIComponent para evitar codificação dupla
+      const redirectUrl = `/welcome?redirect=${correctedUrl}`;
 
       console.log("Redirecionando para:", redirectUrl);
       navigate(redirectUrl);
