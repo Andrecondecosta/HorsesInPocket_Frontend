@@ -2,13 +2,19 @@ import React, { useEffect, useRef } from 'react';
 import { useParams, useNavigate, useLocation } from 'react-router-dom';
 
 const SharedHorse = () => {
-  const { token } = useParams();
   const navigate = useNavigate();
   const hasFetched = useRef(false);
   const location = useLocation(); // Captura a URL completa
 
-  // 🔍 Certifica-te que o token não contém parâmetros extra
-  const cleanToken = token ? token.split("&")[0].split("?")[0] : "";
+  // 🔍 Captura primeiro a URL inteira antes de processar o token
+  const fullUrl = `${location.pathname}${location.search}`;
+  console.log("URL completa recebida:", fullUrl);
+
+  // 🔍 Extrai manualmente o token e os parâmetros antes de modificar qualquer coisa
+  const urlParts = fullUrl.split("/");
+  const tokenIndex = urlParts.indexOf("shared") + 1; // O token está logo após "shared"
+  const cleanToken = urlParts[tokenIndex] || ""; // Obtém o token corretamente
+  console.log("Token extraído da URL:", cleanToken);
 
   // 🔍 Captura os parâmetros corretamente
   const queryParams = new URLSearchParams(location.search);
@@ -21,7 +27,6 @@ const SharedHorse = () => {
 
     const authToken = localStorage.getItem('authToken');
 
-    console.log("Token correto capturado da URL:", cleanToken);
     console.log("Parâmetros extras capturados:", location.search, "| horseImage:", horseImage, "| horseName:", horseName);
 
     if (authToken && cleanToken) {
