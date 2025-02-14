@@ -7,8 +7,11 @@ const SharedHorse = () => {
   const hasFetched = useRef(false);
   const location = useLocation(); // Captura toda a URL incluindo query params
 
-  // 🔍 Extração correta do token SEM parâmetros extra
+  // 🔍 Extração correta do token puro (ignora parâmetros extra)
   const cleanToken = token ? token.split("&")[0] : "";
+
+  // 🔍 Capturar toda a query string (parâmetros extra)
+  const queryParams = location.search; // Mantém tudo depois de '?'
 
   useEffect(() => {
     if (hasFetched.current) return;
@@ -16,8 +19,8 @@ const SharedHorse = () => {
 
     const authToken = localStorage.getItem('authToken');
 
-    console.log("Token correto capturado da URL:", cleanToken); // ✅ Deve imprimir só o token puro
-    console.log("Token de Autenticação:", authToken);
+    console.log("Token correto capturado da URL:", cleanToken); // ✅ Apenas o token puro
+    console.log("Parâmetros extras na URL:", queryParams); // ✅ Verifica se os parâmetros extra estão capturados
 
     if (authToken && cleanToken) {
       fetch(`${process.env.REACT_APP_API_SERVER_URL}/horses/shared/${cleanToken}`, {
@@ -39,9 +42,10 @@ const SharedHorse = () => {
           alert(`Erro ao processar o link: ${err.message}`);
         });
     } else if (!authToken && cleanToken) {
-      navigate(`/welcome?redirect=/received&token=${cleanToken}`);
+      console.log("Usuário não logado, redirecionando para welcome com parâmetros completos...");
+      navigate(`/welcome?redirect=/received&token=${cleanToken}${queryParams}`);
     }
-  }, [cleanToken, navigate]);
+  }, [cleanToken, queryParams, navigate]);
 
   return <p>A processar o link...</p>;
 };
