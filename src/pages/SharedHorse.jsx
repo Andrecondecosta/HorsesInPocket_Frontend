@@ -11,12 +11,16 @@ const SharedHorse = () => {
   const fullUrl = `${location.pathname}${location.search}`;
   console.log("URL completa recebida:", fullUrl);
 
+  // 🔍 Corrigir a URL se os parâmetros não tiverem "?" corretamente
+  const correctedUrl = fullUrl.includes("?") ? fullUrl : fullUrl.replace("&horseImage", "?horseImage");
+  console.log("URL corrigida antes de processar:", correctedUrl);
+
   // 🔍 Extrai o token corretamente
   const cleanToken = token ? token.split("&")[0].split("?")[0] : "";
   console.log("Token correto capturado:", cleanToken);
 
-  // 🔍 Captura os parâmetros corretamente
-  const queryParams = new URLSearchParams(location.search);
+  // 🔍 Captura os parâmetros corretamente da URL corrigida
+  const queryParams = new URLSearchParams(correctedUrl.split("?")[1] || "");
   const horseImage = queryParams.get("horseImage");
   const horseName = queryParams.get("horseName");
 
@@ -26,7 +30,7 @@ const SharedHorse = () => {
 
     const authToken = localStorage.getItem('authToken');
 
-    console.log("Parâmetros extras capturados:", location.search, "| horseImage:", horseImage, "| horseName:", horseName);
+    console.log("Parâmetros extras capturados:", queryParams.toString(), "| horseImage:", horseImage, "| horseName:", horseName);
 
     if (authToken && cleanToken) {
       fetch(`${process.env.REACT_APP_API_SERVER_URL}/horses/shared/${cleanToken}`, {
@@ -50,13 +54,13 @@ const SharedHorse = () => {
     } else if (!authToken && cleanToken) {
       console.log("Usuário não logado, redirecionando para welcome com a URL completa...");
 
-      // 🔥 Redirecionar para welcome usando a URL COMPLETA recebida
-      const redirectUrl = `/welcome?redirect=${encodeURIComponent(fullUrl)}`;
+      // 🔥 Redirecionar para welcome mantendo os parâmetros corrigidos
+      const redirectUrl = `/welcome?redirect=${encodeURIComponent(correctedUrl)}`;
 
       console.log("Redirecionando para:", redirectUrl);
       navigate(redirectUrl);
     }
-  }, [cleanToken, location.search, navigate]);
+  }, [cleanToken, correctedUrl, navigate]);
 
   return <p>A processar o link...</p>;
 };
