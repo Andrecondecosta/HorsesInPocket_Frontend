@@ -10,8 +10,10 @@ const SharedHorse = () => {
   // 🔍 Certifica-te que o token não contém parâmetros extra
   const cleanToken = token ? token.split("&")[0].split("?")[0] : "";
 
-  // 🔍 Captura a query string **exatamente como está**
-  const fullQueryString = location.search || ""; // Se estiver vazia, mantém como ""
+  // 🔍 Captura os parâmetros corretamente
+  const queryParams = new URLSearchParams(location.search);
+  const horseImage = queryParams.get("horseImage");
+  const horseName = queryParams.get("horseName");
 
   useEffect(() => {
     if (hasFetched.current) return;
@@ -20,7 +22,7 @@ const SharedHorse = () => {
     const authToken = localStorage.getItem('authToken');
 
     console.log("Token correto capturado da URL:", cleanToken);
-    console.log("Parâmetros extras na URL (location.search):", fullQueryString);
+    console.log("Parâmetros extras capturados:", location.search);
 
     if (authToken && cleanToken) {
       fetch(`${process.env.REACT_APP_API_SERVER_URL}/horses/shared/${cleanToken}`, {
@@ -44,13 +46,15 @@ const SharedHorse = () => {
     } else if (!authToken && cleanToken) {
       console.log("Usuário não logado, redirecionando para welcome com parâmetros completos...");
 
-      // 🔥 Redireciona **mantendo a URL exatamente como está**
-      const redirectUrl = `/welcome?redirect=/received&token=${cleanToken}${fullQueryString}`;
+      // 🔥 Redirecionar para welcome mantendo os parâmetros
+      const redirectUrl = `/welcome?redirect=/received&token=${cleanToken}${
+        horseImage ? `&horseImage=${encodeURIComponent(horseImage)}` : ""
+      }${horseName ? `&horseName=${encodeURIComponent(horseName)}` : ""}`;
 
       console.log("Redirecionando para:", redirectUrl);
       navigate(redirectUrl);
     }
-  }, [cleanToken, fullQueryString, navigate]);
+  }, [cleanToken, location.search, navigate]);
 
   return <p>A processar o link...</p>;
 };
