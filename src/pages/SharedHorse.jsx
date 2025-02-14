@@ -2,6 +2,7 @@ import React, { useEffect, useRef } from 'react';
 import { useParams, useNavigate, useLocation } from 'react-router-dom';
 
 const SharedHorse = () => {
+  const { token } = useParams(); // Mantemos o useParams() para não perder a lógica de autenticação
   const navigate = useNavigate();
   const hasFetched = useRef(false);
   const location = useLocation(); // Captura a URL completa
@@ -10,11 +11,9 @@ const SharedHorse = () => {
   const fullUrl = `${location.pathname}${location.search}`;
   console.log("URL completa recebida:", fullUrl);
 
-  // 🔍 Extrai manualmente o token e os parâmetros antes de modificar qualquer coisa
-  const urlParts = fullUrl.split("/");
-  const tokenIndex = urlParts.indexOf("shared") + 1; // O token está logo após "shared"
-  const cleanToken = urlParts[tokenIndex] || ""; // Obtém o token corretamente
-  console.log("Token extraído da URL:", cleanToken);
+  // 🔍 Garante que o token está limpo e correto
+  const cleanToken = token ? token.split("&")[0].split("?")[0] : "";
+  console.log("Token correto capturado:", cleanToken);
 
   // 🔍 Captura os parâmetros corretamente
   const queryParams = new URLSearchParams(location.search);
