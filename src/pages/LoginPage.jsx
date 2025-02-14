@@ -1,28 +1,26 @@
 import React, { useState, useEffect } from 'react';
-import { useNavigate, Link, useLocation } from 'react-router-dom';
+import { useNavigate, Link } from 'react-router-dom';
 import { useLogin } from '../hooks/useLogin';
 import './LoginPage.css';
-import { FaEye, FaEyeSlash } from 'react-icons/fa';
+import { FaEye, FaEyeSlash } from 'react-icons/fa'; // Icons to show/hide password
 
 const LoginPage = ({ setIsLoggedIn }) => {
   const [email, setEmail] = useState('');
   const [password, setPassword] = useState('');
   const [showPassword, setShowPassword] = useState(false);
-  const [sharedToken, setSharedToken] = useState(null);
+  const [sharedToken, setSharedToken] = useState(null); // Estado para o shared_token
   const { login, loading, error } = useLogin();
   const navigate = useNavigate();
-  const location = useLocation();
 
-  // 🔍 Captura o shared_token corretamente da URL
+  // Captura o shared_token da URL
   useEffect(() => {
-    const searchParams = new URLSearchParams(location.search);
-    const tokenFromUrl = searchParams.get('token');
-
+    const params = new URLSearchParams(window.location.search);
+    const tokenFromUrl = params.get('token');
     if (tokenFromUrl) {
-      setSharedToken(tokenFromUrl);
-      console.log("Captured shared_token:", tokenFromUrl); // ✅ Verifica se o token está correto
+      setSharedToken(tokenFromUrl); // Armazena o token no estado
+      console.log("Captured shared_token:", tokenFromUrl); // Verifica se o token está correto
     }
-  }, [location.search]);
+  }, []);
 
   const handleSubmit = async (e) => {
     e.preventDefault();
@@ -33,31 +31,31 @@ const LoginPage = ({ setIsLoggedIn }) => {
       shared_token: sharedToken,  // Envia o shared_token capturado
     };
 
-    console.log("Login Data being sent:", loginData); // ✅ Verifica se o token está a ser enviado
+    console.log("Login Data being sent:", loginData); // Verifica se o token está a ser enviado
 
-    await login(email, password, sharedToken);
+    await login(email, password, sharedToken);  // Passa o shared_token para a função de login
 
     if (localStorage.getItem('authToken')) {
       setIsLoggedIn(true);
 
-      // 🔍 Captura o redirect URL corretamente
-      const searchParams = new URLSearchParams(location.search);
-      const redirectUrl = searchParams.get('redirect');
-
-      console.log("Redirecting to:", redirectUrl); // ✅ Verifica o URL de redirecionamento
+      // Captura o parâmetro "redirect" para redirecionar
+      const params = new URLSearchParams(window.location.search);
+      const redirectUrl = params.get('redirect');
 
       if (redirectUrl) {
-        navigate(redirectUrl);
+        navigate(redirectUrl); // Redireciona para o link com o token ou para onde for necessário
       } else {
-        navigate('/dashboard');
+        navigate('/dashboard'); // Redireciona para o dashboard padrão
       }
     }
   };
 
   return (
     <div className="login-page">
+      {/* Left side with the image */}
       <div className="login-image"></div>
 
+      {/* Right side with the form */}
       <div className="login-container">
         <div className="login-header">
           <div className="login-logo">

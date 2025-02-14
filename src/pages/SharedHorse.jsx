@@ -54,9 +54,9 @@ const SharedHorse = () => {
     } else if (!authToken && cleanToken) {
       console.log("Usuário não logado, redirecionando para welcome com a URL completa...");
 
-      // 🔥 Garante que `horseImage` e `horseName` estão sempre na query string
+      // 🔥 Garante que `cleanToken` está na query string corretamente
       const queryString = new URLSearchParams({ horseImage, horseName }).toString();
-      const redirectUrl = `/welcome?redirect=${correctedUrl}&${queryString}`;
+      const redirectUrl = `/welcome?redirect=${correctedUrl}&token=${cleanToken}&${queryString}`;
 
       console.log("Redirecionando para:", redirectUrl);
       navigate(redirectUrl);
