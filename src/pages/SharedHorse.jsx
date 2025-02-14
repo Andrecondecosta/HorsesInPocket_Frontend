@@ -47,9 +47,7 @@ const SharedHorse = () => {
       console.log("Usuário não logado, redirecionando para welcome com parâmetros completos...");
 
       // 🔥 Redirecionar para welcome mantendo os parâmetros
-      const redirectUrl = `/welcome?redirect=/received&token=${cleanToken}${
-        horseImage ? `&horseImage=${encodeURIComponent(horseImage)}` : ""
-      }${horseName ? `&horseName=${encodeURIComponent(horseName)}` : ""}`;
+      const redirectUrl = `/welcome?redirect=/received&token=${cleanToken}${location.search}`;
 
       console.log("Redirecionando para:", redirectUrl);
       navigate(redirectUrl);
