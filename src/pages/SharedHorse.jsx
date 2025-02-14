@@ -10,8 +10,8 @@ const SharedHorse = () => {
   // 🔍 Certifica-te que o token não contém parâmetros extra
   const cleanToken = token ? token.split("&")[0].split("?")[0] : "";
 
-  // 🔍 Verifica se há um `?` correto para os parâmetros
-  const correctedSearch = location.search.startsWith("?") ? location.search : `?${location.search}`;
+  // 🔍 Captura a query string **exatamente como está**
+  const fullQueryString = location.search || ""; // Se estiver vazia, mantém como ""
 
   useEffect(() => {
     if (hasFetched.current) return;
@@ -20,7 +20,7 @@ const SharedHorse = () => {
     const authToken = localStorage.getItem('authToken');
 
     console.log("Token correto capturado da URL:", cleanToken);
-    console.log("Parâmetros extras na URL (location.search):", correctedSearch);
+    console.log("Parâmetros extras na URL (location.search):", fullQueryString);
 
     if (authToken && cleanToken) {
       fetch(`${process.env.REACT_APP_API_SERVER_URL}/horses/shared/${cleanToken}`, {
@@ -44,13 +44,13 @@ const SharedHorse = () => {
     } else if (!authToken && cleanToken) {
       console.log("Usuário não logado, redirecionando para welcome com parâmetros completos...");
 
-      // 🔥 Redirecionamento para `welcome`, garantindo que os parâmetros extra são passados corretamente
-      const redirectUrl = `/welcome?redirect=/received&token=${cleanToken}${correctedSearch}`;
+      // 🔥 Redireciona **mantendo a URL exatamente como está**
+      const redirectUrl = `/welcome?redirect=/received&token=${cleanToken}${fullQueryString}`;
 
       console.log("Redirecionando para:", redirectUrl);
       navigate(redirectUrl);
     }
-  }, [cleanToken, correctedSearch, navigate]);
+  }, [cleanToken, fullQueryString, navigate]);
 
   return <p>A processar o link...</p>;
 };
