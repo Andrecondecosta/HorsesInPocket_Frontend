@@ -2,16 +2,18 @@ import React, { useEffect, useRef } from 'react';
 import { useParams, useNavigate, useLocation } from 'react-router-dom';
 
 const SharedHorse = () => {
-  const { token } = useParams(); // Captura o token da URL
+  const { token } = useParams();
   const navigate = useNavigate();
   const hasFetched = useRef(false);
-  const location = useLocation(); // Captura toda a URL incluindo query params
+  const location = useLocation(); // Captura a URL completa
 
-  // 🔍 Extração correta do token puro (ignora parâmetros extra)
+  // 🔍 Garantir que apenas o token puro é usado
   const cleanToken = token ? token.split("&")[0] : "";
 
-  // 🔍 Capturar toda a query string (parâmetros extra)
-  const queryParams = location.search; // Mantém tudo depois de '?'
+  // 🔍 Capturar parâmetros extras corretamente
+  const queryParams = new URLSearchParams(location.search);
+  const horseImage = queryParams.get("horseImage");
+  const horseName = queryParams.get("horseName");
 
   useEffect(() => {
     if (hasFetched.current) return;
@@ -19,8 +21,8 @@ const SharedHorse = () => {
 
     const authToken = localStorage.getItem('authToken');
 
-    console.log("Token correto capturado da URL:", cleanToken); // ✅ Apenas o token puro
-    console.log("Parâmetros extras na URL:", queryParams); // ✅ Verifica se os parâmetros extra estão capturados
+    console.log("Token correto capturado da URL:", cleanToken);
+    console.log("Parâmetros extras na URL:", location.search);
 
     if (authToken && cleanToken) {
       fetch(`${process.env.REACT_APP_API_SERVER_URL}/horses/shared/${cleanToken}`, {
@@ -43,9 +45,16 @@ const SharedHorse = () => {
         });
     } else if (!authToken && cleanToken) {
       console.log("Usuário não logado, redirecionando para welcome com parâmetros completos...");
-      navigate(`/welcome?redirect=/received&token=${cleanToken}${queryParams}`);
+
+      // 🔥 Redirecionar para welcome mantendo os parâmetros
+      const redirectUrl = `/welcome?redirect=/received&token=${cleanToken}${
+        horseImage ? `&horseImage=${encodeURIComponent(horseImage)}` : ""
+      }${horseName ? `&horseName=${encodeURIComponent(horseName)}` : ""}`;
+
+      console.log("Redirecionando para:", redirectUrl);
+      navigate(redirectUrl);
     }
-  }, [cleanToken, queryParams, navigate]);
+  }, [cleanToken, location.search, navigate]);
 
   return <p>A processar o link...</p>;
 };
