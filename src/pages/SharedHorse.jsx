@@ -21,8 +21,8 @@ const SharedHorse = () => {
 
   // 🔍 Captura os parâmetros corretamente da URL corrigida
   const queryParams = new URLSearchParams(correctedUrl.split("?")[1] || "");
-  const horseImage = queryParams.get("horseImage");
-  const horseName = queryParams.get("horseName");
+  const horseImage = queryParams.get("horseImage") || "";
+  const horseName = queryParams.get("horseName") || "";
 
   useEffect(() => {
     if (hasFetched.current) return;
@@ -54,8 +54,9 @@ const SharedHorse = () => {
     } else if (!authToken && cleanToken) {
       console.log("Usuário não logado, redirecionando para welcome com a URL completa...");
 
-      // 🔥 Removemos encodeURIComponent para evitar codificação dupla
-      const redirectUrl = `/welcome?redirect=${correctedUrl}`;
+      // 🔥 Garante que `horseImage` e `horseName` estão sempre na query string
+      const queryString = new URLSearchParams({ horseImage, horseName }).toString();
+      const redirectUrl = `/welcome?redirect=${correctedUrl}&${queryString}`;
 
       console.log("Redirecionando para:", redirectUrl);
       navigate(redirectUrl);
