@@ -13,11 +13,12 @@ const UpdateProfilePage = () => {
     birthdate: '',
     gender: '',
     phone_number: '',
-    address: '',
+    country: '',
   });
   const [avatar, setAvatar] = useState('');
   const [user, setUser] = useState({});
   const [isLoading, setIsLoading] = useState(true);
+  const [countryList, setCountryList] = useState([]);
   const [error, setError] = useState(null);
   const [success, setSuccess] = useState(null);
   const token = localStorage.getItem('authToken');
@@ -45,7 +46,7 @@ const UpdateProfilePage = () => {
           birthdate: data.birthdate || '',
           gender: data.gender || '',
           phone_number: data.phone_number || '',
-          address: data.address || '',
+          country: data.country || '',
         });
         const avatarUrl =
           data.gender === 'male'
@@ -66,6 +67,22 @@ const UpdateProfilePage = () => {
       setIsLoading(false);
     }
   }, [token]);
+
+  useEffect(() => {
+    const fetchCountries = async () => {
+      try {
+        const response = await fetch(`${process.env.REACT_APP_API_SERVER_URL}/countries`);
+        if (!response.ok) throw new Error('Error loading countries');
+
+        const data = await response.json();
+        setCountryList(data); // ✅ Agora garantimos que os países sejam carregados
+      } catch (error) {
+        console.error('Error fetching countries:', error);
+      }
+    };
+
+    fetchCountries();
+  }, []); // ✅ Executa apenas uma vez ao montar o componente
 
   const handleInputChange = (e) => {
     const { name, value } = e.target;
@@ -191,14 +208,15 @@ const UpdateProfilePage = () => {
                 />
               </p>
               <p>
-                <strong>Address:</strong>
-                <input
-                  type="text"
-                  name="address"
-                  value={formData.address}
-                  onChange={handleInputChange}
-                  className="inline-input"
-                />
+              <strong>Country:</strong>
+                <select name="country" value={formData.country} onChange={handleInputChange} className="inline-input">
+                  <option value="">Select a country</option>
+                  {countryList.map((c) => (
+                    <option key={c.code} value={c.name}>
+                      {c.name}
+                    </option>
+                  ))}
+                </select>
               </p>
             </div>
           </form>

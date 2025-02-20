@@ -8,13 +8,12 @@ const plans = [
   { name: "Ultimate", price: "€34,99", priceId: "price_1Qo68DDCGWh9lQnCaWeRF1YO", features: ["Unlimited horses", "Unlimited shares"] },
 ];
 
-const SubscriptionPlans = ({ onSelectPlan, onClose, currentPlan }) => {
+const SubscriptionPlans = ({ onSelectPlan, onClose, currentPlan, setUserStatus }) => {
   return (
     <div className="plans-container">
       <h2 className="plans-title">Choose Your Plan</h2>
       <div className="plans-row">
         {plans.map((plan) => {
-          // 🔍 Prevent error if `currentPlan` is undefined
           const isCurrentPlan = plan?.name?.toLowerCase().trim() === currentPlan?.toLowerCase().trim();
 
           return (
@@ -27,11 +26,44 @@ const SubscriptionPlans = ({ onSelectPlan, onClose, currentPlan }) => {
                 ))}
               </ul>
 
-              {/* 🔥 If it's the current plan, change the appearance and remove the action */}
+              {/* Se for o plano atual, mostra um botão desativado */}
               {isCurrentPlan ? (
                 <button className="current-plan-btn" disabled>✔ Current Plan</button>
               ) : (
-                <button onClick={() => onSelectPlan(plan)} className="select-plan-btn">
+                <button
+                  onClick={async () => {
+                    if (plan.name === "Basic") {
+                      try {
+                        const token = localStorage.getItem("authToken");
+
+                        const response = await fetch(`${process.env.REACT_APP_API_SERVER_URL}/update_plan`, {
+                          method: "PATCH",
+                          headers: {
+                            "Content-Type": "application/json",
+                            Authorization: `Bearer ${token}`,
+                          },
+                          body: JSON.stringify({ plan: "Basic" }),
+                        });
+
+                        if (!response.ok) throw new Error("Erro ao atualizar o plano para Free!");
+
+                        const data = await response.json();
+                        alert("✅ Seu plano foi atualizado para Free!"); // Feedback para o usuário
+
+                        // 🔄 Atualiza o estado do usuário globalmente
+                        setUserStatus((prev) => ({ ...prev, plan: "Basic", max_horses: 1, max_shares: 3 }));
+
+                        onClose(); // Fecha o popup após a atualização
+                      } catch (error) {
+                        console.error("❌ Erro ao atualizar o plano:", error);
+                        alert("❌ Ocorreu um erro ao tentar mudar para o plano Free.");
+                      }
+                    } else {
+                      onSelectPlan(plan); // Continua para o pagamento nos outros planos
+                    }
+                  }}
+                  className={`select-plan-btn ${plan.name === "Basic" ? "disabled" : ""}`}
+                >
                   Select {plan.name}
                 </button>
               )}

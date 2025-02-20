@@ -7,19 +7,19 @@ const SharedHorse = () => {
   const hasFetched = useRef(false);
   const location = useLocation();
 
-  // 🔍 Captura a URL completa como está recebida
+  // 🔍 Capture the full URL as received
   const fullUrl = `${location.pathname}${location.search}`;
-  console.log("URL completa recebida:", fullUrl);
+  console.log("Full URL received:", fullUrl);
 
-  // 🔍 Corrigir a URL se os parâmetros não tiverem "?" corretamente
+  // 🔍 Correct the URL if the parameters don't have "?" properly
   const correctedUrl = fullUrl.includes("?") ? fullUrl : fullUrl.replace("&horseImage", "?horseImage");
-  console.log("URL corrigida antes de processar:", correctedUrl);
+  console.log("Corrected URL before processing:", correctedUrl);
 
-  // 🔍 Extrai o token corretamente
+  // 🔍 Extract the token correctly
   const cleanToken = token ? token.split("&")[0].split("?")[0] : "";
-  console.log("Token correto capturado:", cleanToken);
+  console.log("Correct token captured:", cleanToken);
 
-  // 🔍 Captura os parâmetros corretamente da URL corrigida
+  // 🔍 Correctly capture the parameters from the corrected URL
   const queryParams = new URLSearchParams(correctedUrl.split("?")[1] || "");
   const horseImage = queryParams.get("horseImage") || "";
   const horseName = queryParams.get("horseName") || "";
@@ -30,7 +30,7 @@ const SharedHorse = () => {
 
     const authToken = localStorage.getItem('authToken');
 
-    console.log("Parâmetros extras capturados:", queryParams.toString(), "| horseImage:", horseImage, "| horseName:", horseName);
+    console.log("Extra parameters captured:", queryParams.toString(), "| horseImage:", horseImage, "| horseName:", horseName);
 
     if (authToken && cleanToken) {
       fetch(`${process.env.REACT_APP_API_SERVER_URL}/horses/shared/${cleanToken}`, {
@@ -40,7 +40,7 @@ const SharedHorse = () => {
       })
         .then((response) => response.json())
         .then((data) => {
-          console.log("Resposta da API:", data);
+          console.log("API response:", data);
           if (data.error) {
             alert(data.error);
           } else {
@@ -48,22 +48,22 @@ const SharedHorse = () => {
           }
         })
         .catch((err) => {
-          console.log("Erro na requisição:", err);
-          alert(`Erro ao processar o link: ${err.message}`);
+          console.log("Error in the request:", err);
+          alert(`Error processing the link: ${err.message}`);
         });
     } else if (!authToken && cleanToken) {
-      console.log("Usuário não logado, redirecionando para welcome com a URL completa...");
+      console.log("User not logged in, redirecting to welcome with the full URL...");
 
-      // 🔥 Garante que `cleanToken` está na query string corretamente
+      // 🔥 Ensure that `cleanToken` is in the query string correctly
       const queryString = new URLSearchParams({ horseImage, horseName }).toString();
       const redirectUrl = `/welcome?redirect=${correctedUrl}&token=${cleanToken}&${queryString}`;
 
-      console.log("Redirecionando para:", redirectUrl);
+      console.log("Redirecting to:", redirectUrl);
       navigate(redirectUrl);
     }
   }, [cleanToken, correctedUrl, navigate]);
 
-  return <p>A processar o link...</p>;
+  return <p>Processing the link...</p>;
 };
 
 export default SharedHorse;

@@ -18,7 +18,6 @@ const LoginPage = ({ setIsLoggedIn }) => {
     const tokenFromUrl = params.get('token');
     if (tokenFromUrl) {
       setSharedToken(tokenFromUrl); // Armazena o token no estado
-      console.log("Captured shared_token:", tokenFromUrl); // Verifica se o token está correto
     }
   }, []);
 

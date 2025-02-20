@@ -8,6 +8,8 @@ import ProfileMedia from '../components/ProfileMedia';
 import ShareHorse from '../components/ShareHorse';
 import "yet-another-react-lightbox/styles.css";
 import LoadingPopup from '../components/LoadingPopup';
+import SubscriptionPlans from '../components/SubscriptionPlans';
+import SavePaymentMethod from '../components/SavePaymentMethod';
 import './ProfileHorse.css';
 
 const ProfileHorse = ({ setIsLoggedIn }) => {
@@ -25,9 +27,34 @@ const ProfileHorse = ({ setIsLoggedIn }) => {
   const [isMenuOpen, setIsMenuOpen] = useState(false);
   const menuRef = useRef(null);
   const [isOwner, setIsOwner] = useState(false);
+  const [userStatus, setUserStatus] = useState(null);
+  const [showPlanPopup, setShowPlanPopup] = useState(false);
+  const [showPaymentPopup, setShowPaymentPopup] = useState(false);
+  const [selectedPlan, setSelectedPlan] = useState(null);
+
 
   const navigate = useNavigate();
   const token = localStorage.getItem('authToken');
+
+  const fetchUserStatus = async () => {
+    try {
+      const response = await fetch(`${process.env.REACT_APP_API_SERVER_URL}/user_status`, {
+        method: "GET",
+        headers: {
+          "Content-Type": "application/json",
+          Authorization: `Bearer ${token}`,
+        },
+      });
+
+      if (!response.ok) throw new Error("Erro ao carregar status do usuário");
+
+      const data = await response.json();
+      setUserStatus(data);
+      console.log("✅ userStatus carregado:", data);
+    } catch (error) {
+      console.error("❌ Erro ao buscar status do usuário:", error);
+    }
+  };
 
   useEffect(() => {
     const queryParams = new URLSearchParams(location.search);
@@ -60,6 +87,7 @@ const ProfileHorse = ({ setIsLoggedIn }) => {
 
     if (token) {
       fetchHorse();
+      fetchUserStatus();
     } else {
       setError('Token not found');
       setIsLoading(false);
@@ -127,6 +155,44 @@ const ProfileHorse = ({ setIsLoggedIn }) => {
 
   const heightInHH = (horse.height_cm / 0.1016).toFixed(1);
 
+  const handleShareClick = () => {
+    if (!userStatus) {
+      console.error("❌ userStatus ainda não carregado!");
+      return;
+    }
+
+    console.log("📊 Estado atual:", userStatus);
+
+    if (userStatus.used_shares >= userStatus.max_shares) {
+      console.warn("🚨 Limite de partilhas atingido! Exibindo popup de planos.");
+      setShowPlanPopup(true); // 🔥 Abre o popup de planos antes de tentar compartilhar
+    } else {
+      console.log("✅ Abaixo do limite! Abrindo modal de partilha.");
+      setShowShareModal(true); // 🔹 Só permite compartilhar se o limite não foi atingido
+    }
+  };
+
+
+
+  // 🔄 Selecionar plano e abrir pagamento
+  const handleSelectPlan = (plan) => {
+    setSelectedPlan(plan);
+    setShowPlanPopup(false);
+    setShowPaymentPopup(true);
+  };
+
+  // ✅ Após pagamento, aumenta os limites e abre o modal de partilha
+  const handlePaymentSuccess = (planName) => {
+    setShowPaymentPopup(false);
+    alert(`Parabéns! Agora você tem o plano ${planName}.`);
+    setUserStatus((prev) => ({
+      ...prev,
+      max_shares: prev.max_shares + 10, // Exemplo de ajuste no limite
+    }));
+    setShowShareModal(true);
+  };
+
+
   return (
     <Layout setIsLoggedIn={setIsLoggedIn}>
       <div className="profile-container">
@@ -148,7 +214,7 @@ const ProfileHorse = ({ setIsLoggedIn }) => {
             <button className="delete-button" onClick={() => setShowDeleteModal(true)}>
               <FaTrash /> Delete
             </button>
-            <button className="share-button" onClick={() => setShowShareModal(true)}>
+            <button className="share-button" onClick={handleShareClick}>
               <FaShareAlt /> Share
             </button>
           </div>
@@ -163,7 +229,7 @@ const ProfileHorse = ({ setIsLoggedIn }) => {
             <button className="delete-button" onClick={() => setShowDeleteModal(true)}>
               <FaTrash />
             </button>
-            <button className="share-button" onClick={() => setShowShareModal(true)}>
+            <button className="share-button" onClick={handleShareClick}>
               <FaShareAlt />
             </button>
           </div>
@@ -274,6 +340,29 @@ const ProfileHorse = ({ setIsLoggedIn }) => {
             horseId={id}
             onClose={() => setShowShareModal(false)}
           />
+        )}
+
+        {showPlanPopup && (
+          <div className="popup-overlay">
+            <div className="popup-content">
+              <SubscriptionPlans
+                onSelectPlan={handleSelectPlan}
+                onClose={() => setShowPlanPopup(false)}
+                currentPlan={userStatus?.plan}
+              />
+            </div>
+          </div>
+        )}
+
+        {showPaymentPopup && selectedPlan && (
+          <div className="popup-overlay">
+            <div className="popup-content1">
+              <SavePaymentMethod
+                selectedPlan={selectedPlan}
+                onPaymentSuccess={() => handlePaymentSuccess(selectedPlan.name)}
+              />
+            </div>
+          </div>
         )}
 
         {/* Lightbox for image preview */}

@@ -5,8 +5,11 @@ import HistoryTable from '../components/HistoryTable';
 import WelcomePopup from '../components/WelcomePopup';
 import './DashboardPage.css';
 
+
 const DashboardPage = ({ setIsLoggedIn }) => {
   const [showPopup, setShowPopup] = useState(false);
+  const [userStatus, setUserStatus] = useState({});
+  const token = localStorage.getItem('authToken');
 
   useEffect(() => {
     window.scrollTo(0, 0); // Scrolls to the top when the component is mounted
@@ -23,6 +26,32 @@ const DashboardPage = ({ setIsLoggedIn }) => {
   }
 }, []);
 
+useEffect(() => {
+  const fetchUserStatus = async () => {
+    try {
+      const response = await fetch(`${process.env.REACT_APP_API_SERVER_URL}/user_status`, {
+        method: "GET",
+        headers: {
+          "Content-Type": "application/json",
+          Authorization: `Bearer ${token}`,
+        },
+      });
+
+      if (!response.ok) throw new Error("Erro ao carregar status do usuário");
+
+      const data = await response.json();
+      setUserStatus(data);
+    } catch (error) {
+      console.error("Erro ao buscar status do usuário:", error);
+    }
+  };
+
+  if (token) {
+    fetchUserStatus();
+  }
+}, [token]);
+
+
   return (
     <Layout setIsLoggedIn={setIsLoggedIn}>
       {/* O popup só aparece se showPopup for true */}
@@ -31,6 +60,12 @@ const DashboardPage = ({ setIsLoggedIn }) => {
       <div className="dashboard-container">
         <h2 className="page-title">Dashboard</h2>
         <CardSection /> {/* Section displaying cards */}
+        <div className="plan-status">
+          <h3>📜 Seu Plano: <strong>{userStatus.plan}</strong></h3>
+          <p>🐎 Cavalos: <strong>{userStatus.used_horses} / {userStatus.max_horses || "∞"}</strong></p>
+          <p>🔗 Partilhas: <strong>{userStatus.used_shares} / {userStatus.max_shares || "∞"}</strong></p>
+      </div>
+
         <HistoryTable /> {/* Table showing history */}
       </div>
     </Layout>

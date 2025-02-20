@@ -179,8 +179,9 @@ const ProfilePage = () => {
               <strong>Phone:</strong> {user.phone_number || "Not specified"}
             </p>
             <p>
-              <strong>Address:</strong> {user.address || "Not specified"}
+              <strong>Country:</strong> {user.country || "Not specified"}
             </p>
+
             <div className="subscription-container">
               <div className="subscription-header">
                 <p>
