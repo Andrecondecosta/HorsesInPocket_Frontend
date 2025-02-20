@@ -1,42 +1,65 @@
 import React, { useState, useEffect } from 'react';
-import { Link } from 'react-router-dom';
+import { Link, useNavigate } from 'react-router-dom';
 import './MyHorses.css';
 import Layout from '../components/Layout';
-import SubscriptionPlans from '../components/SubscriptionPlans';
-import SavePaymentMethod from '../components/SavePaymentMethod';
 
 const MyHorses = () => {
   const [horses, setHorses] = useState([]);
-  const [showPlanPopup, setShowPlanPopup] = useState(false);
-  const [showPaymentPopup, setShowPaymentPopup] = useState(false);
-  const [selectedPlan, setSelectedPlan] = useState(null);
+  const [userStatus, setUserStatus] = useState(null);
+  const [showLimitPopup, setShowLimitPopup] = useState(false);
+
+  const token = localStorage.getItem('authToken');
+  const navigate = useNavigate();
 
   useEffect(() => {
     const fetchHorses = async () => {
-      const response = await fetch(`${process.env.REACT_APP_API_SERVER_URL}/horses`, {
-        headers: {
-          Authorization: `Bearer ${localStorage.getItem('authToken')}`,
-        },
-      });
-      const data = await response.json();
-      setHorses(data);
+      try {
+        const response = await fetch(`${process.env.REACT_APP_API_SERVER_URL}/horses`, {
+          headers: { Authorization: `Bearer ${token}` },
+        });
+
+        if (!response.ok) throw new Error("Erro ao carregar os cavalos");
+
+        const data = await response.json();
+        setHorses(data);
+      } catch (error) {
+        console.error("Erro ao buscar os cavalos:", error);
+      }
     };
 
-    fetchHorses();
-  }, []);
+    const fetchUserStatus = async () => {
+      try {
+        const response = await fetch(`${process.env.REACT_APP_API_SERVER_URL}/user_status`, {
+          method: "GET",
+          headers: {
+            "Content-Type": "application/json",
+            Authorization: `Bearer ${token}`,
+          },
+        });
 
-  // ✅ Função que seleciona o plano e abre o pagamento
-  const handleSelectPlan = (plan) => {
-    setSelectedPlan(plan);
-    setShowPlanPopup(false); // Fecha o popup de planos
-    setShowPaymentPopup(true); // Abre o popup de pagamento
-  };
+        if (!response.ok) throw new Error("Erro ao carregar status do usuário");
 
-  // ✅ Função que fecha o pagamento e atualiza o estado
-  const handlePaymentSuccess = (newPlanName) => {
-    setShowPaymentPopup(false);
-    alert(`Plano ${newPlanName} ativado com sucesso!`);
-    window.location.reload(); // 🔥 Atualiza para refletir mudanças
+        const data = await response.json();
+        setUserStatus(data);
+      } catch (error) {
+        console.error("Erro ao buscar status do usuário:", error);
+      }
+    };
+
+    if (token) {
+      fetchHorses();
+      fetchUserStatus();
+    }
+  }, [token]);
+
+  const handleCreateClick = (e) => {
+    e.preventDefault();
+
+    if (userStatus && userStatus.used_horses >= userStatus.max_horses) {
+      setShowLimitPopup(true);
+    } else {
+      navigate("/newhorse");
+    }
   };
 
   return (
@@ -46,9 +69,9 @@ const MyHorses = () => {
 
         <div className="profile-breadcrumb-container">
           <div className="breadcrumbs">
-            <a href="/dashboard">Dashboard</a> / <span>My Horses</span>
+            <Link to="/dashboard">Dashboard</Link> / <span>My Horses</span>
           </div>
-          <button className="create-button" onClick={() => setShowPlanPopup(true)}>
+          <button className="create-button" onClick={handleCreateClick}>
             <span>+</span> Create
           </button>
         </div>
@@ -75,25 +98,27 @@ const MyHorses = () => {
               </div>
             ))}
         </div>
+
+      {/* Popup de Limite de Cavalos */}
+      {showLimitPopup && (
+        <div className="popup-overlay">
+          <div className="popup-content">
+            <h3>🚨 Horse Limit Reached!</h3>
+            <p>You have reached the horse limit of your plan. To continue, please upgrade.</p>
+
+            <div className="popup-buttons">
+              <button className="popup-btn secondary" onClick={() => setShowLimitPopup(false)}>
+                OK
+              </button>
+              <button className="popup-btn primary" onClick={() => navigate('/profile')}>
+                View My Plan
+              </button>
+            </div>
+          </div>
+        </div>
+      )}
       </div>
 
-      {/* 🔥 Popup de Seleção de Plano */}
-      {showPlanPopup && (
-        <div className="popup-overlay">
-          <div className="popup-content">
-            <SubscriptionPlans onSelectPlan={handleSelectPlan} onClose={() => setShowPlanPopup(false)} />
-          </div>
-        </div>
-      )}
-
-      {/* 🔥 Popup de Pagamento (só aparece se um plano for selecionado) */}
-      {showPaymentPopup && selectedPlan && (
-        <div className="popup-overlay">
-          <div className="popup-content">
-            <SavePaymentMethod selectedPlan={selectedPlan} onPaymentSuccess={() => handlePaymentSuccess(selectedPlan.name)} />
-          </div>
-        </div>
-      )}
     </Layout>
   );
 };

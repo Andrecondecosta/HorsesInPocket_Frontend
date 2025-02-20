@@ -28,9 +28,8 @@ const ProfileHorse = ({ setIsLoggedIn }) => {
   const menuRef = useRef(null);
   const [isOwner, setIsOwner] = useState(false);
   const [userStatus, setUserStatus] = useState(null);
-  const [showPlanPopup, setShowPlanPopup] = useState(false);
-  const [showPaymentPopup, setShowPaymentPopup] = useState(false);
-  const [selectedPlan, setSelectedPlan] = useState(null);
+  const [showLimitPopup, setShowLimitPopup] = useState(false);
+
 
 
   const navigate = useNavigate();
@@ -161,37 +160,13 @@ const ProfileHorse = ({ setIsLoggedIn }) => {
       return;
     }
 
-    console.log("📊 Estado atual:", userStatus);
-
     if (userStatus.used_shares >= userStatus.max_shares) {
-      console.warn("🚨 Limite de partilhas atingido! Exibindo popup de planos.");
-      setShowPlanPopup(true); // 🔥 Abre o popup de planos antes de tentar compartilhar
+      console.warn("🚨 Limite de partilhas atingido! Exibindo popup.");
+      setShowLimitPopup(true);
     } else {
-      console.log("✅ Abaixo do limite! Abrindo modal de partilha.");
-      setShowShareModal(true); // 🔹 Só permite compartilhar se o limite não foi atingido
+      setShowShareModal(true);
     }
   };
-
-
-
-  // 🔄 Selecionar plano e abrir pagamento
-  const handleSelectPlan = (plan) => {
-    setSelectedPlan(plan);
-    setShowPlanPopup(false);
-    setShowPaymentPopup(true);
-  };
-
-  // ✅ Após pagamento, aumenta os limites e abre o modal de partilha
-  const handlePaymentSuccess = (planName) => {
-    setShowPaymentPopup(false);
-    alert(`Parabéns! Agora você tem o plano ${planName}.`);
-    setUserStatus((prev) => ({
-      ...prev,
-      max_shares: prev.max_shares + 10, // Exemplo de ajuste no limite
-    }));
-    setShowShareModal(true);
-  };
-
 
   return (
     <Layout setIsLoggedIn={setIsLoggedIn}>
@@ -342,28 +317,22 @@ const ProfileHorse = ({ setIsLoggedIn }) => {
           />
         )}
 
-        {showPlanPopup && (
-          <div className="popup-overlay">
-            <div className="popup-content">
-              <SubscriptionPlans
-                onSelectPlan={handleSelectPlan}
-                onClose={() => setShowPlanPopup(false)}
-                currentPlan={userStatus?.plan}
-              />
-            </div>
-          </div>
-        )}
+         {/* Popup de Limite de Shares */}
+         {showLimitPopup && (
+            <div className="popup-overlay">
+              <div className="popup-content">
+                <h3>🚨 Sharing Limit Reached!</h3>
+                <p>You have reached the sharing limit of your plan. To continue sharing, please upgrade.</p>
 
-        {showPaymentPopup && selectedPlan && (
-          <div className="popup-overlay">
-            <div className="popup-content1">
-              <SavePaymentMethod
-                selectedPlan={selectedPlan}
-                onPaymentSuccess={() => handlePaymentSuccess(selectedPlan.name)}
-              />
+                <div className="popup-buttons">
+                  <button className="popup-btn secondary" onClick={() => setShowLimitPopup(false)}>OK</button>
+                  <button className="popup-btn primary" onClick={() => navigate('/profile')}>
+                    View My Plan
+                  </button>
+                </div>
+              </div>
             </div>
-          </div>
-        )}
+          )}
 
         {/* Lightbox for image preview */}
         {isOpen && (

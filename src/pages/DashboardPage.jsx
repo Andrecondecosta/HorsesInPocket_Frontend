@@ -60,12 +60,6 @@ useEffect(() => {
       <div className="dashboard-container">
         <h2 className="page-title">Dashboard</h2>
         <CardSection /> {/* Section displaying cards */}
-        <div className="plan-status">
-          <h3>📜 Seu Plano: <strong>{userStatus.plan}</strong></h3>
-          <p>🐎 Cavalos: <strong>{userStatus.used_horses} / {userStatus.max_horses || "∞"}</strong></p>
-          <p>🔗 Partilhas: <strong>{userStatus.used_shares} / {userStatus.max_shares || "∞"}</strong></p>
-      </div>
-
         <HistoryTable /> {/* Table showing history */}
       </div>
     </Layout>
