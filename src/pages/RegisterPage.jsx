@@ -11,7 +11,8 @@ const RegisterPage = () => {
   const [passwordConfirmation, setPasswordConfirmation] = useState('');
   const [birthdate, setBirthdate] = useState('');
   const [phoneNumber, setPhoneNumber] = useState('');
-  const [address, setAddress] = useState('');
+  const [countries, setCountries] = useState([]);
+  const [country, setCountry] = useState('');
   const [gender, setGender] = useState('');
   const [sharedToken, setSharedToken] = useState(null); // Estado para armazenar o token compartilhado
 
@@ -24,6 +25,20 @@ const RegisterPage = () => {
     const tokenFromURL = urlParams.get('token');
     console.log('Captured token from URL:', tokenFromURL); // Log para verificar se o token está correto
     setSharedToken(tokenFromURL); // Atualiza o estado com o token da URL
+
+    const fetchCountries = async () => {
+      try {
+        const response = await fetch(`${process.env.REACT_APP_API_SERVER_URL}/countries`);
+        if (!response.ok) throw new Error('Erro ao carregar países');
+        const data = await response.json();
+
+        console.log('Países carregados:', data); // 👀 Depuração
+        setCountries(Array.isArray(data) ? data : []); // ✅ Garantir que seja um array
+      } catch (err) {
+        console.error(err.message);
+      }
+    };
+    fetchCountries();
   }, []);
 
   const handleSubmit = async (e) => {
@@ -37,12 +52,12 @@ const RegisterPage = () => {
       password_confirmation: passwordConfirmation,
       birthdate,
       phone_number: phoneNumber,
-      address,
+      country,
       gender,
     };
 
     // Enviar o token de compartilhamento junto com os dados do usuário
-    const receivedToken = await register(userData, sharedToken); // Passando o token compartilhado para a requisição
+    const receivedToken = await register(userData, sharedToken || null); // Passando o token compartilhado para a requisição
 
     if (receivedToken) {
       navigate('/login');
@@ -112,13 +127,14 @@ const RegisterPage = () => {
             value={phoneNumber}
             onChange={(e) => setPhoneNumber(e.target.value)}
           />
-          <input
+          <select
             className="half-width"
-            type="text"
-            placeholder="Address"
-            value={address}
-            onChange={(e) => setAddress(e.target.value)}
-          />
+            value={country} onChange={(e) => setCountry(e.target.value)} required>
+            <option value="">Selecione um País</option>
+               {countries.map((c) => (
+            <option key={c.code} value={c.code}>{c.name}</option>
+             ))}
+          </select>
           <input
             className="full-width"
             type="email"

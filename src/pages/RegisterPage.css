@@ -119,6 +119,9 @@ body, html {
 .register-button:hover {
   background-color: #8EB486;
 }
+.register-form select {
+  width: 200px; /* Mesmo tamanho do botão */
+}
 
 /* Mensagem de login */
 .login-message {
