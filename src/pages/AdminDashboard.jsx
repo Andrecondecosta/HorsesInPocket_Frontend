@@ -103,7 +103,7 @@ const AdminDashboard = () => {
               <tbody>
                 {sortedData(users).map((user) => (
                   <tr key={user.id}>
-                    <td>{user.name}</td>
+                    <td>{user.first_name} {user.last_name}</td>
                     <td>{user.email}</td>
                     <td>{new Date(user.created_at).toLocaleDateString()}</td>
                   </tr>
@@ -112,32 +112,34 @@ const AdminDashboard = () => {
             </table>
           </div>
         );
-      case "horses":
-        return (
-          <div className="dashboard-section">
-            <h2>Cavalos</h2>
-            <table>
-              <thead>
-                <tr>
-                  {renderSortableHeader("Nome", "name")}
-                  {renderSortableHeader("Idade", "age")}
-                  {renderSortableHeader("Gênero", "gender")}
-                  {renderSortableHeader("Cor", "color")}
-                </tr>
-              </thead>
-              <tbody>
-                {sortedData(horses).map((horse) => (
-                  <tr key={horse.id}>
-                    <td>{horse.name}</td>
-                    <td>{horse.age}</td>
-                    <td>{horse.gender}</td>
-                    <td>{horse.color}</td>
+        case "horses":
+          return (
+            <div className="dashboard-section">
+              <h2>Cavalos</h2>
+              <table>
+                <thead>
+                  <tr>
+                    {renderSortableHeader("Nome", "name")}
+                    {renderSortableHeader("Idade", "age")}
+                    {renderSortableHeader("Gênero", "gender")}
+                    {renderSortableHeader("Cor", "color")}
+                    {renderSortableHeader("Data de Registo", "created_at")} {/* ✅ Novo cabeçalho */}
                   </tr>
-                ))}
-              </tbody>
-            </table>
-          </div>
-        );
+                </thead>
+                <tbody>
+                  {sortedData(horses).map((horse) => (
+                    <tr key={horse.id}>
+                      <td>{horse.name}</td>
+                      <td>{horse.age}</td>
+                      <td>{horse.gender}</td>
+                      <td>{horse.color}</td>
+                      <td>{new Date(horse.created_at).toLocaleDateString()}</td> {/* ✅ Exibe a data */}
+                    </tr>
+                  ))}
+                </tbody>
+              </table>
+            </div>
+          );
       case "logs":
         return (
           <div className="dashboard-section">
