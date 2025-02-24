@@ -1,0 +1,134 @@
+.admin-dashboard {
+  padding: 20px;
+  background-color: #f9f9f9;
+}
+
+.admin-dashboard h1 {
+  text-align: center;
+  margin-bottom: 30px;
+  color: #47663B;
+}
+
+.dashboard-summary {
+  display: flex;
+  justify-content: space-between;
+  gap: 20px;
+  margin-bottom: 30px;
+}
+
+.summary-card {
+  flex: 1;
+  background: white;
+  padding: 20px;
+  border-radius: 10px;
+  text-align: center;
+  box-shadow: 0 2px 5px rgba(0, 0, 0, 0.1);
+}
+
+.summary-card h3 {
+  color: #47663B;
+  margin-bottom: 10px;
+}
+
+.data-section {
+  background: white;
+  padding: 20px;
+  border-radius: 10px;
+  margin-bottom: 30px;
+  box-shadow: 0 2px 5px rgba(0, 0, 0, 0.1);
+}
+
+.data-section h2 {
+  color: #47663B;
+  margin-bottom: 20px;
+}
+
+.filter-input {
+  width: 100%;
+  padding: 10px;
+  margin-bottom: 15px;
+  border: 1px solid #ccc;
+  border-radius: 6px;
+}
+
+.table-responsive {
+  overflow-x: auto;
+}
+
+table {
+  width: 100%;
+  border-collapse: collapse;
+  margin-top: 10px;
+}
+
+table th, table td {
+  padding: 10px;
+  border-bottom: 1px solid #ddd;
+  text-align: left;
+}
+
+table th {
+  background-color: #f0f0f0;
+  color: #47663B;
+}
+
+.no-data {
+  text-align: center;
+  color: #777;
+}
+
+.logs-list {
+  list-style: none;
+  padding: 0;
+}
+
+.logs-list li {
+  padding: 8px 0;
+  border-bottom: 1px solid #eee;
+}
+.dashboard-summary {
+  display: flex;
+  justify-content: space-around;
+  margin-bottom: 20px;
+}
+
+.card {
+  background-color: #f5f5f5;
+  padding: 20px;
+  border-radius: 8px;
+  text-align: center;
+  box-shadow: 0 2px 5px rgba(0, 0, 0, 0.1);
+  cursor: pointer;
+  transition: all 0.3s ease;
+  width: 30%;
+}
+
+.card:hover {
+  background-color: #e0e0e0;
+  transform: translateY(-5px);
+}
+
+.dashboard-section {
+  margin-top: 30px;
+}
+
+table {
+  width: 100%;
+  border-collapse: collapse;
+  margin-top: 20px;
+}
+
+th, td {
+  padding: 10px;
+  text-align: left;
+  border-bottom: 1px solid #ddd;
+}
+
+th {
+  background-color: #47663B;
+  color: white;
+}
+
+tr:hover {
+  background-color: #f1f1f1;
+}

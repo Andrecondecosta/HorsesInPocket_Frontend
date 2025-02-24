@@ -1,3 +1,4 @@
+.genealogy-tree-container{
 .genealogy-tree {
   position: relative;
   display: flex;
@@ -83,6 +84,7 @@
   top: -10px;
   width: 0;
   height: 0;
+}
 }
 
 /* Responsividade para Mobile */
