@@ -1,7 +1,7 @@
 .admin-dashboard {
   padding: 20px;
   background-color: #f9f9f9;
-}
+
 
 .admin-dashboard h1 {
   text-align: center;
@@ -131,4 +131,5 @@ th {
 
 tr:hover {
   background-color: #f1f1f1;
+}
 }
