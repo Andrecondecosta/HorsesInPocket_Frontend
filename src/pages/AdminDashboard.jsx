@@ -51,6 +51,31 @@ const AdminDashboard = () => {
     fetchData();
   }, []);
 
+  const handleDeleteUser = async (userId) => {
+  const confirmDelete = window.confirm("Tem certeza que deseja excluir este usuário?");
+  if (!confirmDelete) return;
+
+  try {
+    const response = await fetch(`${process.env.REACT_APP_API_SERVER_URL}/admin/users/${userId}`, {
+      method: "DELETE",
+      headers: {
+        "Content-Type": "application/json",
+        Authorization: `Bearer ${localStorage.getItem("authToken")}`,
+      },
+    });
+
+    if (!response.ok) {
+      throw new Error("Erro ao deletar o usuário.");
+    }
+
+    setUsers((prevUsers) => prevUsers.filter((user) => user.id !== userId));
+    alert("Usuário excluído com sucesso!");
+  } catch (error) {
+    console.error("Erro ao excluir usuário:", error);
+  }
+};
+
+
   // 🔀 Função de ordenação
   const handleSort = (key) => {
     let direction = "asc";
@@ -98,6 +123,7 @@ const AdminDashboard = () => {
                   {renderSortableHeader("Nome", "name")}
                   {renderSortableHeader("Email", "email")}
                   {renderSortableHeader("Data de Registo", "created_at")}
+                  {renderSortableHeader("Ações", "actions")}
                 </tr>
               </thead>
               <tbody>
@@ -106,12 +132,21 @@ const AdminDashboard = () => {
                     <td>{user.first_name} {user.last_name}</td>
                     <td>{user.email}</td>
                     <td>{new Date(user.created_at).toLocaleDateString()}</td>
+                    <td>
+                      <button
+                        className="delete-btn"
+                        onClick={() => handleDeleteUser(user.id)}
+                      >
+                        ❌
+                      </button>
+                    </td>
                   </tr>
                 ))}
               </tbody>
             </table>
           </div>
         );
+
         case "horses":
           return (
             <div className="dashboard-section">
