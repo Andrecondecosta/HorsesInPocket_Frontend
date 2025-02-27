@@ -42,7 +42,7 @@ const SharedHorse = () => {
         .then((data) => {
           console.log("API response:", data);
           if (data.error) {
-            alert(data.error);
+            navigate('/received', { state: { message: "The horse had already been shared and was not added again." } });
           } else {
             navigate('/received');
           }
