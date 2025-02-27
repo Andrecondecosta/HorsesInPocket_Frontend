@@ -1,7 +1,9 @@
 import React, { useState, useEffect } from 'react';
-import { useNavigate } from 'react-router-dom';
+import { useNavigate, useLocation} from 'react-router-dom';
 import Layout from '../components/Layout';
 import LoadingPopup from '../components/LoadingPopup';
+
+
 import './MyHorses.css';
 
 const ReceivedHorses = () => {
@@ -10,6 +12,14 @@ const ReceivedHorses = () => {
   const [error, setError] = useState(null);
   const token = localStorage.getItem('authToken');
   const navigate = useNavigate();
+  const location = useLocation(); // ⬅️ Captura a mensagem do `state`
+  const message = location.state?.message || localStorage.getItem('receivedMessage');
+
+  useEffect(() => {
+    if (message) {
+      localStorage.setItem('receivedMessage', message);
+    }
+  }, [message]);
 
   useEffect(() => {
     const fetchReceivedHorses = async () => {
