@@ -28,7 +28,7 @@ const ReceivedHorses = () => {
         setAlertMessage('');
         setAlertType('');
         navigate('/received', { replace: true, state: {} }); // 🔄 Remove `state` da URL sem recarregar a página
-      }, 5000);
+      }, 15000);
     }
   }, [location.state, navigate]);
 
