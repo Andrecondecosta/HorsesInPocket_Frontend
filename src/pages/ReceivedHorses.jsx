@@ -2,6 +2,7 @@ import React, { useState, useEffect } from 'react';
 import { useNavigate, useLocation} from 'react-router-dom';
 import Layout from '../components/Layout';
 import LoadingPopup from '../components/LoadingPopup';
+import './ReceivedHorses.css';
 
 
 import './MyHorses.css';
@@ -13,13 +14,24 @@ const ReceivedHorses = () => {
   const token = localStorage.getItem('authToken');
   const navigate = useNavigate();
   const location = useLocation(); // ⬅️ Captura a mensagem do `state`
-  const message = location.state?.message || localStorage.getItem('receivedMessage');
+  const [alertType, setAlertType] = useState('');
+  const [alertMessage, setAlertMessage] = useState('');
 
   useEffect(() => {
-    if (message) {
-      localStorage.setItem('receivedMessage', message);
+    if (location.state?.message) {
+      console.log("Received message:", location.state.message);
+      setAlertMessage(location.state.message);
+      setAlertType(location.state.type || 'info');
+
+      // 🔥 Apagar a mensagem do estado após um curto período (exemplo: 5 segundos)
+      setTimeout(() => {
+        setAlertMessage('');
+        setAlertType('');
+        navigate('/received', { replace: true, state: {} }); // 🔄 Remove `state` da URL sem recarregar a página
+      }, 5000);
     }
-  }, [message]);
+  }, [location.state, navigate]);
+
 
   useEffect(() => {
     const fetchReceivedHorses = async () => {
@@ -65,6 +77,11 @@ const ReceivedHorses = () => {
             <a href="/dashboard">Dashboard</a> / <span>Received Horses</span>
           </div>
         </div>
+        {alertMessage && (
+            <div className={`alert-message ${alertType}`}>
+              {alertMessage}
+            </div>
+          )}
         <div className="horses-grid">
           {horses.map((horse) => (
             <div key={horse.id} className="horse-card">

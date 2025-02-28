@@ -7,19 +7,16 @@ const SharedHorse = () => {
   const hasFetched = useRef(false);
   const location = useLocation();
 
-  // 🔍 Capture the full URL as received
+  // 🔍 Captura a URL e extrai os parâmetros corretamente
   const fullUrl = `${location.pathname}${location.search}`;
   console.log("Full URL received:", fullUrl);
 
-  // 🔍 Correct the URL if the parameters don't have "?" properly
   const correctedUrl = fullUrl.includes("?") ? fullUrl : fullUrl.replace("&horseImage", "?horseImage");
   console.log("Corrected URL before processing:", correctedUrl);
 
-  // 🔍 Extract the token correctly
   const cleanToken = token ? token.split("&")[0].split("?")[0] : "";
   console.log("Correct token captured:", cleanToken);
 
-  // 🔍 Correctly capture the parameters from the corrected URL
   const queryParams = new URLSearchParams(correctedUrl.split("?")[1] || "");
   const horseImage = queryParams.get("horseImage") || "";
   const horseName = queryParams.get("horseName") || "";
@@ -42,8 +39,15 @@ const SharedHorse = () => {
         .then((data) => {
           console.log("API response:", data);
           if (data.error) {
-            navigate('/received', { state: { message: "The horse had already been shared and was not added again." } });
+            console.log("🚨 Link já foi usado, redirecionando para /received com mensagem de erro.");
+
+            // ✅ Guarda no `localStorage` para persistir no reload
+            localStorage.setItem('receivedMessage', "⚠️ The horse had already been shared and was not added again.");
+            localStorage.setItem('receivedMessageType', "error");
+
+            navigate('/received', { state: { message: "⚠️ The horse had already been shared and was not added again.", type: "error" } });
           } else {
+            console.log("✅ Cavalo adicionado com sucesso! Redirecionando para /received");
             navigate('/received');
           }
         })
@@ -52,14 +56,30 @@ const SharedHorse = () => {
           alert(`Error processing the link: ${err.message}`);
         });
     } else if (!authToken && cleanToken) {
-      console.log("User not logged in, redirecting to welcome with the full URL...");
+      console.log("User not logged in, checking link status before redirecting...");
 
-      // 🔥 Ensure that `cleanToken` is in the query string correctly
-      const queryString = new URLSearchParams({ horseImage, horseName }).toString();
-      const redirectUrl = `/welcome?redirect=${correctedUrl}&token=${cleanToken}&${queryString}`;
+      fetch(`${process.env.REACT_APP_API_SERVER_URL}/horses/shared/${cleanToken}`)
+        .then((response) => response.json())
+        .then((data) => {
+          console.log("🚨 API Response before redirecting:", data);
 
-      console.log("Redirecting to:", redirectUrl);
-      navigate(redirectUrl);
+          if (data.error && (data.error.includes("used") || data.error.includes("expired"))) {
+            // ✅ Link já foi utilizado ou expirou, mostramos erro na Welcome Page
+            const errorRedirectUrl = `/welcome?token=${cleanToken}&message=${encodeURIComponent("⚠️ This sharing link has already been used or expired.")}&horseImage=${encodeURIComponent(horseImage)}&horseName=${encodeURIComponent(horseName)}`;
+            console.log("Redirecting to Welcome Page with error:", errorRedirectUrl);
+            navigate(errorRedirectUrl);
+          } else {
+            // ✅ Link ainda válido, redirecionamos normalmente
+            const queryString = new URLSearchParams({ horseImage, horseName }).toString();
+            const redirectUrl = `/welcome?redirect=${correctedUrl}&token=${cleanToken}&${queryString}`;
+            console.log("Redirecting to:", redirectUrl);
+            navigate(redirectUrl);
+          }
+        })
+        .catch((err) => {
+          console.log("Error in request:", err);
+          navigate(`/welcome?token=${cleanToken}&message=${encodeURIComponent("❌ Error checking the link.")}&horseImage=${encodeURIComponent(horseImage)}&horseName=${encodeURIComponent(horseName)}`);
+        });
     }
   }, [cleanToken, correctedUrl, navigate]);
 
