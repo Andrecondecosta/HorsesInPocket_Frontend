@@ -41,18 +41,43 @@ const HistoryTable = () => {
 
   const getStatusClass = (action) => {
     switch (action) {
-      case 'received':
-        return 'status-received';
-      case 'pending':
-        return 'status-pending';
-      case 'shared':
-        return 'status-shared';
+      case 'created':
+        return 'status-created';
       case 'updated':
         return 'status-updated';
       case 'deleted':
         return 'status-deleted';
+      case 'shared_via_link':
+        return 'status-shared-link';
+      case 'shared_via_email':
+        return 'status-shared-email';
+      case 'received':
+        return 'status-received';
+      case 'deleted_share':
+        return 'status-deleted-share';
       default:
         return 'status-default';
+    }
+  };
+
+  const formatActionText = (action) => {
+    switch (action) {
+      case 'created':
+        return 'Created';
+      case 'updated':
+        return 'Updated';
+      case 'deleted':
+        return 'Deleted';
+      case 'shared_via_link':
+        return 'Shared via Link';
+      case 'shared_via_email':
+        return 'Shared via Email';
+      case 'received':
+        return 'Received';
+      case 'deleted_share':
+        return 'Deleted Share';
+      default:
+        return 'Unknown';
     }
   };
 
@@ -76,7 +101,7 @@ const HistoryTable = () => {
                 <td>{log.recipient || 'N/A'}</td>
                 <td>
                   <span className={`status-tag ${getStatusClass(log.action)}`}>
-                    {log.action.charAt(0).toUpperCase() + log.action.slice(1)}
+                    {formatActionText(log.action)}
                   </span>
                 </td>
                 <td>{log.created_at}</td>

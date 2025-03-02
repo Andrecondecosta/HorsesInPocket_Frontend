@@ -50,31 +50,46 @@
 }
 
 /* Cores específicas dos estados */
-.status-updated {
-  background-color: #ECC62F; /* Amarelo */
-  color: white  ;
-}
-
-.status-received {
-  background-color: #ccc; /* Cinza claro */
+.status-created {
+  background-color: #28a745; /* Verde */
   color: white;
 }
 
-.status-shared {
-  background-color: #25A5CC; /* Azul claro */
+.status-updated {
+  background-color: #ffc107; /* Amarelo */
   color: white;
 }
 
 .status-deleted {
-  background-color: #E64949; /* Vermelho */
+  background-color: #dc3545; /* Vermelho */
+  color: white;
+}
+
+.status-shared-link {
+  background-color: #17a2b8; /* Azul claro */
+  color: white;
+}
+
+.status-shared-email {
+  background-color: #6610f2; /* Roxo */
+  color: white;
+}
+
+.status-received {
+  background-color: #007bff; /* Azul */
+  color: white;
+}
+
+.status-deleted-share {
+  background-color: #6c757d; /* Cinza */
   color: white;
 }
 
 .status-default {
-  background-color: #8EB486; /* Verde claro */
+  background-color: #343a40; /* Preto */
   color: white;
-
 }
+
 @media (max-width: 768px) {
   .history-titles {
     font-size: 18px;
