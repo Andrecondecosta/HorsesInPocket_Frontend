@@ -1,6 +1,6 @@
 import React, { useState, useEffect, useRef } from 'react';
 import { useParams, useNavigate, useLocation } from 'react-router-dom';
-import { FaEdit, FaTrash, FaShareAlt } from 'react-icons/fa';
+import { FaEdit, FaTrash, FaShareAlt, FaChevronDown } from 'react-icons/fa';
 import Lightbox from "yet-another-react-lightbox";
 import GenealogyTree from '../components/GenealogyTree';
 import Layout from '../components/Layout';
@@ -8,8 +8,7 @@ import ProfileMedia from '../components/ProfileMedia';
 import ShareHorse from '../components/ShareHorse';
 import "yet-another-react-lightbox/styles.css";
 import LoadingPopup from '../components/LoadingPopup';
-import SubscriptionPlans from '../components/SubscriptionPlans';
-import SavePaymentMethod from '../components/SavePaymentMethod';
+import DeleteShares from '../components/Deleteshares';
 import './ProfileHorse.css';
 
 const ProfileHorse = ({ setIsLoggedIn }) => {
@@ -29,6 +28,8 @@ const ProfileHorse = ({ setIsLoggedIn }) => {
   const [isOwner, setIsOwner] = useState(false);
   const [userStatus, setUserStatus] = useState(null);
   const [showLimitPopup, setShowLimitPopup] = useState(false);
+  const [showDeleteShares, setShowDeleteShares] = useState(false);
+
 
 
 
@@ -275,39 +276,37 @@ const ProfileHorse = ({ setIsLoggedIn }) => {
           )}
         </div>
 
-        {showDeleteModal && (
-          <div className="modal-overlay">
-            <div className="modal-content">
-              <h3>Delete Horse</h3>
-              <div className="delete-options">
-                {!deleteMessage ? (
-                  <>
-                    <button
-                      className="delete-option-button"
-                      onClick={() => handleDelete("destroy")}
-                    >
-                      <FaTrash /> <p>Delete for Everyone</p>
-                    </button>
-                    <button
-                      className="delete-option-button"
-                      onClick={() => handleDelete("delete_shares")}
-                    >
-                      <FaTrash /> <p>Delete for Shared</p>
-                    </button>
-                    <button
-                      className="modal-close"
-                      onClick={() => setShowDeleteModal(false)}
-                    >
-                      Cancel
-                    </button>
-                  </>
-                ) : (
-                  <p className="delete-message">{deleteMessage}</p>
-                )}
-              </div>
-            </div>
-          </div>
+
+{showDeleteModal && (
+  <div className="modal-overlay">
+    <div className="modal-content">
+      <h3>Delete Horse</h3>
+      <div className="delete-options">
+        {!deleteMessage ? (
+          <>
+            <button
+              className="delete-option-button"
+              onClick={() => handleDelete("destroy")}
+            >
+              <FaTrash /> <p>Delete for Me and Everyone</p>
+            </button>
+
+            < DeleteShares horseId={id} token={token}/>
+
+
+            <button className="modal-close" onClick={() => setShowDeleteModal(false)}>
+              Cancel
+            </button>
+          </>
+        ) : (
+          <p className="delete-message">{deleteMessage}</p>
         )}
+      </div>
+    </div>
+  </div>
+)}
+
+
 
         {/* Share Modal */}
         {showShareModal && (
