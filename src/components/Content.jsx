@@ -17,6 +17,7 @@ import AdminDashboard from '../pages/AdminDashboard';
 import ForgotPassword from '../pages/ForgotPassword';
 import ResetPassword from '../pages/ResetPassword';
 import WelcomePage from '../pages/WelcomePage';
+import PrivacyPolicy from '../pages/PrivacyPolicy';
 import './Content.css';
 
 
@@ -35,6 +36,9 @@ function Content({ setIsLoggedIn }) {
         <Route path="/forgot/password" element={<ForgotPassword />} />
         <Route path="/reset/password/:token" element={<ResetPassword />} />
         <Route path="/home-page" element={<HomePage />} />
+        <Route path="/privacy-policy" element={<PrivacyPolicy />} />
+
+        {/* Protected Routes */}
         <Route path="/profile" element={<ProtectedRoute element={<ProfilePage setIsLoggedIn={setIsLoggedIn}/>} />} />
         <Route path="/update-profile" element={<ProtectedRoute element={<UpdateProfilePage setIsLoggedIn={setIsLoggedIn}/>} />} />
         <Route path="/myhorses" element={<ProtectedRoute element={<MyHorses setIsLoggedIn={setIsLoggedIn}/>} />} />

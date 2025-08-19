@@ -580,6 +580,9 @@
   .edit-breadcrumbs {
     font-size: 13px;
   }
+  .edit-step {
+    width: 26%; /* Cada passo ocupa o mesmo espaço */
+  }
 }
   @media (max-width: 415px) {
 

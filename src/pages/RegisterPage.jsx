@@ -15,6 +15,7 @@ const RegisterPage = () => {
   const [country, setCountry] = useState('');
   const [gender, setGender] = useState('');
   const [sharedToken, setSharedToken] = useState(null); // Estado para armazenar o token compartilhado
+  const [acceptPrivacyPolicy, setAcceptPrivacyPolicy] = useState(false); // Estado para aceitar a Política de Privacidade
 
   const { register, token, loading, error } = useRegister();
   const navigate = useNavigate();
@@ -41,9 +42,17 @@ const RegisterPage = () => {
     fetchCountries();
   }, []);
 
+
   const handleSubmit = async (e) => {
     e.preventDefault();
 
+    // Verifica se o utilizador aceitou a Política de Privacidade
+    // ✅ Verifica se o utilizador aceitou a Política de Privacidade
+    if (!acceptPrivacyPolicy) {
+      alert('You must accept the Privacy Policy to register.');
+      return;
+    }
+    // Cria o objeto com os dados do utilizador
     const userData = {
       first_name: firstName,
       last_name: lastName,
@@ -159,6 +168,22 @@ const RegisterPage = () => {
             onChange={(e) => setPasswordConfirmation(e.target.value)}
             required
           />
+          {/* ✅ Checkbox da Política de Privacidade */}
+          <div className="privacy-checkbox">
+            <input
+              type="checkbox"
+              id="acceptPrivacyPolicy"
+              checked={acceptPrivacyPolicy}
+              onChange={(e) => setAcceptPrivacyPolicy(e.target.checked)}
+              required
+            />
+            <label htmlFor="acceptPrivacyPolicy">
+              I accept the{' '}
+              <Link to="/privacy-policy" className="privacy-link">
+                Privacy Policy
+              </Link>
+            </label>
+          </div>
           <button type="submit" className="register-button" disabled={loading}>
             {loading ? 'Registering...' : 'Register'}
           </button>

@@ -99,24 +99,24 @@ const MyHorses = () => {
             ))}
         </div>
 
-      {/* Popup de Limite de Cavalos */}
-      {showLimitPopup && (
-        <div className="popup-overlay">
-          <div className="popup-content">
-            <h3>🚨 Horse Limit Reached!</h3>
-            <p>You have reached the horse limit of your plan. To continue, please upgrade.</p>
+        {/* Popup de Limite de Cavalos */}
+        {showLimitPopup && (
+          <div className="popup-overlay">
+            <div className="popup-content">
+              <h3>🚨 Horse Limit Reached!</h3>
+              <p>You have reached the horse limit of your plan. To continue, please upgrade.</p>
 
-            <div className="popup-buttons">
-              <button className="popup-btn secondary" onClick={() => setShowLimitPopup(false)}>
-                OK
-              </button>
-              <button className="popup-btn primary" onClick={() => navigate('/profile')}>
-                View My Plan
-              </button>
+              <div className="popup-buttons">
+                <button className="popup-btn secondary" onClick={() => setShowLimitPopup(false)}>
+                  OK
+                </button>
+                <button className="popup-btn primary" onClick={() => navigate('/profile')}>
+                  View My Plan
+                </button>
+              </div>
             </div>
           </div>
-        </div>
-      )}
+        )}
       </div>
 
     </Layout>

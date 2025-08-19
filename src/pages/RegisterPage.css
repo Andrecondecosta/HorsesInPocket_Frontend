@@ -15,6 +15,7 @@
 body, html {
   height: 100%;
   font-family: 'Inter', sans-serif;
+    -webkit-text-size-adjust: 100%;
 }
 
 .register-page {
@@ -96,6 +97,10 @@ body, html {
   background-color: var(--white);
   outline: none;
 }
+.privacy-checkbox, .register-form input,
+.register-form select {
+      width: 53%;
+}
 
 .register-form input:focus,
 .register-form select:focus {
@@ -139,7 +144,69 @@ body, html {
 .login-message a:hover {
   text-decoration: underline;
 }
+.privacy-checkbox {
+  display: flex;
+  align-items: center;
+  margin: 1rem 0;
+  font-size: 0.9rem;
+}
 
+.privacy-checkbox label {
+  width: 221%;
+}
+
+.privacy-checkbox a {
+  color: #2980b9;
+  text-decoration: underline;
+}
+
+.error-message {
+  color: #e74c3c;
+  margin-top: 0.5rem;
+}
+
+
+
+@media (max-width: 900px) {
+  html, body {
+    overflow: auto;          /* em vez de hidden */
+    height: auto;
+    min-height: 100dvh;      /* viewport dinâmica moderna */
+  }
+
+  .register-page {
+    height: auto;
+    min-height: 100dvh;
+  }
+
+  .register-container {
+    width: 100% !important;  /* evita 110% / 114% a “saltar” para fora */
+    height: auto;
+    min-height: 100dvh;
+    margin-left: 0;          /* remove sobreposição no mobile */
+    border-radius: 0;        /* opcional: limpa cantos no mobile */
+    box-shadow: none;        /* já tinhas em mobile */
+  }
+
+  .register-form {
+    width: 100% !important;  /* ocupa a largura do container */
+    max-width: 480px;        /* limita para não ficar gigante */
+    margin: 0 auto;          /* centra */
+    gap: 12px;
+  }
+
+  /* Inputs e selects consistentes no mobile */
+  .register-form input,
+  .register-form select {
+    width: 100%;
+  }
+
+  /* “Half-width” só em ecrãs com espaço; no mobile fica 100% */
+  .register-form .half-width {
+    flex: 1 1 48%;
+  }
+
+}
 /* Estilo responsivo */
 @media (max-width: 768px) {
   body, html {
@@ -178,8 +245,6 @@ body, html {
     max-width: 450px;
     display: flex;
     gap: 5px;
-    margin-left: 42px;
-    margin-top: -2%;
 }
 
 .register-form input,
@@ -207,63 +272,135 @@ body, html {
     font-size: 12px;
     margin-left: 42px;
   }
+  .privacy-checkbox, .register-form input,
+.register-form select {
+      width: 60%;
+}
 }
 
-@media (max-width: 480px) {
-  body, html {
-    overflow: hidden; /* Impede scroll no mobile */
-  }
-
-  .register-page {
-    flex-direction: column;
-  }
-
-  .register-image {
-    display: none; /* Oculta a imagem no mobile */
-  }
-
+@media (orientation: landscape) and (max-height: 480px) {
+  html, body { overflow: auto; }
+  .register-page { min-height: 100dvh; }
   .register-container {
-    flex: none;
-    width: 114%; /* Faz o formulário ocupar toda a largura */
-    height: 100vh; /* Faz o formulário ocupar toda a altura */
-    padding: 20px; /* Ajusta o espaçamento */
-    box-shadow: none; /* Remove a sombra */
-  }
-
-
-  .register-header h2 {
-    margin-top: -19%;
-    font-size: 18px;
-    margin-left: 47px;
-  }
-
-  .register-logo-image {
-    width: 104%;
-    margin-top: -33%;
-    margin-left: 3%;
-  }
-
-  .register-form input,
-  .register-form select {
-    font-size: 14px;
-    padding: 8px;
-  }
-
-  .register-button {
-    padding: 10px;
-    font-size: 14px;
+    padding: 16px;
   }
   .register-form {
-    width: 76%;
-    max-width: 450px;
-    display: flex;
-    flex-wrap: wrap;
-    gap: 8px;
-    margin-left: 42px;
+    max-height: calc(100dvh - 160px); /* espaço para header/botão */
+    overflow: auto;                   /* scroll só no form se precisar */
+    margin-top: -100px;
+  }
+
+
+ .register-header h2 {
+   margin-top: 0;
+   margin-left: 0;
+   font-size: 20px; /* consistente com o resto */
+   text-align: center;
+ }
+
+ .register-form input,
+ .register-form select {
+   width: 19%;
+   font-size: 14px;
+   padding: 10px;
+ }
+
+ .register-button {
+   width: 100%;
+   padding: 12px;
+   font-size: 16px;
+ }
+
+ .login-message {
+   font-size: 12px;
+   text-align: center;
+   margin: 10px 0 0 0;
+ }
+
+ .privacy-checkbox {
+   width: 100%;
+   font-size: 12px;
+ }
 }
-.login-message {
-  font-size: 12px;
-  margin-left: 42px;
+@media (max-width: 480px) {
+ body, html {
+   overflow: auto; /* permitir scroll normal */
+ }
+
+ .register-page {
+   flex-direction: column;
+ }
+
+ .register-image {
+   display: none; /* sem imagem no mobile */
+ }
+
+ .register-container {
+   flex: none;
+   width: 100%;        /* ocupa toda a largura */
+   height: auto;       /* deixa crescer conforme o conteúdo */
+   min-height: 100dvh; /* garante altura mínima */
+   padding: 20px;
+   box-shadow: none;
+   margin-left: 0;     /* remove offset lateral */
+   border-radius: 0;   /* mantém igual às outras páginas */
+ }
+
+ .register-header h2 {
+   margin-top: 0;
+   margin-left: 0;
+   font-size: 20px; /* consistente com o resto */
+   text-align: center;
+ }
+
+ .register-logo-image {
+   width: 100%;
+   margin: -91px auto -30px auto;
+   display: block;
+ }
+
+ .register-form {
+   width: 100%;
+   max-width: 400px;
+   margin: 0 auto;
+   gap: 12px;
+ }
+
+ .register-form input,
+ .register-form select {
+   width: 19%;
+   font-size: 14px;
+   padding: 10px;
+ }
+
+ .register-button {
+   width: 100%;
+   padding: 12px;
+   font-size: 16px;
+ }
+
+ .login-message {
+   font-size: 12px;
+   text-align: center;
+   margin: 10px 0 0 0;
+ }
+
+ .privacy-checkbox {
+   width: 100%;
+   font-size: 12px;
+ }
 }
 
-}
+
+
+ /* Evita empurrões laterais no mobile */
+ .register-header h2,
+ .register-logo-image,
+ .login-message {
+   margin-left: 0 !important;
+ }
+
+ /* A checkbox não deve alterar larguras dos inputs */
+ .privacy-checkbox {
+   width: 100% !important;
+ }

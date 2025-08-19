@@ -368,10 +368,10 @@ const NewHorses = ({ setIsLoggedIn }) => {
               {fieldErrors.name && <p className="error-message">{fieldErrors.name}</p>}
             </div>
             <div className="form-group">
-            <YearPicker
-              selectedYear={newHorse.age} // Passa o ano selecionado como propriedade
-              onChange={(year) => setNewHorse((prevHorse) => ({ ...prevHorse, age: year }))}
-            />
+              <YearPicker
+                selectedYear={newHorse.age} // Passa o ano selecionado como propriedade
+                onChange={(year) => setNewHorse((prevHorse) => ({ ...prevHorse, age: year }))}
+              />
 
               {fieldErrors.age && <p className="error-message">{fieldErrors.age}</p>}
             </div>
@@ -432,10 +432,10 @@ const NewHorses = ({ setIsLoggedIn }) => {
 
             <div className="form-group">
               <input type="text"
-              name="breeder"
-               placeholder="Breeder"
-              value={newHorse.breeder}
-              onChange={handleChange} />
+                name="breeder"
+                placeholder="Breeder"
+                value={newHorse.breeder}
+                onChange={handleChange} />
             </div>
 
             {/* Second row: Height slider and Piroplasmosis */}
@@ -492,9 +492,9 @@ const NewHorses = ({ setIsLoggedIn }) => {
         {currentStep === 2 && (
           <div className="upload-container">
             {/* Image */}
-            <ImageUploader  images={images} setImages={setImages} setError={setError} />
+            <ImageUploader images={images} setImages={setImages} setError={setError} />
             {/* Video */}
-              <VideoUploader videos={videos} setVideos={setVideos} setError={setError} />
+            <VideoUploader videos={videos} setVideos={setVideos} setError={setError} />
           </div>
         )}
 
@@ -505,19 +505,19 @@ const NewHorses = ({ setIsLoggedIn }) => {
             {Object.values(ancestors).some(
               (ancestor) => ancestor.name || ancestor.breeder || ancestor.breed
             ) && (
-              <div className="genealogy-tree">
-                <h2>Genealogy Tree</h2>
-                <ul>
-                  {Object.entries(ancestors).map(([relation, details]) => (
-                    details.name || details.breeder || details.breed ? (
-                      <li key={relation}>
-                        <strong>{relation}</strong>: {details.name || 'N/A'}, {details.breeder || 'N/A'}, {details.breed || 'N/A'}
-                      </li>
-                    ) : null
-                  ))}
-                </ul>
-              </div>
-            )}
+                <div className="genealogy-tree">
+                  <h2>Genealogy Tree</h2>
+                  <ul>
+                    {Object.entries(ancestors).map(([relation, details]) => (
+                      details.name || details.breeder || details.breed ? (
+                        <li key={relation}>
+                          <strong>{relation}</strong>: {details.name || 'N/A'}, {details.breeder || 'N/A'}, {details.breed || 'N/A'}
+                        </li>
+                      ) : null
+                    ))}
+                  </ul>
+                </div>
+              )}
           </div>
         )}
 

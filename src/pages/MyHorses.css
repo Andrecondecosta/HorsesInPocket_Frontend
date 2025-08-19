@@ -92,6 +92,14 @@ a {
   font-weight: bold;
   margin-bottom: 8px;
   color: #333;
+
+  display: -webkit-box;
+  -webkit-line-clamp: 2;      /* máximo de 2 linhas */
+  -webkit-box-orient: vertical;
+  overflow: hidden;
+
+  line-height: 1.2em;         /* altura de cada linha */
+  min-height: calc(1.2em * 2);/* garante espaço para 2 linhas, mesmo se só usar 1 */
 }
 .horse-sender {
   font-size: 14px;
