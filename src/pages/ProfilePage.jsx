@@ -181,7 +181,7 @@ const ProfilePage = () => {
             <p>
               <strong>Country:</strong> {user.country || "Not specified"}
             </p>
-
+            {/*}
             <div className="subscription-container">
               <div className="subscription-header">
                 <p>
@@ -217,6 +217,7 @@ const ProfilePage = () => {
                 Upgrade Plan
               </button>
             </div>
+            */}
             {showPlanPopup && (
               <div className="popup-overlay">
                 <div className="popup-content">

@@ -9,7 +9,11 @@ import ShareHorse from '../components/ShareHorse';
 import "yet-another-react-lightbox/styles.css";
 import LoadingPopup from '../components/LoadingPopup';
 import DeleteShares from '../components/Deleteshares';
+import { useScreenshotProtection } from '../hooks/useScreenshotProtection';
+import { Capacitor } from '@capacitor/core';
+import { ScreenshotDetector } from 'capacitor-screenshot-detector';
 import './ProfileHorse.css';
+
 
 const ProfileHorse = ({ setIsLoggedIn }) => {
   const { id } = useParams();
@@ -29,6 +33,10 @@ const ProfileHorse = ({ setIsLoggedIn }) => {
   const [userStatus, setUserStatus] = useState(null);
   const [showLimitPopup, setShowLimitPopup] = useState(false);
   const [showDeleteShares, setShowDeleteShares] = useState(false);
+
+  const { screenshotTaken } = useScreenshotProtection(); // default 8s
+
+
 
 
 
@@ -171,7 +179,7 @@ const ProfileHorse = ({ setIsLoggedIn }) => {
 
   return (
     <Layout setIsLoggedIn={setIsLoggedIn}>
-      <div className="profile-container">
+      <div className={`profile-container ${screenshotTaken ? 'blurred' : ''}`}>
         {/* Header with title and buttons */}
         <div className="profile-header">
           {/* Breadcrumbs */}
@@ -211,6 +219,11 @@ const ProfileHorse = ({ setIsLoggedIn }) => {
           </div>
         </div>
 
+              {screenshotTaken ? (
+            <div className="screenshot-warning">
+    <p>🚫 Screenshot detectado. Dados ocultos por segurança.</p>
+  </div>
+) : (
         <div className="horse-info-section">
           <h2 className="section-title">Specific Information</h2>
           <div className="info-grid">
@@ -259,7 +272,7 @@ const ProfileHorse = ({ setIsLoggedIn }) => {
           </div>
         </div>
 
-
+        )}
         {/* Images and Videos */}
         <div className="profile-gallery">
           <h2 className="section-title">Images and Videos</h2>
