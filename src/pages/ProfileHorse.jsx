@@ -33,8 +33,8 @@ const ProfileHorse = ({ setIsLoggedIn }) => {
   const [userStatus, setUserStatus] = useState(null);
   const [showLimitPopup, setShowLimitPopup] = useState(false);
   const [showDeleteShares, setShowDeleteShares] = useState(false);
+  const { screenshotTaken } = useScreenshotProtection({ horseId: id });
 
-  const { screenshotTaken } = useScreenshotProtection(); // default 8s
 
 
 
@@ -64,43 +64,51 @@ const ProfileHorse = ({ setIsLoggedIn }) => {
     }
   };
 
-  useEffect(() => {
-    const queryParams = new URLSearchParams(location.search);
-    setReadonly(queryParams.get('readonly') === 'true');
+useEffect(() => {
+  const queryParams = new URLSearchParams(location.search);
+  setReadonly(queryParams.get('readonly') === 'true');
 
-    const fetchHorse = async () => {
-      try {
-        const response = await fetch(`${process.env.REACT_APP_API_SERVER_URL}/horses/${id}`, {
-          method: 'GET',
-          headers: {
-            'Content-Type': 'application/json',
-            'Authorization': `Bearer ${token}`,
-          },
-        });
+  const fetchHorse = async () => {
+    try {
+      const response = await fetch(`${process.env.REACT_APP_API_SERVER_URL}/horses/${id}`, {
+        method: 'GET',
+        headers: {
+          'Content-Type': 'application/json',
+          'Authorization': `Bearer ${token}`,
+        },
+      });
 
-        if (!response.ok) {
-          throw new Error('Failed to fetch horse');
-        }
-
-        const data = await response.json();
-        setHorse(data);
-        setIsOwner(data.is_owner);
-        setSelectedImage(0);
-      } catch (error) {
-        setError('Failed to load horse profile');
-      } finally {
-        setIsLoading(false);
+      if (!response.ok) {
+        throw new Error('Failed to fetch horse');
       }
-    };
 
-    if (token) {
-      fetchHorse();
-      fetchUserStatus();
-    } else {
-      setError('Token not found');
+      const data = await response.json();
+
+      // 👇 Verifica se está à espera de aprovação
+      if (data.status === "pending_approval") {
+        alert("This horse is awaiting the creator's approval. You will be redirected to My Horses.");
+        navigate('/myhorses');
+        return;
+      }
+
+      setHorse(data);
+      setIsOwner(data.is_owner);
+      setSelectedImage(0);
+    } catch (error) {
+      setError('Failed to load horse profile');
+    } finally {
       setIsLoading(false);
     }
-  }, [id, location.search, token]);
+  };
+
+  if (token) {
+    fetchHorse();
+    fetchUserStatus();
+  } else {
+    setError('Token not found');
+    setIsLoading(false);
+  }
+}, [id, location.search, token]);
 
 
   const handleClickOutside = (event) => {
