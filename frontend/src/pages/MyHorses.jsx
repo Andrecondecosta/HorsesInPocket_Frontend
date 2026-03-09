@@ -15,44 +15,52 @@ const MyHorses = () => {
 
   useEffect(() => {
     const fetchHorses = async () => {
-      try {
-        const response = await fetch(`${process.env.REACT_APP_API_SERVER_URL}/horses`, {
-          headers: { Authorization: `Bearer ${token}` },
-        });
+      await apiCall(
+        async () => {
+          const response = await fetch(`${process.env.REACT_APP_API_SERVER_URL}/horses`, {
+            headers: { Authorization: `Bearer ${token}` },
+          });
 
-        if (!response.ok) throw new Error("Erro ao carregar os cavalos");
+          if (!response.ok) throw new Error("Failed to load horses");
 
-        const data = await response.json();
-        setHorses(data);
-      } catch (error) {
-        console.error("Erro ao buscar os cavalos:", error);
-      }
+          const data = await response.json();
+          setHorses(data);
+          return data;
+        },
+        {
+          onError: (err) => console.error("Error fetching horses:", err)
+        }
+      );
     };
 
     const fetchUserStatus = async () => {
-      try {
-        const response = await fetch(`${process.env.REACT_APP_API_SERVER_URL}/user_status`, {
-          method: "GET",
-          headers: {
-            "Content-Type": "application/json",
-            Authorization: `Bearer ${token}`,
-          },
-        });
+      await apiCall(
+        async () => {
+          const response = await fetch(`${process.env.REACT_APP_API_SERVER_URL}/user_status`, {
+            method: "GET",
+            headers: {
+              "Content-Type": "application/json",
+              Authorization: `Bearer ${token}`,
+            },
+          });
 
-        if (!response.ok) throw new Error("Erro ao carregar status do usuário");
+          if (!response.ok) throw new Error("Failed to load user status");
 
-        const data = await response.json();
-        setUserStatus(data);
-      } catch (error) {
-        console.error("Erro ao buscar status do usuário:", error);
-      }
+          const data = await response.json();
+          setUserStatus(data);
+          return data;
+        },
+        {
+          onError: (err) => console.error("Error fetching user status:", err)
+        }
+      );
     };
 
     if (token) {
       fetchHorses();
       fetchUserStatus();
     }
-  }, [token]);
+  }, [token, apiCall]);
 
   const handleCreateClick = (e) => {
     e.preventDefault();
