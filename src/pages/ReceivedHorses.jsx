@@ -29,18 +29,6 @@ const ReceivedHorses = () => {
     }
   }, [location.state, navigate]);
 
-  useEffect(() => {
-    const shouldRefresh = location.state?.refresh;
-
-    if (shouldRefresh) {
-      console.log("🔁 Refresh triggered after screenshot");
-      fetchReceivedHorses();
-      // Limpar o estado para não repetir a cada reentrada
-      navigate('/received', { replace: true, state: {} });
-    }
-  }, [location.state]);
-
-
 
   const fetchReceivedHorses = async () => {
     try {
@@ -62,15 +50,6 @@ const ReceivedHorses = () => {
       setIsLoading(false);
     }
   };
-  useEffect(() => {
-    const shouldRefresh = location.state?.refresh;
-
-    if (shouldRefresh) {
-      console.log("🔁 Refresh triggered after screenshot");
-      fetchReceivedHorses();
-      navigate('/received', { replace: true, state: {} });
-    }
-  }, [location.state]);
 
   useEffect(() => {
     if (token) {
@@ -81,6 +60,19 @@ const ReceivedHorses = () => {
     }
   }, [token]);
 
+ useEffect(() => {
+  const shouldRefresh = location.state?.refresh;
+
+  if (shouldRefresh) {
+    console.log("🔁 Refresh triggered after screenshot");
+    fetchReceivedHorses();
+
+    // ⚠️ Espera 1 tick para garantir que a navegação terminou antes de limpar o estado
+    setTimeout(() => {
+      navigate('/received', { replace: true, state: {} });
+    }, 0);
+  }
+}, [location.state]);
 
   if (isLoading) return <LoadingPopup message="Loading horse details, please wait..." />;
   if (error) return <p>{error}</p>;

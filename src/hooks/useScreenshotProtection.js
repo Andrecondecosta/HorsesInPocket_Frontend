@@ -28,19 +28,26 @@ export const useScreenshotProtection = (options) => {
       }
     };
 
-    window.__onCapEvent = (eventName) => {
-      if (eventName === 'screenshotTaken') {
-        console.warn('📸 Screenshot detectado!');
-        setScreenshotTaken(true);
+   window.__onCapEvent = async (eventName) => {
+  if (eventName === 'screenshotTaken') {
+    console.warn('📸 Screenshot detectado!');
+    setScreenshotTaken(true);
 
-        notifyBackend();
-        navigate("/received", { state: { refresh: true }});
+    try {
+      await notifyBackend(); // Espera que termine
+      console.log("✅ Screenshot reportado ao backend com sucesso");
 
-        setTimeout(() => {
-          setScreenshotTaken(false);
-        }, duration);
-      }
-    };
+      // Agora sim: faz refresh da página
+      window.location.href = "/received";
+    } catch (err) {
+      console.error("❌ Erro ao reportar screenshot:", err);
+    }
+
+    setTimeout(() => {
+      setScreenshotTaken(false);
+    }, duration);
+  }
+};
 
     return () => {
       window.__onCapEvent = null;
