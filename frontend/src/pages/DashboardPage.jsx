@@ -30,28 +30,33 @@ const DashboardPage = ({ setIsLoggedIn }) => {
 
 useEffect(() => {
   const fetchUserStatus = async () => {
-    try {
-      const response = await fetch(`${process.env.REACT_APP_API_SERVER_URL}/user_status`, {
-        method: "GET",
-        headers: {
-          "Content-Type": "application/json",
-          Authorization: `Bearer ${token}`,
-        },
-      });
+    await apiCall(
+      async () => {
+        const response = await fetch(`${process.env.REACT_APP_API_SERVER_URL}/user_status`, {
+          method: "GET",
+          headers: {
+            "Content-Type": "application/json",
+            Authorization: `Bearer ${token}`,
+          },
+        });
 
-      if (!response.ok) throw new Error("Erro ao carregar status do usuário");
+        if (!response.ok) throw new Error("Failed to load user status");
 
-      const data = await response.json();
-      setUserStatus(data);
-    } catch (error) {
-      console.error("Erro ao buscar status do usuário:", error);
-    }
+        const data = await response.json();
+        setUserStatus(data);
+        return data;
+      },
+      {
+        onError: (err) => console.error("Error fetching user status:", err),
+        showErrorAlert: false
+      }
+    );
   };
 
   if (token) {
     fetchUserStatus();
   }
-}, [token]);
+}, [token, apiCall]);
 
 
   return (
