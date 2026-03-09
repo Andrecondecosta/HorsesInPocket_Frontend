@@ -2,11 +2,13 @@ import React, { useState, useEffect } from 'react';
 import { Link, useNavigate } from 'react-router-dom';
 import './MyHorses.css';
 import Layout from '../components/Layout';
+import { useApiCall } from '../hooks/useApiCall';
 
 const MyHorses = () => {
   const [horses, setHorses] = useState([]);
   const [userStatus, setUserStatus] = useState(null);
   const [showLimitPopup, setShowLimitPopup] = useState(false);
+  const { apiCall, loading, error } = useApiCall();
 
   const token = localStorage.getItem('authToken');
   const navigate = useNavigate();
