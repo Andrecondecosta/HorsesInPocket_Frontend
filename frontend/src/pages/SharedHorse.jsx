@@ -1,7 +1,5 @@
 import React, { useEffect, useRef } from 'react';
 import { useParams, useNavigate, useLocation } from 'react-router-dom';
-import { App as CapacitorApp } from '@capacitor/app';
-import { Capacitor } from '@capacitor/core';
 
 const SharedHorse = () => {
   const { token } = useParams();
@@ -22,45 +20,6 @@ const SharedHorse = () => {
   const queryParams = new URLSearchParams(correctedUrl.split("?")[1] || "");
   const horseImage = queryParams.get("horseImage") || "";
   const horseName = queryParams.get("horseName") || "";
-
-  // Deep link listener for mobile app
-  useEffect(() => {
-    // Only run on native platform (mobile app)
-    if (!Capacitor.isNativePlatform()) return;
-
-    const handleAppUrlOpen = (data) => {
-      console.log('App opened via deep link:', data.url);
-      
-      // Extract token from URL
-      // Supported formats:
-      // - https://horsehub.info/horses/shared/{token}
-      // - https://www.horsehub.info/horses/shared/{token}
-      // - horsehub://horses/shared/{token}
-      const url = data.url;
-      let extractedToken = null;
-      
-      if (url.includes('/horses/shared/')) {
-        extractedToken = url.split('/horses/shared/')[1]?.split('?')[0]?.split('&')[0];
-      } else if (url.includes('horsehub://horses/shared/')) {
-        extractedToken = url.split('horsehub://horses/shared/')[1]?.split('?')[0]?.split('&')[0];
-      }
-      
-      if (extractedToken) {
-        console.log('Token extracted from deep link:', extractedToken);
-        // Navigate to the shared horse route with token
-        // This will trigger the existing SharedHorse logic
-        navigate(`/horses/shared/${extractedToken}${location.search}`);
-      }
-    };
-
-    // Add listener for when app is opened via URL
-    const listener = CapacitorApp.addListener('appUrlOpen', handleAppUrlOpen);
-
-    // Cleanup
-    return () => {
-      listener.remove();
-    };
-  }, [navigate, location.search]);
 
   useEffect(() => {
     if (hasFetched.current) return;

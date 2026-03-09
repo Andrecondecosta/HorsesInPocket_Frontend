@@ -6,7 +6,7 @@
   "dependencies": {
     "@capacitor-community/privacy-screen": "^6.0.0",
     "@capacitor/android": "^7.4.2",
-    "@capacitor/app": "^8.0.1",
+    "@capacitor/app": "^7.0.2",
     "@capacitor/cli": "^7.4.2",
     "@capacitor/core": "^7.4.2",
     "@capacitor/ios": "^7.4.2",
@@ -63,8 +63,5 @@
       "last 1 firefox version",
       "last 1 safari version"
     ]
-  },
-  "devDependencies": {
-    "typescript": "^5.9.3"
   }
 }
