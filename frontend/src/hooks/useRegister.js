@@ -9,32 +9,40 @@ export const useRegister = () => {
     setLoading(true);
     setError(null);
 
+    const timeoutPromise = new Promise((_, reject) =>
+      setTimeout(() => reject(new Error('Request timeout')), 30000)
+    );
+
     try {
-      const response = await fetch(`${process.env.REACT_APP_API_SERVER_URL}/signup`, {
+      const fetchPromise = fetch(`${process.env.REACT_APP_API_SERVER_URL}/signup`, {
         method: 'POST',
         headers: {
           'Content-Type': 'application/json',
         },
         body: JSON.stringify({
-          user: userData,  // Enviando os dados do usuário
-          shared_token: sharedToken,  // Enviando o token compartilhado
+          user: userData,
+          shared_token: sharedToken,
         }),
       });
 
+      const response = await Promise.race([fetchPromise, timeoutPromise]);
       const data = await response.json();
 
       if (!response.ok || !data.token) {
-        throw new Error(data.errors?.join(', ') || 'Falha ao registrar usuário');
+        throw new Error(data.errors?.join(', ') || 'Failed to register user');
       }
 
       localStorage.setItem("authToken", data.token);
-      localStorage.setItem("hasSeenPopup", "newUser"); // 🔥 Marca como novo usuário
+      localStorage.setItem("hasSeenPopup", "newUser");
 
       setToken(data.token);
-      return data.token; // Retorna o token explicitamente
+      return data.token;
     } catch (err) {
-      setError(err.message);
-      return null; // Retorna nulo em caso de erro
+      const errorMessage = err.message === 'Request timeout'
+        ? 'Connection timeout. Please check your internet connection.'
+        : err.message || 'Network error. Please try again.';
+      setError(errorMessage);
+      return null;
     } finally {
       setLoading(false);
     }
