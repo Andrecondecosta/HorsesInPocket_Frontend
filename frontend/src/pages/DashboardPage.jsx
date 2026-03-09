@@ -66,8 +66,30 @@ useEffect(() => {
 
       <div className="dashboard-container">
         <h2 className="page-title">Dashboard</h2>
-        <CardSection /> {/* Section displaying cards */}
-        <HistoryTable /> {/* Table showing history */}
+        
+        {error && (
+          <div style={{
+            padding: '1rem',
+            marginBottom: '1rem',
+            backgroundColor: '#fee',
+            border: '1px solid #fcc',
+            borderRadius: '0.5rem',
+            color: '#c33'
+          }}>
+            {error}
+          </div>
+        )}
+
+        {loading ? (
+          <div style={{ textAlign: 'center', padding: '2rem', color: '#666' }}>
+            Loading dashboard...
+          </div>
+        ) : (
+          <>
+            <CardSection /> {/* Section displaying cards */}
+            <HistoryTable /> {/* Table showing history */}
+          </>
+        )}
       </div>
     </Layout>
   );
