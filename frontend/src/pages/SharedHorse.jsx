@@ -1,5 +1,7 @@
 import React, { useEffect, useRef } from 'react';
 import { useParams, useNavigate, useLocation } from 'react-router-dom';
+import { App as CapacitorApp } from '@capacitor/app';
+import { Capacitor } from '@capacitor/core';
 
 const SharedHorse = () => {
   const { token } = useParams();
@@ -20,6 +22,29 @@ const SharedHorse = () => {
   const queryParams = new URLSearchParams(correctedUrl.split("?")[1] || "");
   const horseImage = queryParams.get("horseImage") || "";
   const horseName = queryParams.get("horseName") || "";
+
+  // Deep link listener for mobile app
+  useEffect(() => {
+    if (!Capacitor.isNativePlatform()) return;
+
+    const handleAppUrlOpen = (data) => {
+      const url = data.url;
+      let extractedToken = null;
+      
+      if (url.includes('/horses/shared/')) {
+        extractedToken = url.split('/horses/shared/')[1]?.split('?')[0]?.split('&')[0];
+      } else if (url.includes('horsehub://horses/shared/')) {
+        extractedToken = url.split('horsehub://horses/shared/')[1]?.split('?')[0]?.split('&')[0];
+      }
+      
+      if (extractedToken) {
+        navigate(`/horses/shared/${extractedToken}${location.search}`);
+      }
+    };
+
+    const listener = CapacitorApp.addListener('appUrlOpen', handleAppUrlOpen);
+    return () => listener.remove();
+  }, [navigate, location.search]);
 
   useEffect(() => {
     if (hasFetched.current) return;
