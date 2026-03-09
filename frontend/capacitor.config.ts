@@ -23,6 +23,11 @@ const config: CapacitorConfig = {
       launchShowDuration: 2000,
       backgroundColor: "#ffffff",
       showSpinner: false
+    },
+    App: {
+      appUrlOpen: {
+        enabled: true
+      }
     }
   }
 };
