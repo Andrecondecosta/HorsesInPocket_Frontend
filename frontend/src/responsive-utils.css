@@ -1,0 +1,127 @@
+/* Global Responsive Utilities */
+
+/* Responsive Font Sizes */
+html {
+  font-size: 16px;
+}
+
+@media (max-width: 768px) {
+  html {
+    font-size: 15px;
+  }
+}
+
+@media (max-width: 480px) {
+  html {
+    font-size: 14px;
+  }
+}
+
+/* Responsive Spacing Utilities */
+.container-responsive {
+  padding: 1rem;
+  max-width: 100%;
+  box-sizing: border-box;
+}
+
+@media (min-width: 768px) {
+  .container-responsive {
+    padding: 1.5rem;
+  }
+}
+
+@media (min-width: 1024px) {
+  .container-responsive {
+    padding: 2rem;
+  }
+}
+
+/* Touch-friendly Button Sizing */
+button, .button, a.button {
+  min-height: 2.75rem;
+  min-width: 2.75rem;
+  padding: 0.75rem 1.25rem;
+}
+
+@media (max-width: 768px) {
+  button, .button, a.button {
+    min-height: 3rem;
+    min-width: 3rem;
+    padding: 0.875rem 1.5rem;
+  }
+}
+
+/* Responsive Images */
+img {
+  max-width: 100%;
+  height: auto;
+}
+
+/* Prevent Horizontal Scroll */
+body {
+  overflow-x: hidden;
+}
+
+/* Responsive Text */
+.text-responsive {
+  font-size: clamp(0.875rem, 2vw, 1rem);
+}
+
+.heading-responsive {
+  font-size: clamp(1.5rem, 4vw, 2.5rem);
+}
+
+/* Responsive Gaps */
+.gap-responsive {
+  gap: clamp(0.5rem, 2vw, 1.5rem);
+}
+
+/* Mobile-first Container */
+.page-container {
+  width: 100%;
+  max-width: 1200px;
+  margin: 0 auto;
+  padding: 0 1rem;
+}
+
+@media (min-width: 768px) {
+  .page-container {
+    padding: 0 2rem;
+  }
+}
+
+/* Safe Area Insets for iOS */
+@supports (padding: max(0px)) {
+  .safe-area-padding {
+    padding-left: max(1rem, env(safe-area-inset-left));
+    padding-right: max(1rem, env(safe-area-inset-right));
+    padding-bottom: max(1rem, env(safe-area-inset-bottom));
+  }
+}
+
+/* Responsive Grid */
+.grid-responsive {
+  display: grid;
+  grid-template-columns: repeat(auto-fit, minmax(min(100%, 15rem), 1fr));
+  gap: 1rem;
+}
+
+@media (min-width: 768px) {
+  .grid-responsive {
+    gap: 1.5rem;
+  }
+}
+
+/* Accessibility - Ensure Tap Targets are Large Enough */
+a, button, input, select, textarea {
+  min-height: 44px;
+  min-width: 44px;
+}
+
+@media (hover: none) and (pointer: coarse) {
+  /* Mobile touch devices */
+  a, button, input, select, textarea {
+    min-height: 48px;
+    min-width: 48px;
+  }
+}
