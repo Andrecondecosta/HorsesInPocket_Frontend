@@ -1,5 +1,5 @@
 .page-title {
-  font-size: 1.5rem;
+  font-size: 24px;
   font-weight: bold;
 }
 
@@ -9,8 +9,10 @@
   display: flex;
   justify-content: space-between;
   align-items: center;
-  margin-bottom: 1.25rem;
+  margin-bottom: 20px;
 }
+
+
 
 .create-button {
   display: flex;
@@ -19,17 +21,16 @@
   background-color: #007bff;
   color: white;
   border: none;
-  border-radius: 0.5rem;
-  padding: 0.625rem 1.25rem;
-  font-size: 1rem;
+  border-radius: 8px;
+  padding: 10px 20px;
+  font-size: 16px;
   cursor: pointer;
   transition: background-color 0.3s ease;
   text-decoration: none !important;
-  margin-bottom: 1.938rem;
+  margin-bottom: 31px;
 }
-
 a {
-  text-decoration: none;
+  text-decoration: none; /* Remove o sublinhado do Link */
 }
 
 .create-button:hover {
@@ -38,28 +39,29 @@ a {
 
 .horses-grid {
   display: grid;
-  grid-template-columns: repeat(auto-fit, minmax(13.688rem, 1fr));
-  gap: 1.25rem;
+  grid-template-columns: repeat(auto-fit, minmax(219px, 0fr));
+  gap: 20px;
   justify-content: start;
-  margin-left: 1.875rem;
-}
+  margin-left: 30px;
+      }
+
 
 .horse-card {
   background: #fff;
   border: 1px solid #ddd;
-  border-radius: 0.5rem;
+  border-radius: 8px;
   overflow: hidden;
   transition: transform 0.3s ease, box-shadow 0.3s ease;
 }
 
 .horse-card:hover {
-  transform: translateY(-0.313rem);
-  box-shadow: 0 0.5rem 0.75rem rgba(0, 0, 0, 0.2);
+  transform: translateY(-5px);
+  box-shadow: 0px 8px 12px rgba(0, 0, 0, 0.2);
 }
 
 .horse-image-container {
   width: 100%;
-  height: 9.375rem;
+  height: 150px;
   overflow: hidden;
 }
 
@@ -77,48 +79,49 @@ a {
   justify-content: center;
   background-color: #e2e2e2;
   color: #777;
-  font-size: 0.875rem;
+  font-size: 14px;
 }
 
 .horse-info {
-  padding: 0.938rem;
+  padding: 15px;
+
 }
 
 .horse-name {
-  font-size: 1.125rem;
+  font-size: 18px;
   font-weight: bold;
-  margin-bottom: 0.5rem;
+  margin-bottom: 8px;
   color: #333;
+
   display: -webkit-box;
-  -webkit-line-clamp: 2;
+  -webkit-line-clamp: 2;      /* máximo de 2 linhas */
   -webkit-box-orient: vertical;
   overflow: hidden;
-  line-height: 1.2em;
-  min-height: calc(1.2em * 2);
-}
 
+  line-height: 1.2em;         /* altura de cada linha */
+  min-height: calc(1.2em * 2);/* garante espaço para 2 linhas, mesmo se só usar 1 */
+}
 .horse-sender {
-  font-size: 0.875rem;
+  font-size: 14px;
   color: #555;
-  margin-bottom: 0.5rem;
+  margin-bottom: 8px;
 }
-
 .horse-description {
-  font-size: 0.875rem;
+  font-size: 14px;
   color: #555;
-  margin-bottom: 1.875rem;
+  margin-bottom: 30px;
 }
 
 .details-button {
   display: inline-block;
   background-color: white;
   color: #8EB486;
-  padding: 0.5rem 1rem;
-  border-radius: 0.313rem;
+  padding: 8px 16px;
+  border-radius: 5px;
   text-decoration: none;
-  font-size: 0.875rem;
+  font-size: 14px;
   transition: background-color 0.3s ease;
-  margin-left: 2.5rem;
+  margin-left: 40px;
   border: 2px solid #8EB486;
 }
 
@@ -142,39 +145,39 @@ a {
 
 .popup-content {
   background: white;
-  padding: 1.563rem;
-  border-radius: 0.625rem;
-  box-shadow: 0 0.25rem 0.625rem rgba(0, 0, 0, 0.1);
+  padding: 25px;
+  border-radius: 10px;
+  box-shadow: 0px 4px 10px rgba(0, 0, 0, 0.1);
   text-align: center;
-  max-width: 25rem;
+  max-width: 400px;
   width: 90%;
   position: relative;
 }
 
 .popup-content h3 {
-  font-size: 1.25rem;
-  color: #47663B;
-  margin-bottom: 0.625rem;
+  font-size: 20px;
+  color: #47663B; /* Mantendo a identidade do site */
+  margin-bottom: 10px;
 }
 
 .popup-content p {
-  font-size: 1rem;
+  font-size: 16px;
   color: #555;
-  margin-bottom: 1.25rem;
+  margin-bottom: 20px;
 }
 
 .popup-buttons {
   display: flex;
   justify-content: space-between;
-  gap: 0.625rem;
+  gap: 10px;
 }
 
 .popup-btn {
   flex: 1;
-  padding: 0.625rem 0.938rem;
+  padding: 10px 15px;
   border: none;
-  border-radius: 0.375rem;
-  font-size: 0.875rem;
+  border-radius: 6px;
+  font-size: 14px;
   cursor: pointer;
   transition: all 0.3s ease;
 }
@@ -195,52 +198,59 @@ a {
 }
 
 }
-
-@media (max-width: 768px) {
-  .my-horses-container .horses-grid {
-    grid-template-columns: repeat(auto-fit, minmax(10rem, 1fr));
-    gap: 1rem;
-    margin-left: 0;
-    justify-content: center;
-  }
-
-  .my-horses-container .create-button {
-    padding: 0.625rem 1rem;
-    font-size: 0.938rem;
-    margin-left: 0;
-  }
-
-  .my-horses-container .details-button {
-    margin-left: 0;
-    padding: 0.5rem 0.75rem;
-  }
-}
-
-@media (max-width: 480px) {
-  .page-title {
-    font-size: 1.25rem;
-    margin-bottom: 0.625rem !important;
-  }
+@media (max-width: 768px){
 
   .my-horses-container .horses-grid {
-    grid-template-columns: repeat(auto-fit, minmax(9rem, 1fr));
-    gap: 0.625rem;
-    margin: 0;
-    justify-content: center;
-  }
+    display: grid;
+    grid-template-columns: repeat(auto-fit, minmax(218px, 0fr));
+    gap: 20px;
+    }
 
   .my-horses-container .create-button {
-    font-size: 0.875rem;
-    padding: 0.5rem 0.875rem;
-    margin-left: 0;
-  }
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      background-color: #007bff;
+      color: white;
+      border: none;
+      border-radius: 8px;
+      padding: 10px 20px;
+      font-size: 16px;
+      cursor: pointer;
+      transition: background-color 0.3s ease;
+      text-decoration: none !important;
+      margin-left: 65px;
+    }
 
   .my-horses-container .details-button {
-    font-size: 0.813rem;
-    padding: 0.438rem 0.625rem;
-  }
+    display: inline-block;
+    background-color: white;
+    color: #8EB486;
+    padding: 8px 16px;
+    border-radius: 5px;
+    text-decoration: none;
+    font-size: 14px;
+    transition: background-color 0.3s ease;
+    margin-left: 15px;
+    border: 2px solid #8EB486;
+    }
+    }
 
-  .horse-image-container {
-    height: 7.5rem;
-  }
+    @media (max-width: 480px) {
+
+      .page-title {
+        margin-bottom: 10px !important;
+      }
+      .my-horses-container .horses-grid {
+        display: grid;
+        grid-template-columns: repeat(auto-fit, minmax(168px, 0fr));
+        gap: 10px;
+        justify-content: center;
+        margin: 0;
+    }
+
+    .my-horses-container .create-button {
+      margin-left: -10px;
+    }
+
 }
