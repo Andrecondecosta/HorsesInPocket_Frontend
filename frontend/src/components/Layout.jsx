@@ -36,23 +36,31 @@ const Layout = ({ setIsLoggedIn, children }) => {
   useEffect(() => {
     const fetchProfile = async () => {
       const token = localStorage.getItem('authToken');
-      try {
-        const response = await fetch(`${process.env.REACT_APP_API_SERVER_URL}/profile`, {
-          headers: { Authorization: `Bearer ${token}` },
-        });
-        if (response.ok) {
-          const data = await response.json();
-          setUserName(`${data.first_name}`);
-          setUserGender(data.gender);
-        } else {
-          setUserName('User');
+      
+      await apiCall(
+        async () => {
+          const response = await fetch(`${process.env.REACT_APP_API_SERVER_URL}/profile`, {
+            headers: { Authorization: `Bearer ${token}` },
+          });
+          
+          if (response.ok) {
+            const data = await response.json();
+            setUserName(`${data.first_name}`);
+            setUserGender(data.gender);
+            return data;
+          } else {
+            setUserName('User');
+            throw new Error('Failed to fetch profile');
+          }
+        },
+        {
+          onError: () => setUserName('User'),
+          showErrorAlert: false
         }
-      } catch (error) {
-        setUserName('User');
-      }
+      );
     };
     fetchProfile();
-  }, []);
+  }, [apiCall]);
 
   return (
     <div className="layout-container">
