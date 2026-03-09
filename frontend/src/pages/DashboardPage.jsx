@@ -3,6 +3,7 @@ import Layout from '../components/Layout';
 import CardSection from '../components/CardSection';
 import HistoryTable from '../components/HistoryTable';
 import WelcomePopup from '../components/WelcomePopup';
+import { useApiCall } from '../hooks/useApiCall';
 import './DashboardPage.css';
 
 
