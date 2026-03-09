@@ -77,37 +77,56 @@ const MyHorses = () => {
       <div className="my-horses-container">
         <h1 className="page-title">My Horses</h1>
 
+        {error && (
+          <div style={{
+            padding: '1rem',
+            marginBottom: '1rem',
+            backgroundColor: '#fee',
+            border: '1px solid #fcc',
+            borderRadius: '0.5rem',
+            color: '#c33'
+          }}>
+            {error}
+          </div>
+        )}
+
         <div className="profile-breadcrumb-container">
           <div className="breadcrumbs">
             <Link to="/dashboard">Dashboard</Link> / <span>My Horses</span>
           </div>
-          <button className="create-button" onClick={handleCreateClick}>
+          <button className="create-button" onClick={handleCreateClick} disabled={loading}>
             <span>+</span> Create
           </button>
         </div>
 
-        <div className="horses-grid">
-          {horses
-            .sort((a, b) => new Date(b.created_at) - new Date(a.created_at))
-            .map((horse) => (
-              <div className="horse-card" key={horse.id}>
-                <div className="horse-image-container">
-                  {horse.images && horse.images.length > 0 ? (
-                    <img src={horse.images[0]} alt={horse.name} className="myhorse-image" />
-                  ) : (
-                    <div className="placeholder-image">No Image</div>
-                  )}
+        {loading ? (
+          <div style={{ textAlign: 'center', padding: '2rem', color: '#666' }}>
+            Loading horses...
+          </div>
+        ) : (
+          <div className="horses-grid">
+            {horses
+              .sort((a, b) => new Date(b.created_at) - new Date(a.created_at))
+              .map((horse) => (
+                <div className="horse-card" key={horse.id}>
+                  <div className="horse-image-container">
+                    {horse.images && horse.images.length > 0 ? (
+                      <img src={horse.images[0]} alt={horse.name} className="myhorse-image" />
+                    ) : (
+                      <div className="placeholder-image">No Image</div>
+                    )}
+                  </div>
+                  <div className="horse-info">
+                    <h3 className="horse-name">{horse.name}</h3>
+                    <p className="horse-description">{horse.color || 'Brief Description'}</p>
+                    <Link to={`/horses/${horse.id}`} className="details-button">
+                      Learn More
+                    </Link>
+                  </div>
                 </div>
-                <div className="horse-info">
-                  <h3 className="horse-name">{horse.name}</h3>
-                  <p className="horse-description">{horse.color || 'Brief Description'}</p>
-                  <Link to={`/horses/${horse.id}`} className="details-button">
-                    Learn More
-                  </Link>
-                </div>
-              </div>
-            ))}
-        </div>
+              ))}
+          </div>
+        )}
 
         {/* Popup de Limite de Cavalos */}
         {showLimitPopup && (
