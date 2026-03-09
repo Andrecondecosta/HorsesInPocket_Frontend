@@ -10,6 +10,7 @@ import './DashboardPage.css';
 const DashboardPage = ({ setIsLoggedIn }) => {
   const [showPopup, setShowPopup] = useState(false);
   const [userStatus, setUserStatus] = useState({});
+  const { apiCall, loading, error } = useApiCall();
   const token = localStorage.getItem('authToken');
 
   useEffect(() => {
