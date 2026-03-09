@@ -1,0 +1,719 @@
+/* Cabeçalho: Breadcrumbs e botões na mesma linha */
+.profile-header {
+  display: flex;
+  justify-content: space-between;
+  /* Breadcrumbs à esquerda, botões à direita */
+  align-items: center;
+  /* Alinha verticalmente no centro */
+  width: 90%;
+  margin: 20px auto;
+  padding: 10px 0;
+}
+
+/* Breadcrumbs */
+.breadcrumbs {
+  display: flex;
+  align-items: center;
+  gap: 5px;
+  font-size: 0.9rem;
+  color: #6e6e6e;
+  background-color: #f5f5f5;
+  padding: 10px 15px;
+  border-radius: 8px;
+  margin-top: 10px;
+}
+
+.breadcrumbs a {
+  text-decoration: none;
+  color: #6e6e6e;
+}
+
+.breadcrumbs a:hover {
+  text-decoration: underline;
+  color: #6e6e6e;
+}
+
+.breadcrumbs span {
+  font-weight: bold;
+  color: #333;
+}
+
+/* Botões de ação */
+.profile-actions {
+  display: flex;
+  gap: 10px;
+}
+
+.edit-button,
+.delete-button,
+.share-button {
+  display: flex;
+  align-items: center;
+  gap: 5px;
+  font-size: 0.9rem;
+  font-weight: bold;
+  padding: 10px 5px;
+  border-radius: 5px;
+  border: none;
+  cursor: pointer;
+  color: #fff;
+  margin: 3px;
+}
+
+.edit-button {
+  background-color: #ffc107;
+  /* Amarelo para Editar */
+}
+
+.edit-button:hover {
+  background-color: #e0a800;
+}
+
+.delete-button {
+  background-color: #dc3545;
+  /* Vermelho para Eliminar */
+}
+
+.delete-button:hover {
+  background-color: #c82333;
+}
+
+.share-button {
+  background-color: #17a2b8;
+  /* Azul para Partilhar */
+}
+
+.share-button:hover {
+  background-color: #138496;
+}
+
+/* Título da Seção */
+.section-title {
+  font-size: 1.2rem;
+  font-weight: bold;
+  margin-bottom: 15px;
+  border-bottom: 2px solid #8eb486;
+  padding-bottom: 5px;
+}
+
+.section-title-geno {
+  font-size: 1.2rem;
+  font-weight: bold;
+  margin-bottom: 15px;
+  border-bottom: 2px solid #8eb486;
+  padding-bottom: 5px;
+  width: 90%;
+  margin-left: 63px;
+}
+
+
+/* Grade de Informações */
+.horse-info-section {
+  width: 90%;
+  margin: 20px auto;
+}
+
+.info-grid {
+  display: grid;
+  grid-template-columns: repeat(5, 1fr);
+  gap: 65px;
+  margin-bottom: 65px;
+  align-items: start;
+  justify-content: start;
+}
+
+/* Cada Item */
+.info-item {
+  text-align: left;
+}
+
+.info-item-nivel {
+  text-align: left;
+}
+
+.info-item-nivel p {
+  font-size: 0.9rem;
+  color: #666;
+  margin: 0;
+}
+
+.info-item strong {
+  font-weight: bold;
+  color: #333;
+  display: block;
+  /* Força quebra de linha */
+  margin-bottom: 5px;
+}
+
+.info-item p {
+  font-size: 0.9rem;
+  color: #666;
+  margin: 0;
+}
+
+/* Descrição */
+.description-section {
+  grid-column: span 5;
+  /* Ocupa toda a largura da grade */
+  font-size: 1rem;
+  margin-top: 20px;
+}
+
+.description-section strong {
+  font-weight: bold;
+  color: #333;
+  display: block;
+  margin-bottom: 5px;
+}
+
+.description-section p {
+  font-size: 0.9rem;
+  color: #666;
+  line-height: 1.5;
+}
+
+.blurred {
+  filter: blur(12px);
+  pointer-events: none;
+  user-select: none;
+  transition: filter 0.3s ease;
+}
+
+
+
+/* Galeria de Imagens e Vídeos */
+/* Título da Seção */
+.images-videos-section {
+  margin: 30px 0;
+}
+
+
+/* Galeria de Imagens */
+.profile-gallery {
+  width: 90%;
+  margin: 20px auto;
+
+}
+
+/* Genealogia */
+.genealogy-section {
+  margin-bottom: 30px;
+}
+
+
+/* Modal de Compartilhar */
+.share-modal {
+  position: fixed;
+  top: 50%;
+  left: 50%;
+  transform: translate(-50%, -50%);
+  background-color: white;
+  border: 1px solid #ccc;
+  border-radius: 8px;
+  padding: 20px;
+  z-index: 1000;
+  box-shadow: 0px 4px 6px rgba(0, 0, 0, 0.1);
+}
+
+.share-modal h2 {
+  margin-bottom: 10px;
+}
+
+.share-modal .share-options button {
+  margin: 10px 5px;
+  padding: 10px;
+  font-size: 14px;
+  display: flex;
+  align-items: center;
+  gap: 5px;
+  border: none;
+}
+
+.share-modal .error-message {
+  color: red;
+  margin-bottom: 10px;
+}
+
+.share-modal .close-button {
+  margin-top: 5px;
+  padding: 8px;
+  background-color: white;
+  color: white;
+  border: none;
+  border-radius: 4px;
+  cursor: pointer;
+  margin-right: 5px;
+  border: 1px solid #ccc;
+  color: currentcolor;
+}
+
+/* Lightbox */
+.lightbox-container {
+  position: fixed;
+  top: 0;
+  left: 0;
+  width: 100%;
+  height: 100%;
+  background-color: rgba(0, 0, 0, 0.8);
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  z-index: 1001;
+}
+
+.lightbox-container img {
+  max-width: 90%;
+  max-height: 90%;
+  border-radius: 8px;
+}
+
+.desktop-only {
+  display: flex;
+  /* Exibe os botões no desktop */
+  gap: 10px;
+  margin-bottom: 30px;
+}
+
+.mobile-only {
+  display: none;
+  /* Esconde os três pontos no desktop */
+}
+
+.no-screenshot {
+  user-select: none;
+  /* Impede seleção de texto */
+  -webkit-user-select: none;
+  -webkit-touch-callout: none;
+  /* Remove opções de toque */
+  filter: blur(10px);
+  /* Adiciona desfoque */
+}
+
+.no-genealogy {
+  text-align: center;
+  font-style: italic;
+  color: #888;
+  /* Cor cinza para destaque */
+  margin-top: 20px;
+}
+
+.profile-container {
+  .modal-overlay {
+    position: fixed;
+    top: 0;
+    left: 0;
+    width: 100%;
+    height: 100%;
+    background: rgba(0, 0, 0, 0.5);
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    z-index: 1000;
+  }
+
+  .modal-content {
+    background: #fff;
+    padding: 20px;
+    border-radius: 8px;
+    width: 400px;
+    text-align: center;
+    box-shadow: 0 2px 10px rgba(0, 0, 0, 0.1);
+  }
+
+  .modal-buttons {
+    display: flex;
+    justify-content: space-around;
+    margin-top: 15px;
+  }
+
+  .modal-button {
+    background: #ff6b6b;
+    color: #fff;
+    padding: 10px 20px;
+    border: none;
+    border-radius: 5px;
+    cursor: pointer;
+    font-size: 14px;
+  }
+
+  .modal-button:hover {
+    background: #e63939;
+  }
+
+  .modal-close {
+    margin-top: 10px;
+    padding: 8px 16px;
+    background: white;
+    border: none;
+    border-radius: 5px;
+    cursor: pointer;
+    color: currentColor;
+    border: 1px solid #ccc;
+    width: 23%;
+    align-self: center;
+  }
+
+  .modal-close:hover {
+    opacity: 0.9;
+  }
+
+  .delete-options {
+    display: flex;
+    flex-direction: column;
+    gap: 0px;
+    margin-bottom: 0px;
+    margin-top: 15px;
+  }
+
+  .delete-option-button {
+    background-color: white;
+    color: #d9534f;
+    border: none;
+    border-radius: 4px;
+    padding: 10px 15px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    cursor: pointer;
+    font-size: 14px;
+    transition: background-color 0.3s ease;
+  }
+
+  .delete-option-button p {
+    margin-left: 10px;
+  }
+
+  .delete-option-button:hover {
+    background-color: #ccc;
+  }
+
+  .delete-message {
+    margin-top: 15px;
+    padding: 10px;
+    color: #47663B;
+    font-size: 14px;
+    margin-bottom: 10px;
+    border-radius: 6px;
+    text-align: center;
+  }
+
+  .popup-overlay {
+    position: fixed;
+    top: 0;
+    left: 0;
+    width: 100%;
+    height: 100%;
+    background: rgba(0, 0, 0, 0.5);
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    z-index: 1000;
+  }
+
+  .popup-content {
+    background: white;
+    padding: 25px;
+    border-radius: 10px;
+    box-shadow: 0px 4px 10px rgba(0, 0, 0, 0.1);
+    text-align: center;
+    max-width: 400px;
+    width: 90%;
+    position: relative;
+  }
+
+  .popup-content h3 {
+    font-size: 20px;
+    color: #47663B;
+    /* Mantendo a identidade do site */
+    margin-bottom: 10px;
+  }
+
+  .popup-content p {
+    font-size: 16px;
+    color: #555;
+    margin-bottom: 20px;
+  }
+
+  .popup-buttons {
+    display: flex;
+    justify-content: space-between;
+    gap: 10px;
+  }
+
+  .popup-btn {
+    flex: 1;
+    padding: 10px 15px;
+    border: none;
+    border-radius: 6px;
+    font-size: 14px;
+    cursor: pointer;
+    transition: all 0.3s ease;
+  }
+
+  .popup-btn:hover {
+    opacity: 0.8;
+  }
+
+  .popup-btn.primary {
+    background: #47663B;
+    color: white;
+    font-weight: bold;
+  }
+
+  .popup-btn.secondary {
+    background: #ddd;
+    color: #333;
+  }
+
+
+}
+
+/* Adiciona desfoque apenas quando necessário */
+
+@media (max-width: 768px) {
+
+  /* Cabeçalho: Breadcrumbs e botões na mesma linha */
+  .profile-container {
+    width: 100%;
+    margin-left: 0px;
+    margin-top: 60px;
+  }
+
+  .profile-header {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    flex-wrap: nowrap;
+    width: 93%;
+    margin-left: 10px;
+    margin-top: -53px;
+    margin-bottom: -43px;
+
+  }
+
+  /* Mostrar menu de três pontos */
+  .desktop-only {
+    display: none !important;
+    /* Esconde os botões no mobile */
+  }
+
+  .mobile-only {
+    display: flex;
+    /* Mostra os três pontos no mobile */
+    position: relative;
+    margin-bottom: 35px;
+
+  }
+
+  .menu-button-perfil {
+    background: white;
+    border: none;
+    cursor: pointer;
+    font-size: 1.5rem;
+    color: #333;
+  }
+
+  .menu-icon-perfil {
+    font-size: 1.5rem;
+    color: #333;
+  }
+
+  .menu-dropdown-perfil {
+    position: absolute;
+    top: 40px;
+    right: 0;
+    background-color: white;
+    border: 1px solid #ccc;
+    border-radius: 8px;
+    box-shadow: 0 4px 8px rgba(0, 0, 0, 0.2);
+    z-index: 1000;
+    width: 150px;
+    padding: 10px 0;
+  }
+
+  .edit-button,
+  .delete-button,
+  .share-button {
+    margin-left: 21px;
+  }
+
+  .dropdown-item {
+    display: flex;
+    align-items: center;
+    gap: 8px;
+    font-size: 0.9rem;
+    padding: 10px 15px;
+    background: none;
+    border: none;
+    cursor: pointer;
+    text-align: left;
+    width: 100%;
+    color: #333;
+    font-weight: normal;
+  }
+
+  .dropdown-item:hover {
+    background-color: #ffffff;
+  }
+
+  /* Desabilita foco visual para clique */
+  .menu-button-perfil:focus {
+    outline: none;
+    /* Remove borda de foco */
+    background: none;
+    /* Evita alteração de cor */
+  }
+
+  /* Ajusta hover e interação */
+  .menu-button-perfil:hover {
+    color: #333;
+    /* Altere se desejar um comportamento de hover */
+  }
+
+  /* Breadcrumbs */
+  .breadcrumbs {
+    flex: 1;
+    /* Permite que os breadcrumbs ocupem o máximo espaço disponível */
+    font-size: 12px;
+    /* Reduz tamanho da fonte */
+    padding: 5px 8px;
+    background-color: #f5f5f5;
+    border-radius: 5px;
+    overflow: hidden;
+    /* Esconde texto longo */
+    text-overflow: ellipsis;
+    /* Adiciona "..." se exceder espaço */
+    white-space: nowrap;
+    /* Impede quebra de linha */
+    margin-right: 10px;
+    /* Espaço entre breadcrumbs e botões */
+  }
+
+  /* Links nos breadcrumbs */
+  .breadcrumbs a {
+    color: #6e6e6e;
+    text-decoration: none;
+  }
+
+  .breadcrumbs a:hover {
+    text-decoration: underline;
+  }
+
+  .breadcrumbs span {
+    font-weight: bold;
+    color: #333;
+  }
+
+  .section-title {
+    border-bottom: 2px solid #8eb486 !important;
+    padding-bottom: 5px !important;
+    width: 103% !important;
+    margin-left: -06px !important;
+    margin-bottom: 39px !important;
+  }
+
+  .section-title-geno {
+    border-bottom: 2px solid #8eb486 !important;
+    padding-bottom: 5px !important;
+    width: 93% !important;
+    margin-left: 11px !important;
+    margin-bottom: 39px !important;
+  }
+
+  /* Grade de Informações */
+  .info-grid {
+    display: inline;
+    margin-bottom: 20px;
+  }
+
+  .info-item {
+    display: flex;
+    justify-content: space-between;
+    margin-bottom: 7px;
+    border-bottom: 1px solid #ccc;
+  }
+
+  /* Cada Item */
+
+  .info-item-nivel {
+    grid-column: span 3
+  }
+
+
+  /* Descrição */
+  .description-section {
+
+    margin-top: 5px;
+    margin-bottom: 40px;
+  }
+
+  /* Galeria de Imagens e Vídeos */
+  .profile-media-container {
+    display: flex;
+    flex-direction: column !important;
+    align-items: normal !important;
+    justify-content: space-between !important;
+    gap: 20px !important;
+    width: 100% !important;
+    margin-top: 20px !important;
+  }
+
+  .carousel-container {
+    max-width: 100%;
+    /* Ocupa toda a largura */
+  }
+
+  .media-item {
+    height: 223px !important;
+    /* Ajusta o tamanho no mobile */
+  }
+
+  .pagination-dot {
+    width: 8px;
+    /* Pontos menores no mobile */
+    height: 8px;
+  }
+
+  /* Genealogia */
+  .genealogy-section {
+    margin-bottom: 20px;
+  }
+
+
+  /* Modal de Compartilhar */
+  .share-modal {
+    width: 90%;
+    padding: 15px;
+  }
+
+  .share-modal h2 {
+    font-size: 1rem;
+    margin-bottom: 15px;
+  }
+
+  .share-modal input {
+    padding: 8px;
+  }
+
+  .share-modal button {
+    font-size: 0.8rem;
+    padding: 8px 10px;
+  }
+
+  @media (max-width: 480px) {
+
+    .profile-header {
+      flex-direction: column;
+    }
+
+    .breadcrumbs {
+      margin-left: 10px !important;
+      width: 100% !important;
+      margin-bottom: 12px !important;
+    }
+
+    .mobile-only {
+      margin-bottom: 48px;
+    }
+  }
+}

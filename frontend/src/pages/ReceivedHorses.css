@@ -1,0 +1,51 @@
+.alert-message {
+  padding: 10px;
+  margin: 15px 0;
+  border-radius: 5px;
+  font-weight: bold;
+  text-align: center;
+  font-size: 1.1em;
+}
+
+.alert-message.info {
+  background-color: #d9edf7;
+  color: #31708f;
+}
+
+.alert-message.error {
+  background-color: #f2dede;
+  color: #a94442;
+}
+
+.alert-message.success {
+  background-color: #dff0d8;
+  color: #3c763d;
+}
+
+.alert-message.warning {
+  background-color: #fcf8e3;
+  color: #8a6d3b;
+}
+.horse-card-wrapper {
+  position: relative;
+}
+
+.blurred-card {
+  filter: blur(6px);
+  pointer-events: none;
+  user-select: none;
+}
+
+.approval-warning {
+  position: absolute;
+  top: 50%;
+  left: 50%;
+  transform: translate(-50%, -50%);
+  z-index: 2;
+  background-color: rgba(255, 255, 255, 0.85);
+  padding: 10px 20px;
+  border-radius: 8px;
+  font-weight: bold;
+  text-align: center;
+  box-shadow: 0 0 10px rgba(0,0,0,0.2);
+}

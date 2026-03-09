@@ -1,0 +1,72 @@
+/* Fundo escurecido ao abrir o popup */
+.popup-overlay {
+  position: fixed;
+  top: 0;
+  left: 0;
+  width: 100%;
+  height: 100%;
+  background: rgba(0, 0, 0, 0.6);
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  z-index: 1000;
+}
+
+/* Caixa do popup */
+.popup-container {
+  background: #fff;
+  padding: 25px;
+  border-radius: 12px;
+  box-shadow: 0px 4px 10px rgba(0, 0, 0, 0.2);
+  text-align: center;
+  max-width: 400px;
+  width: 90%;
+  animation: fadeIn 0.3s ease-in-out;
+}
+
+/* Animação de entrada suave */
+@keyframes fadeIn {
+  from { opacity: 0; transform: scale(0.9); }
+  to { opacity: 1; transform: scale(1); }
+}
+
+/* Título do popup */
+.popup-container h2 {
+  font-size: 22px;
+  color: #47663B;
+  margin-bottom: 10px;
+}
+
+/* Texto do popup */
+.popup-container p {
+  font-size: 16px;
+  color: #555;
+  line-height: 1.5;
+}
+
+/* Botão de ação */
+.popup-actions {
+  margin-top: 20px;
+}
+
+.popup-features {
+  text-align: left;
+  padding-left: 20px;
+  margin-top: 10px;
+  margin-bottom: 15px;
+}
+
+.explore-btn {
+  background: #47663B;
+  color: white;
+  border: none;
+  padding: 10px 18px;
+  border-radius: 6px;
+  cursor: pointer;
+  font-size: 16px;
+  transition: 0.3s ease;
+}
+
+.explore-btn:hover {
+  background: #2F4F2F;
+}

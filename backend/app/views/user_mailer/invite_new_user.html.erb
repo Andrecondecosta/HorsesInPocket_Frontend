@@ -1,0 +1,18 @@
+<p>Hello,</p>
+
+<p>You have been invited to view information about the horse <strong><%= @horse.name %></strong>.</p>
+
+<p>Horse Details:</p>
+<ul>
+  <li><strong>Name:</strong> <%= @horse.name %></li>
+  <li><strong>Description:</strong> <%= @horse.description %></li>
+</ul>
+
+<% if @horse.images.any? %>
+  <p>See an image of the horse below:</p>
+  <img src="<%= @horse.images.first.url %>" alt="<%= @horse.name %>" style="width: 300px; height: auto;">
+<% else %>
+  <p>This horse does not have any images available at the moment.</p>
+<% end %>
+
+<p>Log in to the application for more details.</p>

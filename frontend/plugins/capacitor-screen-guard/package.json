@@ -1,0 +1,11 @@
+{
+  "name": "capacitor-screen-guard",
+  "version": "0.0.1",
+  "main": "plugin.ts",
+  "types": "definitions.ts",
+  "capacitor": {
+    "ios": {
+      "src": "ios"
+    }
+  }
+}

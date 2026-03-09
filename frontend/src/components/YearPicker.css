@@ -1,0 +1,12 @@
+.custom-year-input {
+  height: 40px;
+  width: 100%;
+  border: 1px solid #ccc;
+  border-radius: 4px;
+  padding: 5px 10px;
+  cursor: pointer; /* Define o cursor como pointer */
+}
+
+.custom-year-input:read-only {
+  cursor: pointer; /* Garante que o cursor seja pointer para inputs readonly */
+}

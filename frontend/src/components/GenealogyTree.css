@@ -1,0 +1,159 @@
+.genealogy-tree-container{
+.genealogy-tree {
+  position: relative;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+}
+
+.horse-box {
+  text-align: center;
+  position: relative;
+  margin-bottom: 30px;
+}
+
+.horse-image {
+  width: 150px; /* Tamanho proporcional no desktop */
+  height: 150px;
+  border-radius: 50%;
+  object-fit: cover; /* Garante que a imagem não estique ou corte */
+  margin-bottom: 10px;
+}
+
+.horse-name {
+  font-size: 1.2rem;
+  font-weight: bold;
+  color: #333;
+}
+
+.generation {
+  display: flex;
+  justify-content: center;
+  position: relative;
+}
+
+.generation.parents {
+  gap: 200px; /* Espaço entre os pais */
+}
+
+.generation.grandparents {
+  gap: 10px; /* Espaço entre os avós */
+}
+
+/* Elementos Individuais */
+.ancestor-box {
+  position: relative;
+  border: 1px solid #ccc;
+  border-radius: 8px;
+  padding: 10px;
+  width: 200px; /* Tamanho consistente para as caixas */
+  background-color: #f9f9f9;
+  text-align: left;
+  box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
+  margin: 20px;
+}
+
+.ancestor-label {
+  font-weight: bold;
+  text-align: center;
+  margin-bottom: 8px;
+  color: #555;
+}
+
+.ancestor-box p {
+  font-size: 0.9rem;
+  margin: 4px 0;
+  color: #444;
+}
+
+/* Removendo as linhas desnecessárias */
+.ancestor-box::before {
+  content: '';
+  position: absolute;
+  top: -20px;
+  left: 50%;
+  width: 0;
+  height: 0;
+  transform: translateX(-50%);
+}
+
+.generation.parents::before,
+.generation.grandparents::before {
+  content: '';
+  position: absolute;
+  top: -10px;
+  width: 0;
+  height: 0;
+}
+}
+
+/* Responsividade para Mobile */
+@media (max-width: 1023px) {
+  .genealogy-tree {
+    width: 100%;
+    padding: 5px;
+    margin-left: 10px;
+
+
+  .horse-image {
+    width: 40px;
+    height: 40px;
+    margin-bottom: 5px;
+  }
+
+  .horse-name {
+    font-size: 0.7rem;
+    margin-top: -4px;
+  }
+  .horse-box{
+    margin-bottom: 15px;
+  }
+  .ancestor-box {
+    width: 74px; /* Reduzido para dispositivos móveis */
+    padding: 3px;
+    margin: 5px 2px;
+    font-size: 0.6rem;
+  }
+
+  .ancestor-label {
+    font-size: 10px;
+    text-align: center;
+    margin-bottom: 3px;
+    border-bottom: 1px solid #ccc;
+  }
+
+  .ancestor-box p {
+    font-size: 0.5rem; /* Texto menor */
+    text-align: justify;
+    margin: 8px 0;
+  }
+
+  .generation {
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    gap: 5px;
+  }
+
+  .generation.parents {
+    gap: 80px;
+    margin-bottom: 13px;
+  }
+
+  .generation.grandparents {
+    gap: 5px; /* Espaço reduzido entre os avós */
+  }
+
+  .geneology-line-1,
+  .geneology-line-2,
+  .geneology-line-3 {
+    display: none; /* Remove as linhas horizontais */
+  }
+  .ancestor-box::before,
+  .generation.parents::before,
+  .generation.grandparents::before,
+  .genealogy-tree::before {
+    content: none; /* Remove todas as linhas */
+  }
+}
+}

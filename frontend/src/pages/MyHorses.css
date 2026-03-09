@@ -1,0 +1,256 @@
+.page-title {
+  font-size: 24px;
+  font-weight: bold;
+}
+
+.my-horses-container {
+
+.header {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  margin-bottom: 20px;
+}
+
+
+
+.create-button {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  background-color: #007bff;
+  color: white;
+  border: none;
+  border-radius: 8px;
+  padding: 10px 20px;
+  font-size: 16px;
+  cursor: pointer;
+  transition: background-color 0.3s ease;
+  text-decoration: none !important;
+  margin-bottom: 31px;
+}
+a {
+  text-decoration: none; /* Remove o sublinhado do Link */
+}
+
+.create-button:hover {
+  background-color: #0056b3;
+}
+
+.horses-grid {
+  display: grid;
+  grid-template-columns: repeat(auto-fit, minmax(219px, 0fr));
+  gap: 20px;
+  justify-content: start;
+  margin-left: 30px;
+      }
+
+
+.horse-card {
+  background: #fff;
+  border: 1px solid #ddd;
+  border-radius: 8px;
+  overflow: hidden;
+  transition: transform 0.3s ease, box-shadow 0.3s ease;
+}
+
+.horse-card:hover {
+  transform: translateY(-5px);
+  box-shadow: 0px 8px 12px rgba(0, 0, 0, 0.2);
+}
+
+.horse-image-container {
+  width: 100%;
+  height: 150px;
+  overflow: hidden;
+}
+
+.myhorse-image {
+  width: 100%;
+  height: 100%;
+  object-fit: cover;
+}
+
+.placeholder-image {
+  width: 100%;
+  height: 100%;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  background-color: #e2e2e2;
+  color: #777;
+  font-size: 14px;
+}
+
+.horse-info {
+  padding: 15px;
+
+}
+
+.horse-name {
+  font-size: 18px;
+  font-weight: bold;
+  margin-bottom: 8px;
+  color: #333;
+
+  display: -webkit-box;
+  -webkit-line-clamp: 2;      /* máximo de 2 linhas */
+  -webkit-box-orient: vertical;
+  overflow: hidden;
+
+  line-height: 1.2em;         /* altura de cada linha */
+  min-height: calc(1.2em * 2);/* garante espaço para 2 linhas, mesmo se só usar 1 */
+}
+.horse-sender {
+  font-size: 14px;
+  color: #555;
+  margin-bottom: 8px;
+}
+.horse-description {
+  font-size: 14px;
+  color: #555;
+  margin-bottom: 30px;
+}
+
+.details-button {
+  display: inline-block;
+  background-color: white;
+  color: #8EB486;
+  padding: 8px 16px;
+  border-radius: 5px;
+  text-decoration: none;
+  font-size: 14px;
+  transition: background-color 0.3s ease;
+  margin-left: 40px;
+  border: 2px solid #8EB486;
+}
+
+.details-button:hover {
+  background-color: #8EB486;
+  color: white;
+}
+
+.popup-overlay {
+  position: fixed;
+  top: 0;
+  left: 0;
+  width: 100%;
+  height: 100%;
+  background: rgba(0, 0, 0, 0.5);
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  z-index: 1000;
+}
+
+.popup-content {
+  background: white;
+  padding: 25px;
+  border-radius: 10px;
+  box-shadow: 0px 4px 10px rgba(0, 0, 0, 0.1);
+  text-align: center;
+  max-width: 400px;
+  width: 90%;
+  position: relative;
+}
+
+.popup-content h3 {
+  font-size: 20px;
+  color: #47663B; /* Mantendo a identidade do site */
+  margin-bottom: 10px;
+}
+
+.popup-content p {
+  font-size: 16px;
+  color: #555;
+  margin-bottom: 20px;
+}
+
+.popup-buttons {
+  display: flex;
+  justify-content: space-between;
+  gap: 10px;
+}
+
+.popup-btn {
+  flex: 1;
+  padding: 10px 15px;
+  border: none;
+  border-radius: 6px;
+  font-size: 14px;
+  cursor: pointer;
+  transition: all 0.3s ease;
+}
+
+.popup-btn:hover {
+  opacity: 0.8;
+}
+
+.popup-btn.primary {
+  background: #47663B;
+  color: white;
+  font-weight: bold;
+}
+
+.popup-btn.secondary {
+  background: #ddd;
+  color: #333;
+}
+
+}
+@media (max-width: 768px){
+
+  .my-horses-container .horses-grid {
+    display: grid;
+    grid-template-columns: repeat(auto-fit, minmax(218px, 0fr));
+    gap: 20px;
+    }
+
+  .my-horses-container .create-button {
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      background-color: #007bff;
+      color: white;
+      border: none;
+      border-radius: 8px;
+      padding: 10px 20px;
+      font-size: 16px;
+      cursor: pointer;
+      transition: background-color 0.3s ease;
+      text-decoration: none !important;
+      margin-left: 65px;
+    }
+
+  .my-horses-container .details-button {
+    display: inline-block;
+    background-color: white;
+    color: #8EB486;
+    padding: 8px 16px;
+    border-radius: 5px;
+    text-decoration: none;
+    font-size: 14px;
+    transition: background-color 0.3s ease;
+    margin-left: 15px;
+    border: 2px solid #8EB486;
+    }
+    }
+
+    @media (max-width: 480px) {
+
+      .page-title {
+        margin-bottom: 10px !important;
+      }
+      .my-horses-container .horses-grid {
+        display: grid;
+        grid-template-columns: repeat(auto-fit, minmax(168px, 0fr));
+        gap: 10px;
+        justify-content: center;
+        margin: 0;
+    }
+
+    .my-horses-container .create-button {
+      margin-left: -10px;
+    }
+
+}

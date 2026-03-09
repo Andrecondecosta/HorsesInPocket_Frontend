@@ -1,0 +1,659 @@
+
+/* Breadcrumbs (barra de navegação com links) */
+.breadcrumbs {
+  display: flex;
+  align-items: center;
+  gap: 5px; /* Espaço entre os links */
+  font-size: 0.9rem;
+  color: #6e6e6e;
+  background-color: #f5f5f5;
+  padding: 10px 15px;
+  margin-bottom: 40px; /* Mais espaço abaixo */
+  border-radius: 8px;
+  width: 90%; /* Alinhado ao conteúdo */
+  margin-left: auto;
+  margin-right: auto;
+}
+
+.breadcrumbs a {
+  text-decoration: none;
+  color: #6e6e6e;
+}
+
+.breadcrumbs a:hover {
+  text-decoration: underline;
+  color: #6e6e6e;
+}
+
+.breadcrumbs span {
+  font-weight: bold;
+  color: #333;
+}
+
+/* Título da página */
+.page-title {
+  font-size: 1.8rem;
+  font-weight: bold;
+  color: #333;
+  margin-bottom: 30px; /* Espaçamento maior abaixo */
+  text-align: left;
+  width: 100%;
+  margin-left: 12px;
+  margin-right: auto;
+  margin-top: 40px;
+  margin-top: 29px;
+  border-bottom: 3px solid #ccc;
+}
+
+/* Barra de navegação dos passos */
+.steps-navigation {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  margin-bottom: 50px; /* Espaço maior entre a barra e o formulário */
+  position: relative;
+  width: 80%;
+  margin: 0 auto;
+  margin-bottom: 50px;
+}
+
+.steps-line {
+  position: absolute;
+  top: 51%;
+  left: 21%;
+  right: 56%;
+  height: 2px;
+  background-color: #8eb486;
+  z-index: 0;
+}
+.steps-line-2 {
+  position: absolute;
+  top: 51%;
+  left: 63%;
+  right: 14%;
+  height: 2px;
+  background-color: #8eb486;
+  z-index: 0;
+}
+.step {
+  display: flex;
+  align-items: center;
+  gap: 10px;
+}
+
+
+.step-circle {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  width: 50px;
+  height: 50px;
+  border: 2px solid #8eb486;
+  border-radius: 50%;
+  font-size: 14px;
+  font-weight: bold;
+  color: #333;
+  background-color: #E8ECD7;
+}
+
+.step-circle.active {
+  color: #333;
+  box-shadow: 0 4px 6px rgba(0, 0, 0, 0.4);
+}
+
+.step-title {
+  font-size: 1rem;
+  color: #333;
+  font-weight: bold;
+  white-space: nowrap; /* Evita quebra de linha */
+}
+.step-title2 {
+  font-size: 1rem;
+  color: #333;
+  font-weight: bold;
+  white-space: nowrap; /* Evita quebra de linha */
+}
+.step-title3 {
+  font-size: 1rem;
+  color: #333;
+  font-weight: bold;
+  white-space: nowrap; /* Evita quebra de linha */
+}
+/* Formulário principal */
+.new-horse-form {
+  display: grid;
+  grid-template-columns: repeat(4, 1fr);
+  gap: 30px; /* Mais espaço entre os campos */
+  width: 80%;
+  margin: auto;
+}
+
+input[type='text'],
+input[type='number'],
+select,
+textarea {
+  width: 100%;
+  padding: 10px 15px;
+  font-size: 0.9rem;
+  border: 2px solid #47663b;
+  border-radius: 6px;
+  box-sizing: border-box;
+  grid-column: span 1; /* Cada entrada ocupa uma célula */
+}
+
+textarea {
+  grid-column: span 4; /* Descrição ocupa toda a largura */
+  height: 120px; /* Altura maior para texto */
+}
+
+
+/* Botão Próximo */
+.step-buttons {
+  grid-column: span 4; /* O botão ocupa a largura total */
+  display: flex;
+  justify-content: flex-end; /* Alinha à direita */
+  margin-top: 20px; /* Espaçamento entre o formulário e o botão */
+  width: 90%;
+}
+
+.step-button {
+  padding: 10px 20px;
+  font-size: 0.9rem;
+  background-color: #8eb486;
+  color: white;
+  border: none;
+  border-radius: 6px;
+  cursor: pointer;
+  margin-left: 20px;
+}
+
+.step-button:hover {
+  background-color: #6e9469;
+}
+
+.height-and-piroplasmosis input[type="text"] {
+  grid-column: span 1;
+  padding: 10px;
+  border: 1px solid #8eb486;
+  border-radius: 4px;
+}
+
+.piroplasmosis-label {
+  display: flex; /* Alinha checkbox e texto lado a lado */
+  align-items: center; /* Centraliza verticalmente */
+  gap: 10px; /* Espaço entre checkbox e texto */
+}
+
+.piroplasmosis-label label {
+  font-size: 0.9rem; /* Ajuste do tamanho do texto */
+  color: #333; /* Cor do texto */
+}
+
+.piroplasmosis-label input[type="checkbox"] {
+  width: 20px; /* Largura maior */
+  height: 20px; /* Altura maior */
+  accent-color: #47663b; /* Cor personalizada */
+  cursor: pointer; /* Alteração para ponteiro ao passar o mouse */
+  margin: 0; /* Remove margens extras */
+}
+
+.height-slider-container {
+  display: flex; /* Alinha os itens horizontalmente */
+  align-items: flex-start; /* Centraliza verticalmente */
+  justify-content: space-between; /* Cria espaçamento adequado */
+  flex-direction: column; /* Alinha os itens verticalmente */
+  margin-top: 15px;
+  width: 100%;
+  grid-column: span 2;
+}
+
+.height-slider-container span {
+  font-size: 0.9rem;
+  color: #47663b;
+}
+
+.height-slider-container input[type="range"] {
+  width: 100%; /* Garante que o slider ocupe toda a largura */
+  appearance: none;
+  background-color: #8eb486;
+  height: 2px;
+  border-radius: 2px;
+  margin: 10px 0; /* Espaçamento entre o slider e os textos */
+}
+
+.height-slider-container input[type="range"]::-webkit-slider-thumb {
+  appearance: none;
+  width: 14px;
+  height: 14px;
+  background: #47663b;
+  border-radius: 50%;
+  cursor: pointer;
+}
+
+.height-slider-container input[type="range"]::-moz-range-thumb {
+  width: 14px;
+  height: 14px;
+  background: #47663b;
+  border-radius: 50%;
+  cursor: pointer;
+}
+
+.height-slider-label {
+  font-size: 1rem;
+  color: #333;
+  margin-bottom: 5px; /* Espaço abaixo do título */
+}
+
+.upload-container {
+  display: flex;
+  justify-content: space-between;
+  align-items: flex-start;
+  margin: 90px auto;
+  width: 80%; /* Alinhado ao formulário */
+}
+
+.upload-block {
+  flex: 1;
+  margin: 0 20px;
+}
+
+.upload-block h2 {
+  font-size: 1.2rem;
+  color: #333;
+  margin-bottom: 10px;
+}
+
+.upload-block p {
+  font-size: 0.9rem;
+  color: #666;
+  margin-bottom: 20px;
+}
+
+.upload-button {
+  padding: 6px 59px;
+  font-size: 1rem;
+  background-color: white;
+  color: #333;
+  border: 2px solid #47663b;
+  border-radius: 8px;
+  cursor: pointer;
+  transition: background-color 0.3s;
+  box-shadow: 0 4px 6px rgba(0, 0, 0, 0.4);
+}
+
+.upload-button:hover {
+  background-color: #6e9469;
+}
+/* Container de imagens carregadas */
+/* Lista de arquivos carregados */
+.image-upload-list {
+  /*max-height: 120px; /* Limita a altura total */
+  overflow-y: auto; /* Adiciona rolagem vertical */
+  padding: 5px;
+  margin-top: 10px;
+  font-size: 12px; /* Texto menor */
+  line-height: 1.4;
+}
+
+/* Item individual da lista */
+.image-upload-item {
+  display: flex;
+  justify-content: space-between; /* Nome e botão alinhados nas extremidades */
+  align-items: center; /* Centraliza verticalmente */
+  padding: 5px 0;
+  border-bottom: 1px solid #ddd; /* Linha divisória entre os itens */
+  word-break: break-word; /* Permite quebra para nomes longos */
+}
+
+/* Último item sem borda */
+.image-upload-item:last-child {
+  border-bottom: none;
+}
+
+/* Nome da imagem */
+.image-name {
+  font-size: 12px; /* Fonte menor para parecer informativa */
+  color: #666; /* Cor cinza para menos destaque */
+  overflow: hidden; /* Esconde texto extra */
+  text-overflow: ellipsis; /* Adiciona "..." para nomes longos */
+  white-space: nowrap; /* Evita quebra de linha */
+  flex: 1; /* O nome ocupa o espaço restante */
+}
+
+/* Botão para remover a imagem */
+/*.remove-upload-button {
+  background-color: #f44336;
+  color: white;
+  border: none;
+  padding: 2px 6px;
+  font-size: 10px;
+  border-radius: 4px;
+  cursor: pointer;
+  margin-left: 5px;
+}*/
+
+/*.remove-upload-button:hover {
+  background-color: #d32f2f;
+}
+/* Lista de arquivos carregados - Vídeos */
+.video-upload-list {
+  /*max-height: 120px; /* Limita a altura total */
+  overflow-y: auto; /* Adiciona rolagem vertical */
+  padding: 5px;
+  margin-top: 10px;
+  font-size: 12px; /* Texto menor */
+  line-height: 1.4;
+}
+
+/* Item individual da lista */
+.video-upload-item {
+  display: flex;
+  justify-content: space-between; /* Nome e botão alinhados nas extremidades */
+  align-items: center; /* Centraliza verticalmente */
+  padding: 5px 0;
+  border-bottom: 1px solid #ddd; /* Linha divisória entre os itens */
+  word-break: break-word; /* Permite quebra para nomes longos */
+}
+
+/* Último item sem borda */
+.video-upload-item:last-child {
+  border-bottom: none;
+}
+
+/* Nome do vídeo */
+.video-name {
+  font-size: 12px; /* Fonte menor para parecer informativa */
+  color: #666; /* Cor cinza para menos destaque */
+  overflow: hidden; /* Esconde texto extra */
+  text-overflow: ellipsis; /* Adiciona "..." para nomes longos */
+  white-space: nowrap; /* Evita quebra de linha */
+  flex: 1; /* O nome ocupa o espaço restante */
+}
+
+
+.error-message {
+  color: red;
+  font-size: 12px;
+  margin-top: 5px;
+}
+/* Estilo do contêiner de autocomplete */
+.form-group {
+  position: relative;
+  width: 100%;
+}
+
+.autocomplete-input {
+  width: 100%;
+  padding: 10px;
+  border: 1px solid #8eb486;
+  border-radius: 6px;
+  font-size: 1rem;
+  box-sizing: border-box;
+}
+
+/* Estilo do dropdown */
+.autocomplete-dropdown {
+  position: absolute;
+  top: 100%;
+  left: 0;
+  right: 0;
+  background-color: white;
+  border: 1px solid #8eb486;
+  border-radius: 0 0 6px 6px; /* Apenas cantos inferiores arredondados */
+  z-index: 1000;
+  max-height: 200px; /* Altura máxima com scroll */
+  overflow-y: auto;
+  box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
+}
+
+/* Estilo de cada opção */
+.autocomplete-option {
+  padding: 10px;
+  font-size: 0.7rem;
+  color: #333;
+  cursor: pointer;
+  transition: background-color 0.2s ease, color 0.2s ease;
+}
+
+.autocomplete-option:hover {
+  background-color: #f5f5f5; /* Fundo ao passar o rato */
+  color: #47663B; /* Cor do texto ao passar o rato */
+}
+
+/* Adicional para o dropdown quando vazio */
+.autocomplete-dropdown:empty {
+  display: none;
+}
+
+
+/* Responsividade */
+
+@media (max-width: 1500px) {
+.steps-line {
+  display: none; /* Remove os traços */
+}
+.steps-line-2 {
+  display: none; /* Remove os traços */
+}
+}
+
+@media (max-width: 1024px) {
+
+
+
+  .new-horse-form {
+    grid-template-columns: repeat(2, 1fr);
+  }
+  .steps-line {
+    display: none; /* Remove os traços */
+  }
+  .steps-line-2 {
+    display: none; /* Remove os traços */
+  }
+}
+
+/* Estilos gerais para dispositivos móveis */
+/* Mobile Layout para telas menores que 768px */
+/* Formulário no Mobile */
+@media (max-width: 768px) {
+
+  .new-horse-form {
+    display: grid;
+    grid-template-columns: 1fr 1fr 1fr 1fr; /* Quatro colunas de largura igual */
+    gap: 8px; /* Espaçamento uniforme entre os campos */
+    width: 100%;
+    margin: 0 auto; /* Centraliza o formulário */
+  }
+
+
+  input[type="text"],
+  input[type="number"],
+  select {
+    width: 100%; /* Garante que o campo ocupe toda a célula */
+    padding: 8px; /* Espaçamento interno */
+    font-size: 0.9rem; /* Ajusta o tamanho da fonte */
+    border: 2px solid #47663b; /* Borda uniforme */
+    border-radius: 4px; /* Bordas arredondadas */
+    box-sizing: border-box; /* Garante que padding não afeta o tamanho */
+  }
+
+  textarea {
+    grid-column: span 4; /* Descrição ocupa todas as colunas */
+    height: 100px; /* Ajusta altura do textarea */
+  }
+
+  .height-slider-container {
+    grid-column: span 4; /* Slider ocupa duas colunas */
+    display: flex;
+    flex-direction: column;
+    gap: 5px; /* Espaçamento entre elementos */
+    margin-top: 30px;
+    margin-bottom: 55px;
+  }
+
+  .piroplasmosis-label {
+    grid-column: span 2; /* Checkbox ocupa duas colunas */
+    display: flex;
+    align-items: center;
+    gap: 8px; /* Espaço entre checkbox e texto */
+  }
+
+  .step-buttons {
+    width: 96%;
+    padding: 10px 0;
+    display: flex;
+    justify-content: space-around;
+    z-index: 100;
+    margin-top: 61px;
+  }
+
+  .step-button {
+    font-size: 0.9rem; /* Texto menor para telemóveis */
+    padding: 10px 15px; /* Ajusta o tamanho dos botões */
+    border-radius: 6px; /* Bordas arredondadas */
+  }
+  .steps-navigation {
+    display: flex;
+    flex-direction: row; /* Alinha na horizontal */
+    justify-content: space-around; /* Espaça os passos igualmente */
+    align-items: center;
+    width: 100%; /* Ocupa toda a largura */
+    margin-bottom: 30px;
+    margin-top: 40px;
+  }
+
+  .step {
+    display: flex;
+    flex-direction: column; /* Mantém o círculo e o texto empilhados */
+    align-items: center;
+    width: 25%; /* Cada passo ocupa o mesmo espaço */
+  }
+
+  .step-circle {
+    width: 30px;
+    height: 30px;
+    font-size: 0.8rem;
+  }
+
+  .step-title {
+    font-size: 0.7rem;
+    text-align: center;
+    word-break: break-word; /* Permite quebra de linha */
+    margin-top: 5px; /* Espaço entre o círculo e o texto */
+    white-space: normal; /* Permite quebra no mobile */
+  }
+  .step-title2 {
+    font-size: 0.7rem;
+    text-align: center;
+    word-break: break-word; /* Permite quebra de linha */
+    margin-top: 5px; /* Espaço entre o círculo e o texto */
+    white-space: normal; /* Permite quebra no mobile */
+  }
+  .step-title3 {
+    font-size: 0.7rem;
+    text-align: center;
+    word-break: break-word; /* Permite quebra de linha */
+    margin-top: 5px; /* Espaço entre o círculo e o texto */
+    white-space: normal; /* Permite quebra no mobile */
+  }
+
+  .steps-line {
+    display: none; /* Remove os traços */
+  }
+  .steps-line-2 {
+    display: none; /* Remove os traços */
+  }
+
+  /* Remove os traços no mobile */
+  .steps-line,
+  .steps-line-2 {
+    display: none;
+  }
+
+    .upload-container {
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      gap: 20px; /* Espaço entre os blocos */
+      width: 100%;
+      margin: 0 auto;
+      margin-bottom: 20px;
+    }
+
+    .upload-block {
+      width: 90%; /* Ocupa 90% da largura no mobile */
+      padding: 15px;
+    }
+
+    .upload-block h2 {
+      font-size: 1rem; /* Reduz o tamanho da fonte */
+    }
+
+    .upload-block p {
+      font-size: 0.8rem; /* Texto menor para descrições */
+    }
+
+    .upload-button {
+      font-size: 0.9rem; /* Botão menor */
+      padding: 8px 16px; /* Reduz padding interno */
+    }
+
+}
+@media (max-width: 537px) {
+  .step-title3 {
+    font-size: 0.7rem;
+    text-align: center;
+    word-break: break-word; /* Permite quebra de linha */
+    margin-top: 5px; /* Espaço entre o círculo e o texto */
+    white-space: normal; /* Permite quebra no mobile */
+    margin-bottom: 13px;
+  }
+
+  .step-title2 {
+    font-size: 0.7rem;
+    text-align: center;
+    word-break: break-word; /* Permite quebra de linha */
+    margin-top: 5px; /* Espaço entre o círculo e o texto */
+    white-space: normal; /* Permite quebra no mobile */
+    margin-bottom: 13px;
+  }
+}
+@media (max-width: 480px) {
+
+  .new-horse-form {
+    display: flex;
+    grid-template-columns: 1fr 1fr 1fr 1fr;
+    gap: 8px;
+    width: 100%;
+    margin: 0 auto;
+    flex-direction: column;
+}
+  .new-horse-container .breadcrumbs {
+    margin-left: 10px !important;
+    width: 97% !important;
+    margin-bottom: 12px !important;
+    margin-top: 30px;
+    padding: 10px;
+}
+.step-title3 {
+  font-size: 0.7rem;
+  text-align: center;
+  word-break: break-word; /* Permite quebra de linha */
+  margin-top: 5px; /* Espaço entre o círculo e o texto */
+  white-space: normal; /* Permite quebra no mobile */
+  margin-bottom: 13px;
+}
+}
+
+
+@media (max-width: 415px) {
+
+  .step-title2 {
+    font-size: 0.7rem;
+    text-align: center;
+    word-break: break-word; /* Permite quebra de linha */
+    margin-top: 5px; /* Espaço entre o círculo e o texto */
+    white-space: normal; /* Permite quebra no mobile */
+    margin-bottom: 0px;
+  }
+}

@@ -1,0 +1,77 @@
+.welcome-container {
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  height: 100vh;
+  background-color: #f9f9f9;
+  padding: 20px;
+}
+
+.welcome-card {
+  background: white;
+  padding: 25px;
+  border-radius: 10px;
+  box-shadow: 0px 4px 10px rgba(0, 0, 0, 0.1);
+  text-align: center;
+  max-width: 400px;
+  width: 100%;
+}
+
+.welcome-message {
+  font-size: 16px;
+  color: #555;
+  margin-bottom: 20px;
+  margin-top: 15px;
+}
+
+.horse-image-container {
+  margin: 20px 0;
+}
+
+.horse-image {
+  width: 100%;
+  height: auto;
+  border-radius: 8px;
+}
+
+.horse-name {
+  font-size: 20px;
+  font-weight: bold;
+  margin-bottom: 15px;
+}
+
+.welcome-options {
+  margin-top: 20px;
+}
+
+.welcome-text {
+  font-size: 14px;
+  color: #333;
+  margin-bottom: 15px;
+}
+
+.link-text {
+  color: #47663B;
+  font-weight: bold;
+  cursor: pointer;
+  text-decoration: underline;
+  transition: color 0.3s ease;
+}
+
+.link-text:hover {
+  color: #3a5730;
+}
+
+.alert-box {
+  padding: 10px;
+  margin: 15px 0;
+  border-radius: 5px;
+  font-weight: bold;
+  text-align: center;
+}
+
+.alert-box.error {
+  color: red; /* 🔥 Torna o texto vermelho */
+  background-color: #ffe5e5; /* 💡 Fundo suave vermelho-claro */
+  border: 1px solid red; /* Borda vermelha */
+}

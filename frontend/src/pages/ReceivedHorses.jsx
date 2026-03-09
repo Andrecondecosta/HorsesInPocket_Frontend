@@ -1,0 +1,151 @@
+import React, { useState, useEffect } from 'react';
+import { useNavigate, useLocation } from 'react-router-dom';
+import Layout from '../components/Layout';
+import LoadingPopup from '../components/LoadingPopup';
+import './ReceivedHorses.css';
+import './MyHorses.css';
+
+const ReceivedHorses = () => {
+  const [horses, setHorses] = useState([]);
+  const [isLoading, setIsLoading] = useState(true);
+  const [error, setError] = useState(null);
+  const token = localStorage.getItem('authToken');
+  const navigate = useNavigate();
+  const location = useLocation();
+  const [alertType, setAlertType] = useState('');
+  const [alertMessage, setAlertMessage] = useState('');
+
+  useEffect(() => {
+    if (location.state?.message) {
+      console.log("Received message:", location.state.message);
+      setAlertMessage(location.state.message);
+      setAlertType(location.state.type || 'info');
+
+      setTimeout(() => {
+        setAlertMessage('');
+        setAlertType('');
+        navigate('/received', { replace: true, state: {} });
+      }, 15000);
+    }
+  }, [location.state, navigate]);
+
+  useEffect(() => {
+    const shouldRefresh = location.state?.refresh;
+
+    if (shouldRefresh) {
+      console.log("🔁 Refresh triggered after screenshot");
+      fetchReceivedHorses();
+      // Limpar o estado para não repetir a cada reentrada
+      navigate('/received', { replace: true, state: {} });
+    }
+  }, [location.state]);
+
+
+
+  const fetchReceivedHorses = async () => {
+    try {
+      const response = await fetch(`${process.env.REACT_APP_API_SERVER_URL}/received`, {
+        method: 'GET',
+        headers: {
+          'Content-Type': 'application/json',
+          Authorization: `Bearer ${token}`,
+        },
+      });
+
+      if (!response.ok) throw new Error('Failed to fetch received horses');
+
+      const data = await response.json();
+      setHorses(data || []);
+    } catch (error) {
+      setError('Error loading received horses');
+    } finally {
+      setIsLoading(false);
+    }
+  };
+  useEffect(() => {
+    const shouldRefresh = location.state?.refresh;
+
+    if (shouldRefresh) {
+      console.log("🔁 Refresh triggered after screenshot");
+      fetchReceivedHorses();
+      navigate('/received', { replace: true, state: {} });
+    }
+  }, [location.state]);
+
+  useEffect(() => {
+    if (token) {
+      fetchReceivedHorses();
+    } else {
+      setError('Token not found');
+      setIsLoading(false);
+    }
+  }, [token]);
+
+
+  if (isLoading) return <LoadingPopup message="Loading horse details, please wait..." />;
+  if (error) return <p>{error}</p>;
+
+  return (
+    <Layout>
+      <div className="my-horses-container">
+        <h1 className="page-title">Received Horses</h1>
+        <div className="profile-breadcrumb-container">
+          <div className="breadcrumbs">
+            <a href="/dashboard">Dashboard</a> / <span>Received Horses</span>
+          </div>
+        </div>
+
+        {alertMessage && (
+          <div className={`alert-message ${alertType}`}>
+            {alertMessage}
+          </div>
+        )}
+
+        <div className="horses-grid">
+          {horses
+            .filter((horse) => horse.status !== "revoked")
+            .map((horse) => (
+              <div key={horse.id} className="horse-card">
+                <div className="horse-card-wrapper">
+                  <div className={`horse-card-top ${horse.status === 'pending_approval' ? 'blurred-card' : ''}`}>
+                    <div className="horse-image-container">
+                      {horse.images && horse.images.length > 0 ? (
+                        <img src={horse.images[0]} alt={horse.name} className="myhorse-image" />
+                      ) : (
+                        <div className="placeholder-image">No Image</div>
+                      )}
+                    </div>
+                    <div className="horse-info">
+                      <h3 className="horse-name">{horse.name}</h3>
+                      <p className="horse-sender">
+                        <strong> Sent by: </strong>
+                        <br />
+                        {horse.sender_name || 'Unknown'}
+                      </p>
+                    </div>
+                  </div>
+
+                  {horse.status === "pending_approval" && (
+                    <p className="approval-warning">🕓 Screenshot detected! The horse's owner has been notified.</p>
+                  )}
+                </div>
+
+                {horse.status !== "pending_approval" && (
+                  <button
+                    onClick={() => navigate(`/horses/${horse.id}?readonly=true`)}
+                    className="details-button"
+                  >
+                    View Details
+                  </button>
+                )}
+              </div>
+            ))}
+        </div>
+
+
+      </div>
+    </Layout>
+  );
+};
+
+export default ReceivedHorses;
