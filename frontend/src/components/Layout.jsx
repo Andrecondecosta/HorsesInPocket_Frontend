@@ -7,6 +7,7 @@ const Layout = ({ setIsLoggedIn, children }) => {
   const [menuOpen, setMenuOpen] = useState(false);
   const [userName, setUserName] = useState('');
   const [userGender, setUserGender] = useState('female');
+  const { apiCall } = useApiCall();
   const menuRef = useRef(null);
   const navigate = useNavigate();
   const avatarUrl = userGender === 'male'
