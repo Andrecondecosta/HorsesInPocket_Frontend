@@ -2,7 +2,7 @@ import React, { useState, useEffect, useRef } from 'react';
 import { Link, useNavigate } from 'react-router-dom';
 import './Layout.css';
 
-const Layout = ({ setIsLoggedIn, children }) => {
+const Layout = ({ setIsLoggedIn = () => {}, children }) => {
   const [menuOpen, setMenuOpen] = useState(false);
   const [userName, setUserName] = useState('');
   const [userGender, setUserGender] = useState('female');
@@ -34,6 +34,7 @@ const Layout = ({ setIsLoggedIn, children }) => {
   useEffect(() => {
     const fetchProfile = async () => {
       const token = localStorage.getItem('authToken');
+      if (!token) return;
       try {
         const response = await fetch(`${process.env.REACT_APP_API_SERVER_URL}/profile`, {
           headers: { Authorization: `Bearer ${token}` },
@@ -70,9 +71,9 @@ const Layout = ({ setIsLoggedIn, children }) => {
           {menuOpen && (
             <div className="dropdown-menu">
               <Link to="/profile">Profile</Link>
-              <a href="" onClick={handleLogout} className="logout-button">
+              <button type="button" onClick={handleLogout} className="logout-button">
                 Logout
-              </a>
+              </button>
             </div>
           )}
         </div>

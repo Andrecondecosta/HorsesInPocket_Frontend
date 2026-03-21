@@ -30,12 +30,11 @@ const ShareHorse = ({ horseId, onClose }) => {
 
         const data = await response.json();
 
-        // ✅ Ensure that images are loaded correctly
         const horseImageUrl = data.images?.length > 0 ? data.images[0] : '';
-
         setHorse({ ...data, imageUrl: horseImageUrl });
       } catch (err) {
         setError(err.message);
+        setIsLoading(false);
       }
     };
 
@@ -65,10 +64,9 @@ const ShareHorse = ({ horseId, onClose }) => {
 
         const data = await response.json();
 
-        // 🔗 Creating the URL with the horse image and name
         const horseImage = encodeURIComponent(horse.imageUrl || '');
         const horseName = encodeURIComponent(horse.name || '');
-        const fullShareLink = `${data.link}&horseImage=${horseImage}&horseName=${horseName}`;
+        const fullShareLink = `${data.link}?horseImage=${horseImage}&horseName=${horseName}`;
 
         setShareLink(fullShareLink);
       } catch (err) {
@@ -83,7 +81,6 @@ const ShareHorse = ({ horseId, onClose }) => {
     }
   }, [horse, horseId, API_URL, token]);
 
-  // 🔹 Share by email
   const shareByEmail = async () => {
     if (!email || !/\S+@\S+\.\S+/.test(email)) {
       setError('Enter a valid email.');
@@ -123,7 +120,12 @@ const ShareHorse = ({ horseId, onClose }) => {
         {isLoading ? (
           <p>Generating share link...</p>
         ) : error ? (
-          <p className="error-message">{error}</p>
+          <>
+            <p className="error-message">{error}</p>
+            <button className="close-button" onClick={onClose}>
+              Close
+            </button>
+          </>
         ) : (
           <>
             <div className="share-header">
@@ -154,7 +156,6 @@ const ShareHorse = ({ horseId, onClose }) => {
               </div>
             </div>
 
-            {/* 🔹 Field to send via email */}
             <input
               type="email"
               placeholder="Enter email"

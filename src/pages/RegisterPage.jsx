@@ -1,5 +1,5 @@
 import React, { useState, useEffect } from 'react';
-import { useNavigate, Link} from 'react-router-dom';
+import { useNavigate, Link, useSearchParams } from 'react-router-dom';
 import { useRegister } from '../hooks/useRegister.js';
 import './RegisterPage.css';
 
@@ -14,18 +14,17 @@ const RegisterPage = () => {
   const [countries, setCountries] = useState([]);
   const [country, setCountry] = useState('');
   const [gender, setGender] = useState('');
-  const [sharedToken, setSharedToken] = useState(null); // Estado para armazenar o token compartilhado
-  const [acceptPrivacyPolicy, setAcceptPrivacyPolicy] = useState(false); // Estado para aceitar a Política de Privacidade
+  const [sharedToken, setSharedToken] = useState(null);
+  const [acceptPrivacyPolicy, setAcceptPrivacyPolicy] = useState(false);
 
   const { register, token, loading, error } = useRegister();
   const navigate = useNavigate();
+  const [searchParams] = useSearchParams();
 
-  // Captura o token da URL quando a página de registro é carregada
   useEffect(() => {
-    const urlParams = new URLSearchParams(window.location.search);
-    const tokenFromURL = urlParams.get('token');
-    console.log('Captured token from URL:', tokenFromURL); // Log para verificar se o token está correto
-    setSharedToken(tokenFromURL); // Atualiza o estado com o token da URL
+    const tokenFromURL = searchParams.get('token');
+    console.log('Captured token from URL:', tokenFromURL);
+    setSharedToken(tokenFromURL);
 
     const fetchCountries = async () => {
       try {
@@ -33,26 +32,24 @@ const RegisterPage = () => {
         if (!response.ok) throw new Error('Erro ao carregar países');
         const data = await response.json();
 
-        console.log('Países carregados:', data); // 👀 Depuração
-        setCountries(Array.isArray(data) ? data : []); // ✅ Garantir que seja um array
+        console.log('Países carregados:', data);
+        setCountries(Array.isArray(data) ? data : []);
       } catch (err) {
         console.error(err.message);
       }
     };
     fetchCountries();
-  }, []);
+  }, [searchParams]);
 
 
   const handleSubmit = async (e) => {
     e.preventDefault();
 
-    // Verifica se o utilizador aceitou a Política de Privacidade
-    // ✅ Verifica se o utilizador aceitou a Política de Privacidade
     if (!acceptPrivacyPolicy) {
       alert('You must accept the Privacy Policy to register.');
       return;
     }
-    // Cria o objeto com os dados do utilizador
+
     const userData = {
       first_name: firstName,
       last_name: lastName,
@@ -65,11 +62,10 @@ const RegisterPage = () => {
       gender,
     };
 
-    // Enviar o token de compartilhamento junto com os dados do usuário
-    const receivedToken = await register(userData, sharedToken || null); // Passando o token compartilhado para a requisição
+    const receivedToken = await register(userData, sharedToken || null);
 
     if (receivedToken) {
-      navigate('/login');
+      navigate('/dashboard');
     } else {
       console.error('Registration failed: Token was not received.');
     }
@@ -138,11 +134,14 @@ const RegisterPage = () => {
           />
           <select
             className="half-width"
-            value={country} onChange={(e) => setCountry(e.target.value)} required>
+            value={country}
+            onChange={(e) => setCountry(e.target.value)}
+            required
+          >
             <option value="">Selecione um País</option>
-               {countries.map((c) => (
-            <option key={c.code} value={c.code}>{c.name}</option>
-             ))}
+            {countries.map((c) => (
+              <option key={c.code} value={c.name}>{c.name}</option>
+            ))}
           </select>
           <input
             className="full-width"
@@ -168,7 +167,6 @@ const RegisterPage = () => {
             onChange={(e) => setPasswordConfirmation(e.target.value)}
             required
           />
-          {/* ✅ Checkbox da Política de Privacidade */}
           <div className="privacy-checkbox">
             <input
               type="checkbox"
