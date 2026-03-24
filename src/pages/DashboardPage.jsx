@@ -3,6 +3,7 @@ import Layout from '../components/Layout';
 import CardSection from '../components/CardSection';
 import HistoryTable from '../components/HistoryTable';
 import WelcomePopup from '../components/WelcomePopup';
+import ScreenshotAlerts from '../components/ScreenshotAlerts';
 import './DashboardPage.css';
 
 
@@ -59,6 +60,7 @@ useEffect(() => {
 
       <div className="dashboard-container">
         <h2 className="page-title">Dashboard</h2>
+        <ScreenshotAlerts />
         <CardSection /> {/* Section displaying cards */}
         <HistoryTable /> {/* Table showing history */}
       </div>
