@@ -89,6 +89,20 @@
   background-color: #343a40; /* Preto */
   color: white;
 }
+status-screenshot-pending {
+  background-color: #f39c12;
+  color: white;
+}
+
+.status-screenshot-approved {
+  background-color: #47663B;
+  color: white;
+}
+
+.status-screenshot-revoked {
+  background-color: #dc3545;
+  color: white;
+}
 
 @media (max-width: 768px) {
   .history-titles {
