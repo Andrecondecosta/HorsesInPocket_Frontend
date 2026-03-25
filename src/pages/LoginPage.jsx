@@ -47,12 +47,12 @@ const LoginPage = ({ setIsLoggedIn }) => {
 
   return (
     <div className="login-page">
-      {loading && <LoadingPopup message="Loading..." />}
       {/* Left side with the image */}
       <div className="login-image"></div>
 
       {/* Right side with the form */}
       <div className="login-container">
+      {loading && <LoadingPopup message="Loading..." contained />}
         <div className="login-header">
           <div className="login-logo">
             <img

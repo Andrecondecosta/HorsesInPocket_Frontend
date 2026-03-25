@@ -89,7 +89,7 @@ const HistoryTable = () => {
             {logs.map((log) => (
               <tr key={log.id}>
                 <td>{log.horse_name || 'N/A'}</td>
-                <td>{log.recipient || 'N/A'}</td>
+                <td>{log.recipient?.startsWith('Pending') ? 'Pending' : (log.recipient || 'N/A')}</td>
                 <td>
                   <span className={`status-tag ${getStatusClass(log.action)}`}>
                     {formatActionText(log.action)}

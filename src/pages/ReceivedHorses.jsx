@@ -94,9 +94,14 @@ const ReceivedHorses = () => {
         )}
 
         <div className="horses-grid">
-          {horses
-            .filter((horse) => horse.status !== "revoked")
-            .map((horse) => (
+          {horses.filter((horse) => horse.status !== "revoked").length === 0 ? (
+            <div className="no-horses-message">
+              <p>No received horses yet.</p>
+            </div>
+          ) : (
+            horses
+              .filter((horse) => horse.status !== "revoked")
+              .map((horse) => (
               <div key={horse.id} className="horse-card">
                 <div className="horse-card-wrapper">
                   <div className={`horse-card-top ${horse.status === 'pending_approval' ? 'blurred-card' : ''}`}>
@@ -131,7 +136,8 @@ const ReceivedHorses = () => {
                   </button>
                 )}
               </div>
-            ))}
+              ))
+            )}
         </div>
 
 

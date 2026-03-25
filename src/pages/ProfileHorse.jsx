@@ -267,7 +267,7 @@ const ProfileHorse = ({ setIsLoggedIn }) => {
 
             <div className="description-section">
               <strong>Description</strong>
-              <p>{horse.description}</p>
+              <p>{horse.description || 'Not specified'}</p>
             </div>
           </div>
         )}

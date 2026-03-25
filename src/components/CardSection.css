@@ -1,8 +1,8 @@
 /* Container da seção de cards */
 .card-section {
   display: flex;
-  justify-content: space-evenly;
-  gap: 20px;
+  justify-content: center;
+  gap: 40px;
   margin: 20px;
 }
 

@@ -59,3 +59,7 @@
   color: #47663B;
   letter-spacing: 0.2px;
 }
+.loading-popup--contained {
+  position: absolute;
+  border-radius: 16px;
+}

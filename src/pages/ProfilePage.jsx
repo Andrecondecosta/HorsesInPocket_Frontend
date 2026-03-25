@@ -169,7 +169,7 @@ const ProfilePage = () => {
               <strong>Name:</strong> {user.first_name} {user.last_name}
             </p>
             <p>
-              <strong>Date of Birth:</strong> {user.birthdate || "dd/mm/yyyy"}
+              <strong>Date of Birth:</strong> {user.birthdate ? user.birthdate.split('-').reverse().join('/') : 'dd/mm/yyyy'}
             </p>
             <p>
               <strong>Gender:</strong> {user.gender || "Not specified"}

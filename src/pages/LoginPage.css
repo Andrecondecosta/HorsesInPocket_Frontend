@@ -48,6 +48,7 @@ body, html {
   z-index: 2;
   margin-left: -50px;
   box-shadow: -10px 0 15px rgba(0, 0, 0, 0.2);
+  overflow: hidden;
 }
 
 .login-header {
