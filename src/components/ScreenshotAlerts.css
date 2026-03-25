@@ -104,7 +104,7 @@
 
 @media (max-width: 480px) {
   .screenshot-alerts-section {
-    margin: 0 0 16px 0;
+    margin: 16 0 16px 0;
     border-radius: 8px;
   }
 
