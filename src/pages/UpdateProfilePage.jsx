@@ -127,7 +127,7 @@ const UpdateProfilePage = () => {
         <h1 className="page-title">Edit Profile</h1>
         <div className="profile-breadcrumb-container">
           <div className="breadcrumbs">
-            <a href="/dashboard">Dashboard</a> / <a href="/profile">Settings</a> / <span>Edit Profile</span>
+            <Link to="/dashboard">Dashboard</Link> / <Link to="/profile">Settings</Link> / <span>Edit Profile</span>
           </div>
           {/* Save Button connected to the form */}
           <div className="profile-edit-actions">

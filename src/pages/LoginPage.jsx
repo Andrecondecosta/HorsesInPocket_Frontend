@@ -1,25 +1,26 @@
 import React, { useState, useEffect } from 'react';
-import { useNavigate, Link } from 'react-router-dom';
+import { useNavigate, Link, useSearchParams } from 'react-router-dom';
 import { useLogin } from '../hooks/useLogin';
+import LoadingPopup from '../components/LoadingPopup';
 import './LoginPage.css';
-import { FaEye, FaEyeSlash } from 'react-icons/fa'; // Icons to show/hide password
+import { FaEye, FaEyeSlash } from 'react-icons/fa';
 
 const LoginPage = ({ setIsLoggedIn }) => {
   const [email, setEmail] = useState('');
   const [password, setPassword] = useState('');
   const [showPassword, setShowPassword] = useState(false);
-  const [sharedToken, setSharedToken] = useState(null); // Estado para o shared_token
+  const [sharedToken, setSharedToken] = useState(null);
   const { login, loading, error } = useLogin();
   const navigate = useNavigate();
+  const [searchParams] = useSearchParams();
 
-  // Captura o shared_token da URL
+  // Captura o shared_token da URL via React Router
   useEffect(() => {
-    const params = new URLSearchParams(window.location.search);
-    const tokenFromUrl = params.get('token');
+    const tokenFromUrl = searchParams.get('token');
     if (tokenFromUrl) {
-      setSharedToken(tokenFromUrl); // Armazena o token no estado
+      setSharedToken(tokenFromUrl);
     }
-  }, []);
+  }, [searchParams]);
 
   const handleSubmit = async (e) => {
     e.preventDefault();
@@ -30,27 +31,23 @@ const LoginPage = ({ setIsLoggedIn }) => {
       shared_token: sharedToken,  // Envia o shared_token capturado
     };
 
-    console.log("Login Data being sent:", loginData); // Verifica se o token está a ser enviado
-
-    await login(email, password, sharedToken);  // Passa o shared_token para a função de login
+    await login(email, password, sharedToken);
 
     if (localStorage.getItem('authToken')) {
       setIsLoggedIn(true);
 
-      // Captura o parâmetro "redirect" para redirecionar
-      const params = new URLSearchParams(window.location.search);
-      const redirectUrl = params.get('redirect');
-
+      const redirectUrl = searchParams.get('redirect');
       if (redirectUrl) {
-        navigate(redirectUrl); // Redireciona para o link com o token ou para onde for necessário
+        navigate(redirectUrl);
       } else {
-        navigate('/dashboard'); // Redireciona para o dashboard padrão
+        navigate('/dashboard');
       }
     }
   };
 
   return (
     <div className="login-page">
+      {loading && <LoadingPopup message="Loading..." />}
       {/* Left side with the image */}
       <div className="login-image"></div>
 

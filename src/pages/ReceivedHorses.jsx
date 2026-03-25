@@ -1,5 +1,5 @@
 import React, { useState, useEffect } from 'react';
-import { useNavigate, useLocation } from 'react-router-dom';
+import { Link, useNavigate, useLocation } from 'react-router-dom';
 import Layout from '../components/Layout';
 import LoadingPopup from '../components/LoadingPopup';
 import './ReceivedHorses.css';
@@ -83,7 +83,7 @@ const ReceivedHorses = () => {
         <h1 className="page-title">Received Horses</h1>
         <div className="profile-breadcrumb-container">
           <div className="breadcrumbs">
-            <a href="/dashboard">Dashboard</a> / <span>Received Horses</span>
+            <Link to="/dashboard">Dashboard</Link> / <span>Received Horses</span>
           </div>
         </div>
 

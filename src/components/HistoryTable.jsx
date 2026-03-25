@@ -1,5 +1,6 @@
 import React, { useEffect, useState } from 'react';
 import './HistoryTable.css';
+import LoadingPopup from './LoadingPopup';
 
 const HistoryTable = () => {
   const [logs, setLogs] = useState([]);
@@ -32,7 +33,7 @@ const HistoryTable = () => {
   }, []);
 
   if (loading) {
-    return <p>Loading...</p>;
+    return <LoadingPopup message="Loading..." />;
   }
 
   if (error) {
@@ -104,7 +105,15 @@ const HistoryTable = () => {
                     {formatActionText(log.action)}
                   </span>
                 </td>
-                <td>{log.created_at}</td>
+                <td>
+                  {new Date(log.created_at).toLocaleString('pt-PT', {
+                    day: '2-digit',
+                    month: '2-digit',
+                    year: 'numeric',
+                    hour: '2-digit',
+                    minute: '2-digit',
+                  })}
+                </td>
               </tr>
             ))}
           </tbody>

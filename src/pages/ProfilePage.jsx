@@ -21,7 +21,8 @@ const ProfilePage = () => {
   const [error, setError] = useState(null);
   const [showPlanPopup, setShowPlanPopup] = useState(false);
   const [showPaymentPopup, setShowPaymentPopup] = useState(false);
-  const [selectedPlan, setSelectedPlan] = useState(null); // State to store the selected plan
+  const [selectedPlan, setSelectedPlan] = useState(null);
+  const [refreshKey, setRefreshKey] = useState(0);
   const token = localStorage.getItem("authToken");
 
   useEffect(() => {
@@ -38,7 +39,6 @@ const ProfilePage = () => {
         if (!response.ok) throw new Error("Error loading profile");
 
         const data = await response.json();
-        console.log("🔍 Received user data:", data); // DEBUG
         setUser(data);
 
         const planResponse = await fetch(`${process.env.REACT_APP_API_SERVER_URL}/get_user_plan`, {
@@ -52,7 +52,6 @@ const ProfilePage = () => {
         if (!planResponse.ok) throw new Error("Error loading plan");
 
         const planData = await planResponse.json();
-        console.log("📢 Received plan:", planData); // DEBUG
         setPlan(planData.plan);
       } catch (error) {
         setError("Error loading user data");
@@ -64,7 +63,7 @@ const ProfilePage = () => {
     if (token) {
       fetchProfile();
     }
-  }, [token, user?.subscription_canceled]); // Now reloads correctly
+  }, [token, refreshKey]);
 
   const handleSelectPlan = async (plan) => {
     if (!plan) {
@@ -106,7 +105,7 @@ const ProfilePage = () => {
   const handlePaymentSuccess = (newPlan) => {
     setShowPaymentPopup(false);
     setPlan(newPlan);
-    window.location.reload(); // Refresh the page to get the correct data
+    setRefreshKey((k) => k + 1);
   };
 
   const handleCancelSubscription = async () => {
@@ -124,7 +123,7 @@ const ProfilePage = () => {
       const data = await res.json();
       if (res.ok) {
         alert(data.message);
-        window.location.reload(); // Reloads the entire page
+        setRefreshKey((k) => k + 1);
       } else {
         alert(data.error);
       }
@@ -143,7 +142,7 @@ const ProfilePage = () => {
         <h1 className="page-title">Settings</h1>
         <div className="profile-breadcrumb-container">
           <div className="breadcrumbs">
-            <a href="/dashboard">Dashboard</a> / <span>Settings</span>
+            <Link to="/dashboard">Dashboard</Link> / <span>Settings</span>
           </div>
           <Link to="/update-profile" className="profile-edit-button-link">
             <button className="profile-edit-button">

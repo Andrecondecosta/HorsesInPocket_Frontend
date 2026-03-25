@@ -7,6 +7,8 @@ const MyHorses = () => {
   const [horses, setHorses] = useState([]);
   const [userStatus, setUserStatus] = useState(null);
   const [showLimitPopup, setShowLimitPopup] = useState(false);
+  const [loading, setLoading] = useState(true);
+  const [fetchError, setFetchError] = useState(null);
 
   const token = localStorage.getItem('authToken');
   const navigate = useNavigate();
@@ -14,6 +16,7 @@ const MyHorses = () => {
   useEffect(() => {
     const fetchHorses = async () => {
       try {
+        setLoading(true);
         const response = await fetch(`${process.env.REACT_APP_API_SERVER_URL}/horses`, {
           headers: { Authorization: `Bearer ${token}` },
         });
@@ -23,7 +26,9 @@ const MyHorses = () => {
         const data = await response.json();
         setHorses(data);
       } catch (error) {
-        console.error("Erro ao buscar os cavalos:", error);
+        setFetchError("Unable to load horses. Please try again.");
+      } finally {
+        setLoading(false);
       }
     };
 
@@ -77,26 +82,34 @@ const MyHorses = () => {
         </div>
 
         <div className="horses-grid">
-          {horses
-            .sort((a, b) => new Date(b.created_at) - new Date(a.created_at))
-            .map((horse) => (
-              <div className="horse-card" key={horse.id}>
-                <div className="horse-image-container">
-                  {horse.images && horse.images.length > 0 ? (
-                    <img src={horse.images[0]} alt={horse.name} className="myhorse-image" />
-                  ) : (
-                    <div className="placeholder-image">No Image</div>
-                  )}
+          {loading ? (
+            <p className="horses-loading">Loading horses...</p>
+          ) : fetchError ? (
+            <p className="horses-error">{fetchError}</p>
+          ) : horses.length === 0 ? (
+            <p className="horses-empty">No horses yet. Create your first horse!</p>
+          ) : (
+            horses
+              .sort((a, b) => new Date(b.created_at) - new Date(a.created_at))
+              .map((horse) => (
+                <div className="horse-card" key={horse.id}>
+                  <div className="horse-image-container">
+                    {horse.images && horse.images.length > 0 ? (
+                      <img src={horse.images[0]} alt={horse.name} className="myhorse-image" />
+                    ) : (
+                      <div className="placeholder-image">No Image</div>
+                    )}
+                  </div>
+                  <div className="horse-info">
+                    <h3 className="horse-name">{horse.name}</h3>
+                    <p className="horse-description">{horse.color || 'Brief Description'}</p>
+                    <Link to={`/horses/${horse.id}`} className="details-button">
+                      Learn More
+                    </Link>
+                  </div>
                 </div>
-                <div className="horse-info">
-                  <h3 className="horse-name">{horse.name}</h3>
-                  <p className="horse-description">{horse.color || 'Brief Description'}</p>
-                  <Link to={`/horses/${horse.id}`} className="details-button">
-                    Learn More
-                  </Link>
-                </div>
-              </div>
-            ))}
+              ))
+          )}
         </div>
 
         {/* Popup de Limite de Cavalos */}

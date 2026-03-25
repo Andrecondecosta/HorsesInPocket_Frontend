@@ -1,5 +1,6 @@
 import React, { useEffect, useState } from 'react';
 import { FaWhatsapp, FaLink } from 'react-icons/fa';
+import LoadingPopup from './LoadingPopup';
 import './ShareHorse.css';
 
 const ShareHorse = ({ horseId, onClose }) => {
@@ -81,6 +82,7 @@ const ShareHorse = ({ horseId, onClose }) => {
     }
   }, [horse, horseId, API_URL, token]);
 
+  // 🔹 Share by email
   const shareByEmail = async () => {
     if (!email || !/\S+@\S+\.\S+/.test(email)) {
       setError('Enter a valid email.');
@@ -118,14 +120,9 @@ const ShareHorse = ({ horseId, onClose }) => {
 
       <div className="share-modal">
         {isLoading ? (
-          <p>Generating share link...</p>
+          <LoadingPopup message="Loading..." />
         ) : error ? (
-          <>
-            <p className="error-message">{error}</p>
-            <button className="close-button" onClick={onClose}>
-              Close
-            </button>
-          </>
+          <p className="error-message">{error}</p>
         ) : (
           <>
             <div className="share-header">
@@ -156,6 +153,7 @@ const ShareHorse = ({ horseId, onClose }) => {
               </div>
             </div>
 
+            {/* 🔹 Field to send via email */}
             <input
               type="email"
               placeholder="Enter email"

@@ -1,6 +1,7 @@
+
 :root {
-  --green-dark: #47663B; /* Cor do botão */
-  --green-light: #E8ECD7; /* Fundo do campo de password */
+  --green-dark: #47663B;
+  --green-light: #E8ECD7;
   --white: #FFFFFF;
   --gray-border: #8EB486;
   --text-dark: #333333;
@@ -15,7 +16,7 @@
 body, html {
   height: 100%;
   font-family: 'Inter', sans-serif;
-    -webkit-text-size-adjust: 100%;
+  -webkit-text-size-adjust: 100%;
 }
 
 .register-page {
@@ -25,7 +26,6 @@ body, html {
   overflow: hidden;
 }
 
-/* Imagem do lado esquerdo */
 .register-image {
   flex: 1;
   background-image: url('https://images.unsplash.com/photo-1550785330-003a9afa3bd9?q=80&w=2070&auto=format&fit=crop&ixlib=rb-4.0.3&ixid=M3wxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8fA%3D%3D');
@@ -33,7 +33,6 @@ body, html {
   background-position: center;
 }
 
-/* Contêiner do formulário */
 .register-container {
   flex: 1;
   display: flex;
@@ -45,7 +44,7 @@ body, html {
   border-top-left-radius: 50px;
   border-bottom-left-radius: 50px;
   position: relative;
-  margin-left: -50px; /* Sobreposição */
+  margin-left: -50px;
   box-shadow: -10px 0 15px rgba(0, 0, 0, 0.2);
 }
 
@@ -68,7 +67,6 @@ body, html {
   margin-left: -5%;
 }
 
-/* Formulário */
 .register-form {
   width: 100%;
   max-width: 450px;
@@ -77,7 +75,6 @@ body, html {
   gap: 20px;
 }
 
-/* Campos lado a lado */
 .register-form .half-width {
   flex: 1 1 calc(50% - 10px);
 }
@@ -86,7 +83,6 @@ body, html {
   flex: 1 1 100%;
 }
 
-/* Inputs e Selects */
 .register-form input,
 .register-form select {
   width: 100%;
@@ -97,17 +93,12 @@ body, html {
   background-color: var(--white);
   outline: none;
 }
-.privacy-checkbox, .register-form input,
-.register-form select {
-      width: 53%;
-}
 
 .register-form input:focus,
 .register-form select:focus {
   border-color: #47663B;
 }
 
-/* Botão Registrar */
 .register-button {
   width: 100%;
   padding: 14px;
@@ -124,11 +115,7 @@ body, html {
 .register-button:hover {
   background-color: #8EB486;
 }
-.register-form select {
-  width: 200px; /* Mesmo tamanho do botão */
-}
 
-/* Mensagem de login */
 .login-message {
   text-align: center;
   margin-top: 20px;
@@ -144,15 +131,18 @@ body, html {
 .login-message a:hover {
   text-decoration: underline;
 }
+
 .privacy-checkbox {
   display: flex;
   align-items: center;
-  margin: 1rem 0;
+  width: 100%;
+  margin: 0.5rem 0;
   font-size: 0.9rem;
+  gap: 8px;
 }
 
 .privacy-checkbox label {
-  width: 221%;
+  flex: 1;
 }
 
 .privacy-checkbox a {
@@ -165,13 +155,11 @@ body, html {
   margin-top: 0.5rem;
 }
 
-
-
 @media (max-width: 900px) {
   html, body {
-    overflow: auto;          /* em vez de hidden */
+    overflow: auto;
     height: auto;
-    min-height: 100dvh;      /* viewport dinâmica moderna */
+    min-height: 100dvh;
   }
 
   .register-page {
@@ -180,37 +168,34 @@ body, html {
   }
 
   .register-container {
-    width: 100% !important;  /* evita 110% / 114% a “saltar” para fora */
+    width: 100% !important;
     height: auto;
     min-height: 100dvh;
-    margin-left: 0;          /* remove sobreposição no mobile */
-    border-radius: 0;        /* opcional: limpa cantos no mobile */
-    box-shadow: none;        /* já tinhas em mobile */
+    margin-left: 0;
+    border-radius: 0;
+    box-shadow: none;
   }
 
   .register-form {
-    width: 100% !important;  /* ocupa a largura do container */
-    max-width: 480px;        /* limita para não ficar gigante */
-    margin: 0 auto;          /* centra */
+    width: 100% !important;
+    max-width: 480px;
+    margin: 0 auto;
     gap: 12px;
   }
 
-  /* Inputs e selects consistentes no mobile */
   .register-form input,
   .register-form select {
     width: 100%;
   }
 
-  /* “Half-width” só em ecrãs com espaço; no mobile fica 100% */
   .register-form .half-width {
     flex: 1 1 48%;
   }
-
 }
-/* Estilo responsivo */
+
 @media (max-width: 768px) {
   body, html {
-    overflow: hidden; /* Impede scroll no mobile */
+    overflow: auto;
   }
 
   .register-page {
@@ -218,20 +203,25 @@ body, html {
   }
 
   .register-image {
-    display: none; /* Oculta a imagem no mobile */
+    display: none;
   }
 
   .register-container {
     flex: none;
-    width: 110%; /* Faz o formulário ocupar toda a largura */
-    height: 100vh; /* Faz o formulário ocupar toda a altura */
-    padding: 20px; /* Ajusta o espaçamento */
-    box-shadow: none; /* Remove a sombra */
+    width: 100%;
+    height: auto;
+    min-height: 100vh;
+    padding: 20px;
+    box-shadow: none;
+    margin-left: 0;
+    border-radius: 0;
   }
+
   .register-header h2 {
     font-size: 20px;
-    margin-left: 47px;
-    margin-top: -110px;
+    margin-left: 0;
+    margin-top: 0;
+    text-align: center;
   }
 
   .register-logo-image {
@@ -241,27 +231,17 @@ body, html {
   }
 
   .register-form {
-    width: 56%;
+    width: 100%;
     max-width: 450px;
-    display: flex;
-    gap: 5px;
-}
+    gap: 10px;
+  }
 
-.register-form input,
-.register-form select {
-  width: 100%;
-  padding: 12px;
-  font-size: 16px;
-  border: 2px solid #47663B;
-  border-radius: 8px;
-  background-color: var(--white);
-  outline: none;
-}
-.register-form input:focus,
-.register-form select:focus {
-  border-color: #47663B;
-}
-
+  .register-form input,
+  .register-form select {
+    width: 100%;
+    padding: 12px;
+    font-size: 16px;
+  }
 
   .register-button {
     padding: 12px;
@@ -270,137 +250,125 @@ body, html {
 
   .login-message {
     font-size: 12px;
-    margin-left: 42px;
+    margin-left: 0;
+    text-align: center;
   }
-  .privacy-checkbox, .register-form input,
-.register-form select {
-      width: 60%;
-}
+
+  .privacy-checkbox {
+    width: 100%;
+  }
 }
 
 @media (orientation: landscape) and (max-height: 480px) {
   html, body { overflow: auto; }
+
   .register-page { min-height: 100dvh; }
-  .register-container {
-    padding: 16px;
-  }
+
+  .register-container { padding: 16px; }
+
   .register-form {
-    max-height: calc(100dvh - 160px); /* espaço para header/botão */
-    overflow: auto;                   /* scroll só no form se precisar */
+    max-height: calc(100dvh - 160px);
+    overflow: auto;
     margin-top: -100px;
   }
 
+  .register-header h2 {
+    margin-top: 0;
+    margin-left: 0;
+    font-size: 20px;
+    text-align: center;
+  }
 
- .register-header h2 {
-   margin-top: 0;
-   margin-left: 0;
-   font-size: 20px; /* consistente com o resto */
-   text-align: center;
- }
+  .register-form input,
+  .register-form select {
+    width: 100%;
+    font-size: 14px;
+    padding: 10px;
+  }
 
- .register-form input,
- .register-form select {
-   width: 19%;
-   font-size: 14px;
-   padding: 10px;
- }
+  .register-button {
+    width: 100%;
+    padding: 12px;
+    font-size: 16px;
+  }
 
- .register-button {
-   width: 100%;
-   padding: 12px;
-   font-size: 16px;
- }
+  .login-message {
+    font-size: 12px;
+    text-align: center;
+    margin: 10px 0 0 0;
+  }
 
- .login-message {
-   font-size: 12px;
-   text-align: center;
-   margin: 10px 0 0 0;
- }
-
- .privacy-checkbox {
-   width: 100%;
-   font-size: 12px;
- }
+  .privacy-checkbox {
+    width: 100%;
+    font-size: 12px;
+  }
 }
+
 @media (max-width: 480px) {
- body, html {
-   overflow: auto; /* permitir scroll normal */
- }
+  body, html {
+    overflow: auto;
+  }
 
- .register-page {
-   flex-direction: column;
- }
+  .register-page {
+    flex-direction: column;
+  }
 
- .register-image {
-   display: none; /* sem imagem no mobile */
- }
+  .register-image {
+    display: none;
+  }
 
- .register-container {
-   flex: none;
-   width: 100%;        /* ocupa toda a largura */
-   height: auto;       /* deixa crescer conforme o conteúdo */
-   min-height: 100dvh; /* garante altura mínima */
-   padding: 20px;
-   box-shadow: none;
-   margin-left: 0;     /* remove offset lateral */
-   border-radius: 0;   /* mantém igual às outras páginas */
- }
+  .register-container {
+    flex: none;
+    width: 100%;
+    height: auto;
+    min-height: 100dvh;
+    padding: 20px;
+    box-shadow: none;
+    margin-left: 0;
+    border-radius: 0;
+  }
 
- .register-header h2 {
-   margin-top: 0;
-   margin-left: 0;
-   font-size: 20px; /* consistente com o resto */
-   text-align: center;
- }
+  .register-header h2 {
+    margin-top: 0;
+    margin-left: 0;
+    font-size: 20px;
+    text-align: center;
+  }
 
- .register-logo-image {
-   width: 100%;
-   margin: -91px auto -30px auto;
-   display: block;
- }
+  .register-logo-image {
+    width: 100%;
+    margin: -91px auto -30px auto;
+    display: block;
+  }
 
- .register-form {
-   width: 100%;
-   max-width: 400px;
-   margin: 0 auto;
-   gap: 12px;
- }
+  .register-form {
+    width: 100%;
+    max-width: 400px;
+    margin: 0 auto;
+    gap: 12px;
+  }
 
- .register-form input,
- .register-form select {
-   width: 19%;
-   font-size: 14px;
-   padding: 10px;
- }
+  .register-form input,
+  .register-form select {
+    width: 100%;
+    font-size: 14px;
+    padding: 10px;
+  }
 
- .register-button {
-   width: 100%;
-   padding: 12px;
-   font-size: 16px;
- }
+  .register-button {
+    width: 100%;
+    padding: 12px;
+    font-size: 16px;
+  }
 
- .login-message {
-   font-size: 12px;
-   text-align: center;
-   margin: 10px 0 0 0;
- }
+  .login-message {
+    font-size: 12px;
+    text-align: center;
+    margin: 10px 0 0 0;
+  }
 
- .privacy-checkbox {
-   width: 100%;
-   font-size: 12px;
- }
+  .privacy-checkbox {
+    width: 100%;
+    font-size: 12px;
+  }
 }
-
-
-
- /* Evita empurrões laterais no mobile */
- .register-header h2,
- .register-logo-image,
- .login-message {
-   margin-left: 0 !important;
- }
-
- /* A checkbox não deve alterar larguras dos inputs */
- .privacy-checkbox {
-   width: 100% !important;
- }

@@ -1,6 +1,6 @@
 :root {
-  --green-dark: #47663B; /* Cor do botão */
-  --green-light: #E8ECD7; /* Fundo do campo de password */
+  --green-dark: #47663B;
+  --green-light: #E8ECD7;
   --white: #FFFFFF;
   --gray-border: #CCCCCC;
   --text-dark: #333333;
@@ -23,9 +23,8 @@ body, html {
   width: 100vw;
   overflow: hidden;
   position: relative;
+}
 
-
-/* Imagem do lado esquerdo */
 .login-image {
   flex: 1;
   background-image: url('https://images.unsplash.com/photo-1550785330-003a9afa3bd9?q=80&w=2070&auto=format&fit=crop&ixlib=rb-4.0.3&ixid=M3wxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8fA%3D%3D');
@@ -35,7 +34,6 @@ body, html {
   z-index: 1;
 }
 
-/* Formulário do lado direito */
 .login-container {
   flex: 1;
   display: flex;
@@ -48,21 +46,20 @@ body, html {
   border-bottom-left-radius: 50px;
   position: relative;
   z-index: 2;
-  margin-left: -50px; /* Sobreposição */
+  margin-left: -50px;
   box-shadow: -10px 0 15px rgba(0, 0, 0, 0.2);
 }
 
-/* Header com logo e título */
 .login-header {
   text-align: center;
   margin-bottom: 40px;
 }
 
-
 .login-logo-image {
   width: 100%;
   margin-top: -167px;
 }
+
 .login-header h2 {
   font-size: 28px;
   color: var(--text-dark);
@@ -70,7 +67,6 @@ body, html {
   margin: 0;
 }
 
-/* Formulário */
 .login-form {
   width: 100%;
   max-width: 450px;
@@ -93,25 +89,22 @@ body, html {
   outline: none;
 }
 
-/* Estilo específico para o input da password */
 .password-group input {
   background-color: var(--green-light);
-  border: none; /* Remove a borda sólida */
+  border: none;
   border-radius: 12px;
 }
 
 .password-icon {
   position: absolute;
-  right: 15px; /* Ajusta a posição à direita */
+  right: 15px;
   top: 50%;
   transform: translateY(-50%);
   cursor: pointer;
   color: var(--green-dark);
-  font-size: 18px; /* Ajusta o tamanho do ícone */
-
+  font-size: 18px;
 }
 
-/* Botão */
 button {
   background-color: var(--green-dark);
   color: var(--white);
@@ -143,61 +136,57 @@ button:hover {
 .register-message a:hover {
   text-decoration: underline;
 }
-}
-/* Responsividade */
-@media (max-width: 768px) {
 
-  .login-form {
-    width: 100%;
-    max-width: 450px;
-    display: flex;
-    flex-direction: column;
-    gap: 25px;
-    margin-left: 46px;
-}
+@media (max-width: 768px) {
   .login-image {
-    display: none  /* Garante que a imagem não será exibida */
+    display: none;
+  }
+
+  .login-container {
+    padding: 20px;
+    border-radius: 12px;
+    margin-left: 0;
+    box-shadow: none;
   }
 
   .login-logo-image {
     width: 100%;
     margin-top: -167px;
-    margin-left: 3%;
-}
-
-  .login-container {
-    padding: 20px; /* Reduz o padding para telas menores */
-    border-radius: 12px;
   }
 
   .login-header h2 {
-    font-size: 22px; /* Reduz o tamanho da fonte */
-    margin-left: 61px;
+    font-size: 22px;
+  }
+
+  .login-form {
+    width: 100%;
+    max-width: 450px;
+    gap: 25px;
+    margin: 0 auto;
   }
 
   .input-group input {
-    font-size: 14px; /* Ajusta o tamanho da fonte dos inputs */
+    font-size: 14px;
   }
 
   button {
     font-size: 14px;
-    padding: 10px; /* Ajusta o padding do botão */
-
+    padding: 10px;
   }
+
   .register-message {
     margin-top: 30px;
     font-size: 14px;
     text-align: center;
     color: var(--text-dark);
-    margin-left: 60px;
-}
+  }
 }
 
 @media (max-width: 480px) {
   .login-image {
-    display: none; /* Garante que a imagem não será exibida */
-
+    display: none;
   }
+
   .login-container {
     padding: 15px;
   }
@@ -207,9 +196,8 @@ button:hover {
   }
 
   .login-page .login-logo-image {
-    width: 122%;
+    width: 100%;
     margin-top: -161px;
-    margin-left: -3%;
   }
 
   .input-group input {
@@ -220,12 +208,11 @@ button:hover {
     font-size: 13px;
     padding: 8px;
   }
+
   .login-form {
-    width: 75%;
+    width: 100%;
     max-width: 450px;
-    display: flex;
-    flex-direction: column;
     gap: 25px;
-    margin-left: 54px;
-}
+    margin: 0 auto;
+  }
 }

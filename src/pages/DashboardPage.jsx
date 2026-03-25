@@ -16,14 +16,10 @@ const DashboardPage = ({ setIsLoggedIn }) => {
     window.scrollTo(0, 0); // Scrolls to the top when the component is mounted
 
     const hasSeenPopup = localStorage.getItem("hasSeenPopup");
-  console.log("📌 Valor inicial de hasSeenPopup:", hasSeenPopup);
 
   if (hasSeenPopup === "newUser") {
-    console.log("✅ Exibindo popup pela primeira vez...");
     setShowPopup(true);
-    localStorage.setItem("hasSeenPopup", "true"); // 🔥 Define como visto após exibir
-  } else {
-    console.log("🚫 Popup já foi visto antes, não exibindo.");
+    localStorage.setItem("hasSeenPopup", "true");
   }
 }, []);
 
@@ -60,9 +56,9 @@ useEffect(() => {
 
       <div className="dashboard-container">
         <h2 className="page-title">Dashboard</h2>
+        <CardSection />
         <ScreenshotAlerts />
-        <CardSection /> {/* Section displaying cards */}
-        <HistoryTable /> {/* Table showing history */}
+        <HistoryTable />
       </div>
     </Layout>
   );

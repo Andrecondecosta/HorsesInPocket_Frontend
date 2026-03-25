@@ -1,39 +1,61 @@
+
 .loading-popup {
   position: fixed;
   top: 0;
   left: 0;
   width: 100vw;
   height: 100vh;
-  background-color: rgba(0, 0, 0, 0.6);
+  background-color: rgba(255, 255, 255, 0.45);
+  backdrop-filter: blur(6px);
+  -webkit-backdrop-filter: blur(6px);
   display: flex;
   justify-content: center;
   align-items: center;
   z-index: 1000;
+  animation: fadeInOverlay 0.2s ease forwards;
+}
+
+@keyframes fadeInOverlay {
+  from { opacity: 0; }
+  to   { opacity: 1; }
 }
 
 .loading-popup-content {
-  background: #fff;
-  padding: 20px;
-  border-radius: 8px;
+  background: #ffffff;
+  padding: 32px 40px;
+  border-radius: 16px;
   text-align: center;
-  box-shadow: 0 4px 10px rgba(0, 0, 0, 0.2);
+  box-shadow: 0 8px 32px rgba(71, 102, 59, 0.13), 0 2px 8px rgba(0, 0, 0, 0.07);
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: 14px;
+  animation: slideUp 0.25s ease forwards;
+}
+
+@keyframes slideUp {
+  from { opacity: 0; transform: translateY(10px); }
+  to   { opacity: 1; transform: translateY(0); }
 }
 
 .spinner {
   width: 40px;
   height: 40px;
-  border: 4px solid #ccc;
-  border-top: 4px solid #47663B; /* Cor do spinner */
+  border: 3px solid #e4ede1;
+  border-top: 3px solid #47663B;
   border-radius: 50%;
-  animation: spin 1s linear infinite;
-  margin: 10px auto;
+  animation: spin 0.85s linear infinite;
 }
 
 @keyframes spin {
-  from {
-    transform: rotate(0deg);
-  }
-  to {
-    transform: rotate(360deg);
-  }
+  from { transform: rotate(0deg); }
+  to   { transform: rotate(360deg); }
+}
+
+.loading-popup-content p {
+  margin: 0;
+  font-size: 14px;
+  font-weight: 500;
+  color: #47663B;
+  letter-spacing: 0.2px;
 }

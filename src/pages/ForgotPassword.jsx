@@ -1,5 +1,6 @@
 import React, { useState } from 'react';
 import { Link, useNavigate } from 'react-router-dom';
+import LoadingPopup from '../components/LoadingPopup';
 import './ForgotPassword.css';
 
 const ForgotPassword = () => {
@@ -7,7 +8,7 @@ const ForgotPassword = () => {
   const [successMessage, setSuccessMessage] = useState('');
   const [errorMessage, setErrorMessage] = useState('');
   const [loading, setLoading] = useState(false);
-  const navigate = useNavigate(); // Hook for redirection
+  const navigate = useNavigate();
 
   const handleSubmit = async (e) => {
     e.preventDefault();
@@ -18,9 +19,7 @@ const ForgotPassword = () => {
     try {
       const response = await fetch(`${process.env.REACT_APP_API_SERVER_URL}/password/forgot`, {
         method: 'POST',
-        headers: {
-          'Content-Type': 'application/json',
-        },
+        headers: { 'Content-Type': 'application/json' },
         body: JSON.stringify({ email }),
       });
 
@@ -30,11 +29,7 @@ const ForgotPassword = () => {
       }
 
       setSuccessMessage('Recovery email sent successfully! Please check your inbox.');
-
-      // Redirect to the login page after 5 seconds
-      setTimeout(() => {
-        navigate('/login');
-      }, 5000);
+      setTimeout(() => { navigate('/login'); }, 5000);
     } catch (error) {
       setErrorMessage(error.message);
     } finally {
@@ -44,6 +39,8 @@ const ForgotPassword = () => {
 
   return (
     <div className="forgot-password-page">
+      {loading && <LoadingPopup message="Loading..." />}
+      <div className="forgot-password-image"></div>
       <div className="forgot-password-container">
         <h2>Password Recovery</h2>
         {successMessage && <p className="success-message">{successMessage}</p>}
@@ -59,7 +56,7 @@ const ForgotPassword = () => {
             />
           </div>
           <button type="submit" disabled={loading}>
-            {loading ? 'Sending...' : 'Send Email'}
+            Send Email
           </button>
         </form>
         <div className="forgot-password-links">
