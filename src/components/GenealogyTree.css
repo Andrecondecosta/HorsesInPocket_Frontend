@@ -1,159 +1,226 @@
-.genealogy-tree-container{
-.genealogy-tree {
-  position: relative;
+
+.pedigree-scroll {
+  overflow-x: auto;
+  padding: 16px 0 8px;
+}
+
+.pedigree {
+  display: flex;
+  flex-direction: row;
+  align-items: center;
+  min-width: 700px;
+  padding: 0 16px;
+}
+
+/* ── COLUMNS ── */
+.pedigree-col {
+  display: flex;
+  flex-direction: column;
+  justify-content: center;
+}
+
+/* ── SUBJECT ── */
+.col-subject {
+  flex: 0 0 160px;
+}
+
+.pedigree-subject {
   display: flex;
   flex-direction: column;
   align-items: center;
-}
-
-.horse-box {
+  background: #fff;
+  border: 2px solid #47663B;
+  border-radius: 12px;
+  padding: 12px;
+  box-shadow: 0 2px 10px rgba(71, 102, 59, 0.15);
   text-align: center;
-  position: relative;
-  margin-bottom: 30px;
 }
 
-.horse-image {
-  width: 150px; /* Tamanho proporcional no desktop */
-  height: 150px;
+.subject-img {
+  width: 80px;
+  height: 80px;
   border-radius: 50%;
-  object-fit: cover; /* Garante que a imagem não estique ou corte */
-  margin-bottom: 10px;
-}
-
-.horse-name {
-  font-size: 1.2rem;
-  font-weight: bold;
-  color: #333;
-}
-
-.generation {
-  display: flex;
-  justify-content: center;
-  position: relative;
-}
-
-.generation.parents {
-  gap: 200px; /* Espaço entre os pais */
-}
-
-.generation.grandparents {
-  gap: 10px; /* Espaço entre os avós */
-}
-
-/* Elementos Individuais */
-.ancestor-box {
-  position: relative;
-  border: 1px solid #ccc;
-  border-radius: 8px;
-  padding: 10px;
-  width: 200px; /* Tamanho consistente para as caixas */
-  background-color: #f9f9f9;
-  text-align: left;
-  box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
-  margin: 20px;
-}
-
-.ancestor-label {
-  font-weight: bold;
-  text-align: center;
+  object-fit: cover;
   margin-bottom: 8px;
-  color: #555;
+  border: 2px solid #8EB486;
 }
 
-.ancestor-box p {
-  font-size: 0.9rem;
-  margin: 4px 0;
-  color: #444;
+.subject-name {
+  font-size: 14px;
+  font-weight: 700;
+  color: #47663B;
+  margin-top: 4px;
 }
 
-/* Removendo as linhas desnecessárias */
-.ancestor-box::before {
-  content: '';
-  position: absolute;
-  top: -20px;
-  left: 50%;
-  width: 0;
-  height: 0;
-  transform: translateX(-50%);
+/* ── PARENTS ── */
+.col-parents {
+  flex: 0 0 170px;
+  gap: 20px;
 }
 
-.generation.parents::before,
-.generation.grandparents::before {
-  content: '';
-  position: absolute;
-  top: -10px;
-  width: 0;
-  height: 0;
-}
+.parent-slot {
+  display: flex;
+  align-items: center;
 }
 
-/* Responsividade para Mobile */
-@media (max-width: 1023px) {
-  .genealogy-tree {
-    width: 100%;
-    padding: 5px;
-    margin-left: 10px;
-
-
-  .horse-image {
-    width: 40px;
-    height: 40px;
-    margin-bottom: 5px;
-  }
-
-  .horse-name {
-    font-size: 0.7rem;
-    margin-top: -4px;
-  }
-  .horse-box{
-    margin-bottom: 15px;
-  }
-  .ancestor-box {
-    width: 74px; /* Reduzido para dispositivos móveis */
-    padding: 3px;
-    margin: 5px 2px;
-    font-size: 0.6rem;
-  }
-
-  .ancestor-label {
-    font-size: 10px;
-    text-align: center;
-    margin-bottom: 3px;
-    border-bottom: 1px solid #ccc;
-  }
-
-  .ancestor-box p {
-    font-size: 0.5rem; /* Texto menor */
-    text-align: justify;
-    margin: 8px 0;
-  }
-
-  .generation {
-    display: flex;
-    justify-content: center;
-    align-items: center;
-    gap: 5px;
-  }
-
-  .generation.parents {
-    gap: 80px;
-    margin-bottom: 13px;
-  }
-
-  .generation.grandparents {
-    gap: 5px; /* Espaço reduzido entre os avós */
-  }
-
-  .geneology-line-1,
-  .geneology-line-2,
-  .geneology-line-3 {
-    display: none; /* Remove as linhas horizontais */
-  }
-  .ancestor-box::before,
-  .generation.parents::before,
-  .generation.grandparents::before,
-  .genealogy-tree::before {
-    content: none; /* Remove todas as linhas */
-  }
+/* ── GRANDPARENTS ── */
+.col-grandparents {
+  flex: 0 0 190px;
+  gap: 10px;
 }
+
+.gp-slot {
+  display: flex;
+  align-items: center;
+}
+
+/* ── CARDS ── */
+.pedigree-card {
+  width: 100%;
+  border-radius: 10px;
+  padding: 10px 12px;
+  box-shadow: 0 2px 6px rgba(0, 0, 0, 0.08);
+  transition: transform 0.15s ease, box-shadow 0.15s ease;
+}
+
+.pedigree-card:hover {
+  transform: translateY(-2px);
+  box-shadow: 0 4px 12px rgba(0, 0, 0, 0.14);
+}
+
+.card-label {
+  font-size: 10px;
+  font-weight: 700;
+  text-transform: uppercase;
+  letter-spacing: 0.6px;
+  margin-bottom: 4px;
+  opacity: 0.65;
+}
+
+.card-name {
+  font-size: 13px;
+  font-weight: 700;
+  color: #222;
+  margin-bottom: 2px;
+  white-space: nowrap;
+  overflow: hidden;
+  text-overflow: ellipsis;
+}
+
+.card-detail {
+  font-size: 11px;
+  color: #777;
+  white-space: nowrap;
+  overflow: hidden;
+  text-overflow: ellipsis;
+}
+
+/* Card colours */
+.card-father {
+  background: #eaf2ff;
+  border: 1.5px solid #5b9bd5;
+}
+.card-father .card-label { color: #2a6aad; }
+
+.card-mother {
+  background: #fff0f6;
+  border: 1.5px solid #e07baa;
+}
+.card-mother .card-label { color: #c0527a; }
+
+.card-father-side {
+  background: #f0f7ff;
+  border: 1.5px solid #9bbfe0;
+}
+.card-father-side .card-label { color: #3a7abf; }
+
+.card-mother-side {
+  background: #fff5f9;
+  border: 1.5px solid #e8a8c8;
+}
+.card-mother-side .card-label { color: #c06090; }
+
+.card-unknown {
+  opacity: 0.45;
+  border-style: dashed;
+}
+.card-unknown .card-name { color: #aaa; }
+
+/* ── CONNECTORS ── */
+.pedigree-connector {
+  flex: 0 0 36px;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  align-self: stretch;
+}
+
+/* Connector 1: Subject → Parents */
+.connector-1 {
+  justify-content: center;
+}
+
+.c-h-top,
+.c-h-bottom {
+  width: 36px;
+  height: 2px;
+  background: #47663B;
+}
+
+.c-v {
+  width: 2px;
+  flex: 1;
+  background: #47663B;
+}
+
+/* Connector 2: Parents → Grandparents */
+.connector-2 {
+  justify-content: center;
+}
+
+.c-h-q1,
+.c-h-q2,
+.c-h-q3,
+.c-h-q4 {
+  width: 36px;
+  height: 2px;
+  background: #8EB486;
+}
+
+.c-v-top {
+  width: 2px;
+  flex: 1;
+  background: #8EB486;
+  max-height: 60px;
+}
+
+.c-v-bottom {
+  width: 2px;
+  flex: 1;
+  background: #8EB486;
+  max-height: 60px;
+}
+
+.c-spacer {
+  flex: 1;
+  min-height: 20px;
+}
+
+/* ── RESPONSIVE ── */
+@media (max-width: 720px) {
+  .pedigree-scroll {
+    overflow-x: auto;
+    -webkit-overflow-scrolling: touch;
+  }
+
+  .pedigree { min-width: 620px; }
+
+  .col-subject  { flex: 0 0 130px; }
+  .col-parents  { flex: 0 0 140px; }
+  .col-grandparents { flex: 0 0 155px; }
+
+  .subject-img { width: 60px; height: 60px; }
+  .card-name   { font-size: 12px; }
+  .card-detail { font-size: 10px; }
+  .card-label  { font-size: 9px; }
 }

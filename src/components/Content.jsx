@@ -18,8 +18,8 @@ import ForgotPassword from '../pages/ForgotPassword';
 import ResetPassword from '../pages/ResetPassword';
 import WelcomePage from '../pages/WelcomePage';
 import PrivacyPolicy from '../pages/PrivacyPolicy';
+import SupportPage from '../pages/SupportPage';
 import './Content.css';
-
 
 function Content({ setIsLoggedIn }) {
   const isAuthenticated = localStorage.getItem('authToken');
@@ -37,6 +37,7 @@ function Content({ setIsLoggedIn }) {
         <Route path="/reset/password/:token" element={<ResetPassword />} />
         <Route path="/home-page" element={<HomePage />} />
         <Route path="/privacy-policy" element={<PrivacyPolicy />} />
+        <Route path="/support" element={<SupportPage />} />
 
         {/* Protected Routes */}
         <Route path="/profile" element={<ProtectedRoute element={<ProfilePage setIsLoggedIn={setIsLoggedIn}/>} />} />

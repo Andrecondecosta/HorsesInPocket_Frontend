@@ -1,5 +1,5 @@
 import React, { useState, useEffect, useRef } from 'react';
-import { Link, useNavigate, useLocation } from 'react-router-dom';
+import { Link, useNavigate } from 'react-router-dom';
 import './Layout.css';
 
 const Layout = ({ setIsLoggedIn = () => {}, children }) => {
@@ -8,9 +8,6 @@ const Layout = ({ setIsLoggedIn = () => {}, children }) => {
   const [userGender, setUserGender] = useState('female');
   const menuRef = useRef(null);
   const navigate = useNavigate();
-  const location = useLocation();
-  const isDashboard = location.pathname === '/dashboard';
-
   const avatarUrl = userGender === 'male'
     ? 'https://res.cloudinary.com/dcvtrregd/image/upload/v1736802678/user_1_vl6pae.png'
     : 'https://res.cloudinary.com/dcvtrregd/image/upload/v1736802680/user_yp8nup.png';
@@ -74,6 +71,7 @@ const Layout = ({ setIsLoggedIn = () => {}, children }) => {
           {menuOpen && (
             <div className="dropdown-menu">
               <Link to="/profile">Profile</Link>
+              <Link to="/support">Support</Link>
               <button type="button" onClick={handleLogout} className="logout-button">
                 Logout
               </button>
@@ -81,14 +79,7 @@ const Layout = ({ setIsLoggedIn = () => {}, children }) => {
           )}
         </div>
       </div>
-      <div className="content-wrapper">
-        {!isDashboard && (
-          <button className="back-button" onClick={() => navigate(-1)}>
-            &#8592; Back
-          </button>
-        )}
-        {children}
-      </div>
+      <div className="content-wrapper">{children}</div>
     </div>
   );
 };

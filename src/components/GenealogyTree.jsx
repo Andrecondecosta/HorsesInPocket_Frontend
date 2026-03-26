@@ -2,55 +2,80 @@ import React from 'react';
 import './GenealogyTree.css';
 
 const GenealogyTree = ({ horse }) => {
-  const getAncestorByRelation = (relation) => {
-    const ancestor = horse.ancestors.find((ancestor) => ancestor.relation_type === relation);
-    return ancestor;
-  };
+  const getAncestor = (relation) =>
+    horse?.ancestors?.find((a) => a.relation_type === relation);
 
-  const renderAncestor = (relation, label) => {
-    const ancestor = getAncestorByRelation(relation);
-    const isUnknown = !ancestor;
-
+  const renderCard = (relation, label, className) => {
+    const a = getAncestor(relation);
     return (
-      <div key={relation} className={`ancestor-box ${isUnknown ? 'unknown' : ''}`}>
-        <div className="ancestor-label">{label}</div>
-        <p><strong>Name:</strong> {ancestor?.name || 'Unknown'}</p>
-        <p><strong>Breeder:</strong> {ancestor?.breeder || 'Unknown'}</p>
-        <p><strong>Breed:</strong> {ancestor?.breed || 'Unknown'}</p>
+      <div className={`pedigree-card ${className} ${!a ? 'card-unknown' : ''}`}>
+        <div className="card-label">{label}</div>
+        <div className="card-name">{a?.name || '—'}</div>
+        {a?.breed && <div className="card-detail">{a.breed}</div>}
+        {a?.breeder && <div className="card-detail">{a.breeder}</div>}
       </div>
     );
   };
 
   return (
-    <div className="genealogy-tree-container">
-      <div className="genealogy-tree">
-        {/* Main horse */}
-        {/* Check before rendering the main horse */}
-        {horse?.images && horse.images.length > 0 && (
-          <div className="horse-box">
-            <img
-              src={horse.images[0]} // Use the first image as the main one
-              alt={horse.name || 'Horse'}
-              className="horse-image"
-            />
-            <p className="horse-name">{horse?.name || 'Unknown Name'}</p>
+    <div className="pedigree-scroll">
+      <div className="pedigree">
+
+        {/* ── Column 1: Subject ── */}
+        <div className="pedigree-col col-subject">
+          <div className="pedigree-subject">
+            {horse?.images?.[0] && (
+              <img src={horse.images[0]} alt={horse.name} className="subject-img" />
+            )}
+            <div className="card-label">Subject</div>
+            <div className="subject-name">{horse?.name || '—'}</div>
           </div>
-        )}
-        <div className="geneology-line-1"></div>
-        {/* Parents generation */}
-        <div className="generation parents">
-          {renderAncestor('father', 'Father')}
-          {renderAncestor('mother', 'Mother')}
         </div>
-        <div className="geneology-line-2"></div>
-        <div className="geneology-line-3"></div>
-        {/* Grandparents generation */}
-        <div className="generation grandparents">
-          {renderAncestor('paternal_grandfather', 'Paternal Grandfather')}
-          {renderAncestor('maternal_grandfather', 'Maternal Grandfather')}
-          {renderAncestor('paternal_grandmother', 'Paternal Grandmother')}
-          {renderAncestor('maternal_grandmother', 'Maternal Grandmother')}
+
+        {/* ── Connector 1 → 2 ── */}
+        <div className="pedigree-connector connector-1">
+          <div className="c-h-top" />
+          <div className="c-v" />
+          <div className="c-h-bottom" />
         </div>
+
+        {/* ── Column 2: Parents ── */}
+        <div className="pedigree-col col-parents">
+          <div className="parent-slot slot-top">
+            {renderCard('father', 'Father', 'card-father')}
+          </div>
+          <div className="parent-slot slot-bottom">
+            {renderCard('mother', 'Mother', 'card-mother')}
+          </div>
+        </div>
+
+        {/* ── Connector 2 → 3 ── */}
+        <div className="pedigree-connector connector-2">
+          <div className="c-h-q1" />
+          <div className="c-v-top" />
+          <div className="c-h-q2" />
+          <div className="c-spacer" />
+          <div className="c-h-q3" />
+          <div className="c-v-bottom" />
+          <div className="c-h-q4" />
+        </div>
+
+        {/* ── Column 3: Grandparents ── */}
+        <div className="pedigree-col col-grandparents">
+          <div className="gp-slot">
+            {renderCard('paternal_grandfather', 'Paternal GF', 'card-gp card-father-side')}
+          </div>
+          <div className="gp-slot">
+            {renderCard('paternal_grandmother', 'Paternal GM', 'card-gp card-father-side')}
+          </div>
+          <div className="gp-slot">
+            {renderCard('maternal_grandfather', 'Maternal GF', 'card-gp card-mother-side')}
+          </div>
+          <div className="gp-slot">
+            {renderCard('maternal_grandmother', 'Maternal GM', 'card-gp card-mother-side')}
+          </div>
+        </div>
+
       </div>
     </div>
   );
