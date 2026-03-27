@@ -1,77 +1,107 @@
-import React from 'react';
+import React, { useState } from 'react';
 import './GenealogyTree.css';
 
 const GenealogyTree = ({ horse }) => {
+  const [expanded, setExpanded] = useState(null);
+
   const getAncestor = (relation) =>
     horse?.ancestors?.find((a) => a.relation_type === relation);
 
-  const renderCard = (relation, label, className) => {
+  const toggle = (relation) =>
+    setExpanded((prev) => (prev === relation ? null : relation));
+
+  const renderCard = (relation, label, variant) => {
     const a = getAncestor(relation);
+    const isOpen = expanded === relation;
+    const hasAny = !!(a?.name || a?.breed || a?.breeder);
+    const hasExtra = !!(a?.breed || a?.breeder);
+
     return (
-      <div className={`vt-card ${className}${!a ? ' vt-card--empty' : ''}`}>
-        <span className="vt-card__label">{label}</span>
-        <span className="vt-card__name">{a?.name || '—'}</span>
-        {a?.breed && <span className="vt-card__detail">{a.breed}</span>}
-        {a?.breeder && <span className="vt-card__detail">{a.breeder}</span>}
+      <div
+        className={`gt-card gt-card--${variant}${!a?.name ? ' gt-card--empty' : ''}${isOpen ? ' gt-card--open' : ''}`}
+        onClick={hasAny ? () => toggle(relation) : undefined}
+        role={hasAny ? 'button' : undefined}
+        tabIndex={hasAny ? 0 : undefined}
+        onKeyDown={hasAny ? (e) => e.key === 'Enter' && toggle(relation) : undefined}
+        data-testid={`genealogy-card-${relation}`}
+      >
+        <span className="gt-label">{label}</span>
+        <span className="gt-name">{a?.name || '—'}</span>
+
+        <div className="gt-details">
+          {a?.breed && (
+            <span className="gt-detail">
+              <b>Breed:</b> {a.breed}
+            </span>
+          )}
+          {a?.breeder && (
+            <span className="gt-detail">
+              <b>Breeder:</b> {a.breeder}
+            </span>
+          )}
+        </div>
+
+        {!isOpen && hasExtra && <span className="gt-hint">details</span>}
+        {isOpen && <span className="gt-hint gt-hint--close">close</span>}
       </div>
     );
   };
 
   return (
-    <div className="vtree">
+    <div className="gtree">
 
-      {/* ── Subject ── */}
-      <div className="vtree__subject">
+      {/* Subject */}
+      <div className="gtree__subject">
         {horse?.images?.[0] && (
-          <img src={horse.images[0]} alt={horse.name} className="vtree__subject-img" />
+          <img
+            src={horse.images[0]}
+            alt={horse.name}
+            className="gtree__subject-img"
+          />
         )}
-        <span className="vt-card__label">Subject</span>
-        <span className="vtree__subject-name">{horse?.name || '—'}</span>
+        <span className="gt-label">Subject</span>
+        <span className="gtree__subject-name">{horse?.name || '—'}</span>
       </div>
 
-      {/* ── Subject → Parents ── */}
-      <div className="vtree__stem" />
-      <div className="vtree__t vtree__t--parents">
-        <div className="vtree__arm vtree__arm--left" />
-        <div className="vtree__arm vtree__arm--right" />
+      {/* Connector: Subject → two branches */}
+      <div className="gtree__vstem" />
+      <div className="gtree__hbar">
+        <div className="gtree__arm gtree__arm--main-l" />
+        <div className="gtree__arm gtree__arm--main-r" />
       </div>
 
-      {/* ── Parents ── */}
-      <div className="vtree__row vtree__row--parents">
-        {renderCard('father', 'Father', 'vt-card--father')}
-        {renderCard('mother', 'Mother', 'vt-card--mother')}
-      </div>
+      {/* Parents level */}
+      <div className="gtree__level">
 
-      {/* ── Parents → Grandparents ── */}
-      <div className="vtree__gp-stems">
-        <div className="vtree__gp-stem">
-          <div className="vtree__stem vtree__stem--light" />
-          <div className="vtree__t vtree__t--gps">
-            <div className="vtree__arm vtree__arm--gp-left" />
-            <div className="vtree__arm vtree__arm--gp-right" />
+        {/* Father branch */}
+        <div className="gtree__branch">
+          {renderCard('father', 'Father', 'father')}
+          <div className="gtree__vstem gtree__vstem--light" />
+          <div className="gtree__hbar">
+            <div className="gtree__arm gtree__arm--gp-l" />
+            <div className="gtree__arm gtree__arm--gp-r" />
+          </div>
+          <div className="gtree__gp-row">
+            {renderCard('paternal_grandfather', 'Pat. Grandfather', 'gp')}
+            {renderCard('paternal_grandmother', 'Pat. Grandmother', 'gp')}
           </div>
         </div>
-        <div className="vtree__gp-stem">
-          <div className="vtree__stem vtree__stem--light" />
-          <div className="vtree__t vtree__t--gps">
-            <div className="vtree__arm vtree__arm--gp-left" />
-            <div className="vtree__arm vtree__arm--gp-right" />
+
+        {/* Mother branch */}
+        <div className="gtree__branch">
+          {renderCard('mother', 'Mother', 'mother')}
+          <div className="gtree__vstem gtree__vstem--light" />
+          <div className="gtree__hbar">
+            <div className="gtree__arm gtree__arm--gp-l" />
+            <div className="gtree__arm gtree__arm--gp-r" />
+          </div>
+          <div className="gtree__gp-row">
+            {renderCard('maternal_grandfather', 'Mat. Grandfather', 'gp-m')}
+            {renderCard('maternal_grandmother', 'Mat. Grandmother', 'gp-m')}
           </div>
         </div>
-      </div>
 
-      {/* ── Grandparents ── */}
-      <div className="vtree__row vtree__row--gps">
-        <div className="vtree__gp-group">
-          {renderCard('paternal_grandfather', 'Paternal Grandfather', 'vt-card--gp')}
-          {renderCard('paternal_grandmother', 'Paternal Grandmother', 'vt-card--gp')}
-        </div>
-        <div className="vtree__gp-group">
-          {renderCard('maternal_grandfather', 'Maternal Grandfather', 'vt-card--gp-m')}
-          {renderCard('maternal_grandmother', 'Maternal Grandmother', 'vt-card--gp-m')}
-        </div>
       </div>
-
     </div>
   );
 };

@@ -1,24 +1,18 @@
-/* ═══════════════════════════════════════════════════
-   GENEALOGY TREE — Vertical (top to bottom)
-   Palette: #47663B (dark green) · #8EB486 (mid green)
-═══════════════════════════════════════════════════ */
-
-.vtree {
+.gtree {
   display: flex;
   flex-direction: column;
   align-items: center;
-  padding: 24px 16px 36px;
-  min-width: 660px;
+  padding: 24px 16px 40px;
+  font-family: 'Inter', sans-serif;
   overflow-x: auto;
-  font-family: 'inter', sans-serif;
+  min-width: 620px;
 }
 
-/* ── Subject ── */
-.vtree__subject {
+.gtree__subject {
   display: flex;
   flex-direction: column;
   align-items: center;
-  background: #ffffff;
+  background: #fff;
   border: 2px solid #47663B;
   border-radius: 14px;
   padding: 14px 24px;
@@ -28,7 +22,7 @@
   box-sizing: border-box;
 }
 
-.vtree__subject-img {
+.gtree__subject-img {
   width: 72px;
   height: 72px;
   border-radius: 50%;
@@ -37,191 +31,214 @@
   margin-bottom: 8px;
 }
 
-.vtree__subject-name {
+.gtree__subject-name {
   font-size: 15px;
   font-weight: 700;
   color: #47663B;
   margin-top: 2px;
 }
 
-/* ── Vertical stems ── */
-.vtree__stem {
+.gtree__vstem {
   width: 2px;
-  height: 28px;
+  height: 24px;
   background: #47663B;
 }
 
-.vtree__stem--light {
+.gtree__vstem--light {
   background: #8EB486;
+  height: 20px;
 }
 
-/* ── T-connectors ── */
-.vtree__t {
+.gtree__hbar {
   display: flex;
 }
 
-.vtree__arm {
-  height: 28px;
-}
-
-/* Arms — Parents level (180px each side) */
-.vtree__arm--left {
-  width: 180px;
+.gtree__arm--main-l {
+  width: 155px;
+  height: 20px;
   border-top: 2px solid #47663B;
   border-left: 2px solid #47663B;
 }
 
-.vtree__arm--right {
-  width: 180px;
+.gtree__arm--main-r {
+  width: 155px;
+  height: 20px;
   border-top: 2px solid #47663B;
   border-right: 2px solid #47663B;
 }
 
-/* Arms — Grandparents level (75px each side) */
-.vtree__arm--gp-left {
-  width: 75px;
+.gtree__arm--gp-l {
+  width: 70px;
+  height: 16px;
   border-top: 2px solid #8EB486;
   border-left: 2px solid #8EB486;
 }
 
-.vtree__arm--gp-right {
-  width: 75px;
+.gtree__arm--gp-r {
+  width: 70px;
+  height: 16px;
   border-top: 2px solid #8EB486;
   border-right: 2px solid #8EB486;
 }
 
-/* ── Level rows ── */
-.vtree__row {
+.gtree__level {
   display: flex;
-  justify-content: center;
+  gap: 40px;
 }
 
-.vtree__row--parents {
-  gap: 200px;
-}
-
-/* ── GP stems ── */
-.vtree__gp-stems {
-  display: flex;
-  justify-content: center;
-  gap: 200px;
-}
-
-.vtree__gp-stem {
+.gtree__branch {
   display: flex;
   flex-direction: column;
   align-items: center;
-  width: 160px;
+  width: 270px;
 }
 
-/* ── Grandparents row ── */
-.vtree__row--gps {
-  gap: 70px;
-}
-
-.vtree__gp-group {
+.gtree__gp-row {
   display: flex;
   gap: 10px;
+  align-items: flex-start;
 }
 
-/* ── Generic cards ── */
-.vt-card {
+/* ════════ CARDS ════════ */
+
+.gt-card {
   border-radius: 10px;
-  padding: 10px 12px;
+  padding: 8px 10px;
   box-shadow: 0 2px 8px rgba(0, 0, 0, 0.07);
-  transition: transform 0.15s ease, box-shadow 0.15s ease;
   text-align: center;
   box-sizing: border-box;
+  transition: transform 0.15s ease, box-shadow 0.15s ease;
+  user-select: none;
 }
 
-.vt-card:hover {
+.gt-card[role="button"] {
+  cursor: pointer;
+}
+
+.gt-card[role="button"]:hover {
   transform: translateY(-2px);
   box-shadow: 0 5px 16px rgba(0, 0, 0, 0.13);
 }
 
-.vt-card--empty {
+.gt-card--empty {
   opacity: 0.4;
   border-style: dashed !important;
+  cursor: default;
 }
 
-.vt-card__label {
+.gt-card--open {
+  box-shadow: 0 6px 20px rgba(71, 102, 59, 0.24) !important;
+  transform: translateY(-1px);
+}
+
+.gt-label {
   display: block;
-  font-size: 9px;
+  font-size: 8px;
   font-weight: 700;
   text-transform: uppercase;
-  letter-spacing: 0.7px;
+  letter-spacing: 0.5px;
   opacity: 0.65;
-  margin-bottom: 4px;
+  margin-bottom: 3px;
+  white-space: nowrap;
+  overflow: hidden;
+  text-overflow: ellipsis;
 }
 
-.vt-card__name {
+.gt-name {
   display: block;
   font-size: 13px;
   font-weight: 700;
   color: #222;
+  white-space: nowrap;
   overflow: hidden;
   text-overflow: ellipsis;
-  white-space: nowrap;
 }
 
-.vt-card__detail {
+.gt-card--open .gt-name {
+  white-space: normal;
+  overflow: visible;
+  text-overflow: unset;
+}
+
+.gt-details {
+  max-height: 0;
+  overflow: hidden;
+  transition: max-height 0.28s ease;
+}
+
+.gt-card--open .gt-details {
+  max-height: 160px;
+}
+
+.gt-detail {
   display: block;
   font-size: 11px;
-  color: #777;
-  overflow: hidden;
-  text-overflow: ellipsis;
-  white-space: nowrap;
+  color: #555;
+  text-align: left;
+  white-space: normal;
+  word-break: break-word;
+  line-height: 1.5;
+  margin-top: 4px;
 }
 
-/* ── Father ── */
-.vt-card--father {
+.gt-detail b {
+  color: #333;
+  font-weight: 600;
+}
+
+.gt-hint {
+  display: block;
+  font-size: 9px;
+  color: #47663B;
+  margin-top: 4px;
+  opacity: 0.65;
+  letter-spacing: 0.3px;
+}
+
+.gt-hint--close {
+  opacity: 0.45;
+}
+
+/* ════════ VARIANTS ════════ */
+
+.gt-card--father {
   background: #EFF6EE;
   border: 2px solid #47663B;
   width: 160px;
 }
+.gt-card--father .gt-label { color: #2d5227; }
 
-.vt-card--father .vt-card__label { color: #2d5227; }
-
-/* ── Mother ── */
-.vt-card--mother {
+.gt-card--mother {
   background: #F1F8EF;
   border: 2px solid #6A9A5E;
   width: 160px;
 }
+.gt-card--mother .gt-label { color: #4a7a3e; }
 
-.vt-card--mother .vt-card__label { color: #4a7a3e; }
-
-/* ── Paternal Grandparents ── */
-.vt-card--gp {
+.gt-card--gp {
   background: #F5FAF4;
   border: 2px solid #8EB486;
-  width: 140px;
-  padding: 8px 8px;
+  width: 130px;
 }
-
-.vt-card--gp .vt-card__label {
+.gt-card--gp .gt-label {
   color: #5a8050;
-  font-size: 7.5px;
-  letter-spacing: 0.4px;
+  font-size: 7px;
+  letter-spacing: 0.3px;
 }
 
-/* ── Maternal Grandparents ── */
-.vt-card--gp-m {
+.gt-card--gp-m {
   background: #F8FCF7;
   border: 2px solid #9EC496;
-  width: 140px;
-  padding: 8px 8px;
+  width: 130px;
 }
-
-.vt-card--gp-m .vt-card__label {
+.gt-card--gp-m .gt-label {
   color: #6a9060;
-  font-size: 7.5px;
-  letter-spacing: 0.4px;
+  font-size: 7px;
+  letter-spacing: 0.3px;
 }
 
-/* ── Responsive: horizontal scroll on small screens ── */
-@media (max-width: 600px) {
-  .vtree {
+@media (max-width: 640px) {
+  .gtree {
     padding: 16px 8px 24px;
   }
 }
