@@ -8,75 +8,70 @@ const GenealogyTree = ({ horse }) => {
   const renderCard = (relation, label, className) => {
     const a = getAncestor(relation);
     return (
-      <div className={`pedigree-card ${className} ${!a ? 'card-unknown' : ''}`}>
-        <div className="card-label">{label}</div>
-        <div className="card-name">{a?.name || '—'}</div>
-        {a?.breed && <div className="card-detail">{a.breed}</div>}
-        {a?.breeder && <div className="card-detail">{a.breeder}</div>}
+      <div className={`vt-card ${className}${!a ? ' vt-card--empty' : ''}`}>
+        <span className="vt-card__label">{label}</span>
+        <span className="vt-card__name">{a?.name || '—'}</span>
+        {a?.breed && <span className="vt-card__detail">{a.breed}</span>}
+        {a?.breeder && <span className="vt-card__detail">{a.breeder}</span>}
       </div>
     );
   };
 
   return (
-    <div className="pedigree-scroll">
-      <div className="pedigree">
+    <div className="vtree">
 
-        {/* ── Column 1: Subject ── */}
-        <div className="pedigree-col col-subject">
-          <div className="pedigree-subject">
-            {horse?.images?.[0] && (
-              <img src={horse.images[0]} alt={horse.name} className="subject-img" />
-            )}
-            <div className="card-label">Subject</div>
-            <div className="subject-name">{horse?.name || '—'}</div>
-          </div>
-        </div>
-
-        {/* ── Connector 1 → 2 ── */}
-        <div className="pedigree-connector connector-1">
-          <div className="c-h-top" />
-          <div className="c-v" />
-          <div className="c-h-bottom" />
-        </div>
-
-        {/* ── Column 2: Parents ── */}
-        <div className="pedigree-col col-parents">
-          <div className="parent-slot slot-top">
-            {renderCard('father', 'Father', 'card-father')}
-          </div>
-          <div className="parent-slot slot-bottom">
-            {renderCard('mother', 'Mother', 'card-mother')}
-          </div>
-        </div>
-
-        {/* ── Connector 2 → 3 ── */}
-        <div className="pedigree-connector connector-2">
-          <div className="c-h-q1" />
-          <div className="c-v-top" />
-          <div className="c-h-q2" />
-          <div className="c-spacer" />
-          <div className="c-h-q3" />
-          <div className="c-v-bottom" />
-          <div className="c-h-q4" />
-        </div>
-
-        {/* ── Column 3: Grandparents ── */}
-        <div className="pedigree-col col-grandparents">
-          <div className="gp-slot">
-            {renderCard('paternal_grandfather', 'Paternal GF', 'card-gp card-father-side')}
-          </div>
-          <div className="gp-slot">
-            {renderCard('paternal_grandmother', 'Paternal GM', 'card-gp card-father-side')}
-          </div>
-          <div className="gp-slot">
-            {renderCard('maternal_grandfather', 'Maternal GF', 'card-gp card-mother-side')}
-          </div>
-          <div className="gp-slot">
-            {renderCard('maternal_grandmother', 'Maternal GM', 'card-gp card-mother-side')}
-          </div>
-        </div>
-
+      {/* ── Nível 0: Sujeito ── */}
+      <div className="vtree__subject">
+        {horse?.images?.[0] && (
+          <img src={horse.images[0]} alt={horse.name} className="vtree__subject-img" />
+        )}
+        <span className="vt-card__label">Sujeito</span>
+        <span className="vtree__subject-name">{horse?.name || '—'}</span>
       </div>
+
+      {/* ── Conector: Sujeito → Pais ── */}
+      <div className="vtree__stem" />
+      <div className="vtree__t vtree__t--parents">
+        <div className="vtree__arm vtree__arm--left" />
+        <div className="vtree__arm vtree__arm--right" />
+      </div>
+
+      {/* ── Nível 1: Pais ── */}
+      <div className="vtree__row vtree__row--parents">
+        {renderCard('father', 'Pai', 'vt-card--father')}
+        {renderCard('mother', 'Mãe', 'vt-card--mother')}
+      </div>
+
+      {/* ── Conectores: Pais → Avós ── */}
+      <div className="vtree__gp-stems">
+        <div className="vtree__gp-stem">
+          <div className="vtree__stem vtree__stem--light" />
+          <div className="vtree__t vtree__t--gps">
+            <div className="vtree__arm vtree__arm--gp-left" />
+            <div className="vtree__arm vtree__arm--gp-right" />
+          </div>
+        </div>
+        <div className="vtree__gp-stem">
+          <div className="vtree__stem vtree__stem--light" />
+          <div className="vtree__t vtree__t--gps">
+            <div className="vtree__arm vtree__arm--gp-left" />
+            <div className="vtree__arm vtree__arm--gp-right" />
+          </div>
+        </div>
+      </div>
+
+      {/* ── Nível 2: Avós ── */}
+      <div className="vtree__row vtree__row--gps">
+        <div className="vtree__gp-group">
+          {renderCard('paternal_grandfather', 'Avô Paterno', 'vt-card--gp')}
+          {renderCard('paternal_grandmother', 'Avó Paterna', 'vt-card--gp')}
+        </div>
+        <div className="vtree__gp-group">
+          {renderCard('maternal_grandfather', 'Avô Materno', 'vt-card--gp-m')}
+          {renderCard('maternal_grandmother', 'Avó Materna', 'vt-card--gp-m')}
+        </div>
+      </div>
+
     </div>
   );
 };

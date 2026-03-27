@@ -1,5 +1,5 @@
 @import url('https://fonts.googleapis.com/css2?family=Inter:wght@700&display=swap');
-
+/* Estilos Gerais */
 body, html {
   margin: 0;
   padding: 0;
@@ -9,32 +9,34 @@ body, html {
   height: 100%;
 }
 
+/* Contêiner Principal */
 .layout-container {
   display: flex;
   flex-direction: column;
   min-height: 100vh;
 }
 
+/* Navbar */
 .navbar {
   color: #000000;
   padding: 15px 69px;
   display: flex;
   justify-content: space-between;
   align-items: center;
-  position: absolute;
+  position: fixed;
   top: 8px;
   width: 100%;
   height: 60px;
   z-index: 10;
-}
+  position: absolute;
 
-.logo-image {
+.logo-image{
   width: 39%;
   margin-left: 47%;
   margin-top: -21px;
 }
 
-a.logo-link {
+a.logo-link{
   width: 75%;
 }
 
@@ -49,6 +51,29 @@ a.logo-link {
   margin-left: 8px;
 }
 
+}
+
+/* Botão Voltar — discreto, canto superior esquerdo da área branca */
+.back-button {
+  display: inline-flex;
+  align-items: center;
+  gap: 4px;
+  background: none;
+  border: none;
+  cursor: pointer;
+  color: #aaa;
+  font-size: 13px;
+  font-family: 'inter', sans-serif;
+  padding: 2px 0 8px 0;
+  margin-bottom: 4px;
+  transition: color 0.15s ease;
+  letter-spacing: 0.2px;
+}
+
+.back-button:hover {
+  color: #47663B;
+}
+
 .logo-link {
   text-decoration: none;
   color: black;
@@ -58,6 +83,7 @@ a.logo-link {
   color: black;
 }
 
+/* Estiliza o texto do utilizador e o ícone */
 .user-text {
   display: flex;
   align-items: center;
@@ -75,6 +101,7 @@ a.logo-link {
   transform: rotate(90deg);
 }
 
+/* Dropdown Menu */
 .dropdown-menu {
   position: absolute;
   top: 60px;
@@ -117,23 +144,28 @@ a.logo-link {
   color: #333;
 }
 
+/* Botão de logout no dropdown */
 .logout-button {
   display: block;
   width: 100%;
   padding: 10px 15px;
-  color: #333;
+  color: #c0392b;
+  font-size: 14px;
+  font-family: 'inter', sans-serif;
+  font-weight: 600;
   background: none;
   border: none;
-  font-size: 14px;
-  text-align: left;
   cursor: pointer;
-  transition: background-color 0.2s ease;
+  text-align: left;
+  transition: background-color 0.2s ease, color 0.2s ease;
 }
 
 .logout-button:hover {
-  background-color: #dfdfdf;
+  background-color: #fdecea;
+  color: #a93226;
 }
 
+/* Conteúdo Central */
 .content-wrapper {
   background-color: #fff;
   margin: 80px 63px 42px 58px;
@@ -142,22 +174,23 @@ a.logo-link {
   border-radius: 12px;
   box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
   flex: 1 1;
+  overflow-y: auto;
   overflow: visible;
 }
 
+/* Responsividade */
 @media (max-width: 1024px) {
   .navbar {
     padding: 15px 30px;
-  }
 
-  .logo-image {
-    width: 52%;
-    margin-left: 46%;
-    margin-top: -14px;
-  }
-
-  a.logo-link {
-    width: 70%;
+    .logo-image {
+      width: 52%;
+      margin-left: 46%;
+      margin-top: -14px;
+    }
+    a.logo-link{
+      width: 70%;
+    }
   }
 
   .dropdown-menu {
@@ -171,6 +204,7 @@ a.logo-link {
 }
 
 @media (max-width: 768px) {
+
   body, html {
     overflow: auto;
     height: auto;
@@ -187,16 +221,16 @@ a.logo-link {
     padding: 28px;
     position: absolute;
     margin-top: -18px;
-  }
 
-  .logo-image {
-    width: 42%;
-    margin-left: 44%;
-    margin-top: -7px;
-  }
+    .logo-image{
+      width: 42%;
+      margin-left: 44%;
+      margin-top: -7px;
+    }
 
-  a.logo-link {
-    width: 78%;
+    a.logo-link{
+      width: 78%;
+    }
   }
 
   .user-text {
@@ -236,20 +270,20 @@ a.logo-link {
     padding: 20px;
     position: absolute;
     margin-top: 30px;
-  }
 
-  .logo-image {
-    width: 69%;
-    margin-left: -7%;
-    margin-top: -4px;
-  }
+    .logo-image{
+      width: 69%;
+      margin-left: -7%;
+      margin-top: -4px;
+    }
 
-  a.logo-link {
-    width: 61%;
-  }
+    a.logo-link{
+      width: 61%;
+    }
 
-  .user-avatar {
-    width: 25px;
+    .user-avatar {
+      width: 25px;
+    }
   }
 
   .user-text {
