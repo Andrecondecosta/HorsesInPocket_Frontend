@@ -1,7 +1,6 @@
-
 /* ═══════════════════════════════════════════════════
-   ÁRVORE GENEALÓGICA — Vertical (cima para baixo)
-   Paleta: #47663B (verde escuro) · #8EB486 (verde médio)
+   GENEALOGY TREE — Vertical (top to bottom)
+   Palette: #47663B (dark green) · #8EB486 (mid green)
 ═══════════════════════════════════════════════════ */
 
 .vtree {
@@ -9,12 +8,12 @@
   flex-direction: column;
   align-items: center;
   padding: 24px 16px 36px;
-  min-width: 540px;
+  min-width: 660px;
   overflow-x: auto;
   font-family: 'inter', sans-serif;
 }
 
-/* ── Sujeito ── */
+/* ── Subject ── */
 .vtree__subject {
   display: flex;
   flex-direction: column;
@@ -45,7 +44,7 @@
   margin-top: 2px;
 }
 
-/* ── Hastes verticais ── */
+/* ── Vertical stems ── */
 .vtree__stem {
   width: 2px;
   height: 28px;
@@ -56,7 +55,7 @@
   background: #8EB486;
 }
 
-/* ── Conectores em T ── */
+/* ── T-connectors ── */
 .vtree__t {
   display: flex;
 }
@@ -65,47 +64,47 @@
   height: 28px;
 }
 
-/* Braços — Nível Pais (145px de cada lado) */
+/* Arms — Parents level (180px each side) */
 .vtree__arm--left {
-  width: 145px;
+  width: 180px;
   border-top: 2px solid #47663B;
   border-left: 2px solid #47663B;
 }
 
 .vtree__arm--right {
-  width: 145px;
+  width: 180px;
   border-top: 2px solid #47663B;
   border-right: 2px solid #47663B;
 }
 
-/* Braços — Nível Avós (60px de cada lado) */
+/* Arms — Grandparents level (75px each side) */
 .vtree__arm--gp-left {
-  width: 60px;
+  width: 75px;
   border-top: 2px solid #8EB486;
   border-left: 2px solid #8EB486;
 }
 
 .vtree__arm--gp-right {
-  width: 60px;
+  width: 75px;
   border-top: 2px solid #8EB486;
   border-right: 2px solid #8EB486;
 }
 
-/* ── Linhas de nível ── */
+/* ── Level rows ── */
 .vtree__row {
   display: flex;
   justify-content: center;
 }
 
 .vtree__row--parents {
-  gap: 130px;
+  gap: 200px;
 }
 
-/* ── Hastes para nível dos avós ── */
+/* ── GP stems ── */
 .vtree__gp-stems {
   display: flex;
   justify-content: center;
-  gap: 130px;
+  gap: 200px;
 }
 
 .vtree__gp-stem {
@@ -115,9 +114,9 @@
   width: 160px;
 }
 
-/* ── Linha dos avós ── */
+/* ── Grandparents row ── */
 .vtree__row--gps {
-  gap: 60px;
+  gap: 70px;
 }
 
 .vtree__gp-group {
@@ -125,7 +124,7 @@
   gap: 10px;
 }
 
-/* ── Cards genéricos ── */
+/* ── Generic cards ── */
 .vt-card {
   border-radius: 10px;
   padding: 10px 12px;
@@ -174,7 +173,7 @@
   white-space: nowrap;
 }
 
-/* ── Card: Pai ── */
+/* ── Father ── */
 .vt-card--father {
   background: #EFF6EE;
   border: 2px solid #47663B;
@@ -183,7 +182,7 @@
 
 .vt-card--father .vt-card__label { color: #2d5227; }
 
-/* ── Card: Mãe ── */
+/* ── Mother ── */
 .vt-card--mother {
   background: #F1F8EF;
   border: 2px solid #6A9A5E;
@@ -192,25 +191,35 @@
 
 .vt-card--mother .vt-card__label { color: #4a7a3e; }
 
-/* ── Card: Avós Paternos ── */
+/* ── Paternal Grandparents ── */
 .vt-card--gp {
   background: #F5FAF4;
   border: 2px solid #8EB486;
-  width: 110px;
+  width: 140px;
+  padding: 8px 8px;
 }
 
-.vt-card--gp .vt-card__label { color: #5a8050; }
+.vt-card--gp .vt-card__label {
+  color: #5a8050;
+  font-size: 7.5px;
+  letter-spacing: 0.4px;
+}
 
-/* ── Card: Avós Maternos ── */
+/* ── Maternal Grandparents ── */
 .vt-card--gp-m {
   background: #F8FCF7;
   border: 2px solid #9EC496;
-  width: 110px;
+  width: 140px;
+  padding: 8px 8px;
 }
 
-.vt-card--gp-m .vt-card__label { color: #6a9060; }
+.vt-card--gp-m .vt-card__label {
+  color: #6a9060;
+  font-size: 7.5px;
+  letter-spacing: 0.4px;
+}
 
-/* ── Responsividade: scroll horizontal em ecrãs pequenos ── */
+/* ── Responsive: horizontal scroll on small screens ── */
 @media (max-width: 600px) {
   .vtree {
     padding: 16px 8px 24px;

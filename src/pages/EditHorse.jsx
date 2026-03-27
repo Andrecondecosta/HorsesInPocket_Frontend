@@ -1,5 +1,5 @@
 import React, { useState, useEffect} from 'react';
-import { useParams, useNavigate } from 'react-router-dom';
+import { Link, useParams, useNavigate } from 'react-router-dom';
 import Layout from '../components/Layout';
 import GenealogyForm from '../components/GenealogyForm';
 import LoadingPopup from '../components/LoadingPopup';
@@ -44,67 +44,22 @@ const EditHorse = ({ setIsLoggedIn }) => {
   const [showDropdown, setShowDropdown] = useState(false);
 
   const breeds = [
-    'Akhal-Teke',
-    'American Cream Draft',
-    'American Paint Horse',
-    'American Quarter Horse',
-    'American Saddlebred',
-    'Andalusian',
-    'Appaloosa',
-    'Arabian',
-    'Ardennes',
-    'Azteca',
-    'Bashkir Curly',
-    'Belgian Draft',
-    'Brumby',
-    'Budyonny',
-    'Canadian Horse',
-    'Caspian',
-    'Cleveland Bay',
-    'Clydesdale',
-    'Criollo',
-    'Dutch Warmblood',
-    'Exmoor Pony',
-    'Fell Pony',
-    'Friesian',
-    'Gypsy Vanner',
-    'Hackney Horse',
-    'Haflinger',
-    'Hanoverian',
-    'Highland Pony',
-    'Holsteiner',
-    'Icelandic Horse',
-    'Irish Draught',
-    'Knabstrupper',
-    'Lipizzaner',
-    'Lusitano',
-    'Marwari',
-    'Miniature Horse',
-    'Missouri Fox Trotter',
-    'Morgan',
-    'Mustang',
-    'Nokota Horse',
-    'Oldenburg',
-    'Paso Fino',
-    'Percheron',
-    'Peruvian Paso',
-    'Pinto',
-    'Pony of the Americas',
-    'Przewalski’s Horse',
-    'Quarter Horse',
-    'Rocky Mountain Horse',
-    'Shetland Pony',
-    'Shire',
-    'Suffolk Punch',
-    'Tennessee Walking Horse',
-    'Thoroughbred',
-    'Trakehner',
-    'Welsh Pony',
-    'Westphalian',
-    'Zangersheide',
-    'Other'
+    'Akhal-Teke', 'American Cream Draft', 'American Paint Horse',
+    'American Quarter Horse', 'American Saddlebred', 'Andalusian',
+    'Appaloosa', 'Arabian', 'Ardennes', 'Azteca', 'Bashkir Curly',
+    'Belgian Draft', 'Brumby', 'Budyonny', 'Canadian Horse', 'Caspian',
+    'Cleveland Bay', 'Clydesdale', 'Criollo', 'Dutch Warmblood',
+    'Exmoor Pony', 'Fell Pony', 'Friesian', 'Gypsy Vanner',
+    'Hackney Horse', 'Haflinger', 'Hanoverian', 'Highland Pony',
+    'Holsteiner', 'Icelandic Horse', 'Irish Draught', 'Knabstrupper',
+    'Lipizzaner', 'Lusitano', 'Marwari', 'Miniature Horse',
+    'Missouri Fox Trotter', 'Morgan', 'Mustang', 'Nokota Horse',
+    'Oldenburg', 'Paso Fino', 'Percheron', 'Peruvian Paso', 'Pinto',
+    'Pony of the Americas', "Przewalski's Horse", 'Quarter Horse',
+    'Rocky Mountain Horse', 'Shetland Pony', 'Shire', 'Suffolk Punch',
+    'Tennessee Walking Horse', 'Thoroughbred', 'Trakehner',
+    'Welsh Pony', 'Westphalian', 'Zangersheide', 'Other'
   ];
-
 
   useEffect(() => {
     const fetchHorse = async () => {
@@ -121,6 +76,7 @@ const EditHorse = ({ setIsLoggedIn }) => {
 
         const horseData = await response.json();
         setHorse(horseData);
+        setBreedInput(horseData.breed || '');
 
         setExistingVideos(horseData.videos || []);
 
@@ -170,8 +126,8 @@ const EditHorse = ({ setIsLoggedIn }) => {
       breed: option,
     }));
     setFilteredOptions([]);
+    setShowDropdown(false);
   };
-
 
   const handleNextStep = () => {
     setCurrentStep((prevStep) => Math.min(prevStep + 1, 3));
@@ -189,7 +145,6 @@ const EditHorse = ({ setIsLoggedIn }) => {
     }));
   };
 
-
   const handleHeightChange = (e) => {
     const valueInMeters = parseFloat(e.target.value);
     setHorse((prevHorse) => ({
@@ -197,7 +152,6 @@ const EditHorse = ({ setIsLoggedIn }) => {
       height_cm: valueInMeters,
     }));
   };
-
 
   const handleSubmit = async (e) => {
     e.preventDefault();
@@ -223,6 +177,19 @@ const EditHorse = ({ setIsLoggedIn }) => {
     formData.append('horse[breed]', horse.breed);
     formData.append('horse[breeder]', horse.breeder);
 
+    // Ancestors — inclui id para atualizar existente, ou cria novo
+    Object.entries(ancestors).forEach(([relation, ancestor]) => {
+      if (!ancestor) return;
+      if (!ancestor.id && !ancestor.name && !ancestor.breed && !ancestor.breeder) return;
+      if (ancestor.id) {
+        formData.append('horse[ancestors_attributes][][id]', ancestor.id);
+      }
+      formData.append('horse[ancestors_attributes][][relation_type]', relation);
+      formData.append('horse[ancestors_attributes][][name]', ancestor.name || '');
+      formData.append('horse[ancestors_attributes][][breeder]', ancestor.breeder || '');
+      formData.append('horse[ancestors_attributes][][breed]', ancestor.breed || '');
+    });
+
     images.forEach((image) => {
       if (typeof image === 'string') {
         formData.append('existing_images[]', image);
@@ -231,15 +198,15 @@ const EditHorse = ({ setIsLoggedIn }) => {
 
     images.forEach((image) => {
       if (typeof image !== 'string') {
-        formData.append('horse[images][]', image); // Novos arquivos
+        formData.append('horse[images][]', image);
       }
     });
 
     videos.forEach((video) => {
       if (typeof video === 'string') {
-        formData.append('existing_videos[]', video); // URLs existentes
+        formData.append('existing_videos[]', video);
       } else {
-        formData.append('horse[videos][]', video.file); // Novos arquivos
+        formData.append('horse[videos][]', video.file);
       }
     });
 
@@ -247,7 +214,7 @@ const EditHorse = ({ setIsLoggedIn }) => {
     newVideos.forEach((video) => formData.append('horse[videos][]', video));
 
     deletedImages.forEach((imageUrl) => formData.append('deleted_images[]', imageUrl));
-    deletedVideos.forEach((videoUrl) => formData.append('deleted_videos[]', videoUrl)); // Inclui os vídeos removidos
+    deletedVideos.forEach((videoUrl) => formData.append('deleted_videos[]', videoUrl));
 
     try {
       const response = await fetch(`${process.env.REACT_APP_API_SERVER_URL}/horses/${id}`, {
@@ -279,8 +246,8 @@ const EditHorse = ({ setIsLoggedIn }) => {
       <div className="edit-horse-container">
         <h1 className="edit-page-title">Edit Horse</h1>
         <div className="edit-breadcrumbs">
-          <a href="/dashboard">Dashboard /</a>
-          <a href="/myhorses">My Horses /</a>
+          <Link to="/dashboard">Dashboard /</Link>
+          <Link to="/myhorses">My Horses /</Link>
           <span>Edit Horse</span>
         </div>
 
@@ -350,27 +317,27 @@ const EditHorse = ({ setIsLoggedIn }) => {
                 <option value="Isabella">Isabella</option>
               </select>
               <div className="form-group">
-            <input
-              type="text"
-              value={breedInput}
-              onChange={handleBreedInputChange}
-              placeholder="Type or select a breed"
-              className="autocomplete-input"
-            />
-            {showDropdown && (
-              <ul className="autocomplete-dropdown">
-                {filteredOptions.map((option, index) => (
-                  <li
-                    key={index}
-                    onClick={() => handleOptionClick(option)}
-                    className="autocomplete-option"
-                  >
-                    {option}
-                  </li>
-                ))}
-              </ul>
-            )}
-          </div>
+                <input
+                  type="text"
+                  value={breedInput}
+                  onChange={handleBreedInputChange}
+                  placeholder="Type or select a breed"
+                  className="autocomplete-input"
+                />
+                {showDropdown && (
+                  <ul className="autocomplete-dropdown">
+                    {filteredOptions.map((option, index) => (
+                      <li
+                        key={index}
+                        onClick={() => handleOptionClick(option)}
+                        className="autocomplete-option"
+                      >
+                        {option}
+                      </li>
+                    ))}
+                  </ul>
+                )}
+              </div>
               <input
                 type="text"
                 name="breeder"
@@ -378,7 +345,14 @@ const EditHorse = ({ setIsLoggedIn }) => {
                 placeholder="Breeder"
                 value={horse.breeder}
                 onChange={handleChange}
-                required
+              />
+              <input
+                type="text"
+                name="training_level"
+                className="edit-input"
+                placeholder="Training Level"
+                value={horse.training_level || ''}
+                onChange={handleChange}
               />
               <div className="edit-piroplasmosis-label">
                 <label>Piroplasmosis</label>
@@ -420,9 +394,7 @@ const EditHorse = ({ setIsLoggedIn }) => {
         {currentStep === 2 && (
           <div className="edit-upload-container">
             <EditImageUploader images={images} setImages={setImages} setDeletedImages={setDeletedImages} />
-
-
-            <EditVideoUploader videos={videos} setVideos={setVideos} setDeletedVideos={setDeletedVideos}/>
+            <EditVideoUploader videos={videos} setVideos={setVideos} setDeletedVideos={setDeletedVideos} />
           </div>
         )}
 
@@ -432,7 +404,6 @@ const EditHorse = ({ setIsLoggedIn }) => {
           </div>
         )}
 
-        {/* Buttons */}
         <div className="step-buttons">
           {currentStep > 1 && <button className="step-button" onClick={handlePreviousStep}>Back</button>}
           {currentStep < 3 && <button className="step-button" onClick={handleNextStep}>Next</button>}
@@ -443,7 +414,7 @@ const EditHorse = ({ setIsLoggedIn }) => {
           )}
         </div>
       </div>
-      {isSubmitting && <LoadingPopup message="Saving the horse, please wait..." />}
+      {isSubmitting && <LoadingPopup message="Saving..." />}
     </Layout>
   );
 };

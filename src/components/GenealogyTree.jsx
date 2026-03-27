@@ -20,29 +20,29 @@ const GenealogyTree = ({ horse }) => {
   return (
     <div className="vtree">
 
-      {/* ── Nível 0: Sujeito ── */}
+      {/* ── Subject ── */}
       <div className="vtree__subject">
         {horse?.images?.[0] && (
           <img src={horse.images[0]} alt={horse.name} className="vtree__subject-img" />
         )}
-        <span className="vt-card__label">Sujeito</span>
+        <span className="vt-card__label">Subject</span>
         <span className="vtree__subject-name">{horse?.name || '—'}</span>
       </div>
 
-      {/* ── Conector: Sujeito → Pais ── */}
+      {/* ── Subject → Parents ── */}
       <div className="vtree__stem" />
       <div className="vtree__t vtree__t--parents">
         <div className="vtree__arm vtree__arm--left" />
         <div className="vtree__arm vtree__arm--right" />
       </div>
 
-      {/* ── Nível 1: Pais ── */}
+      {/* ── Parents ── */}
       <div className="vtree__row vtree__row--parents">
-        {renderCard('father', 'Pai', 'vt-card--father')}
-        {renderCard('mother', 'Mãe', 'vt-card--mother')}
+        {renderCard('father', 'Father', 'vt-card--father')}
+        {renderCard('mother', 'Mother', 'vt-card--mother')}
       </div>
 
-      {/* ── Conectores: Pais → Avós ── */}
+      {/* ── Parents → Grandparents ── */}
       <div className="vtree__gp-stems">
         <div className="vtree__gp-stem">
           <div className="vtree__stem vtree__stem--light" />
@@ -60,15 +60,15 @@ const GenealogyTree = ({ horse }) => {
         </div>
       </div>
 
-      {/* ── Nível 2: Avós ── */}
+      {/* ── Grandparents ── */}
       <div className="vtree__row vtree__row--gps">
         <div className="vtree__gp-group">
-          {renderCard('paternal_grandfather', 'Avô Paterno', 'vt-card--gp')}
-          {renderCard('paternal_grandmother', 'Avó Paterna', 'vt-card--gp')}
+          {renderCard('paternal_grandfather', 'Paternal Grandfather', 'vt-card--gp')}
+          {renderCard('paternal_grandmother', 'Paternal Grandmother', 'vt-card--gp')}
         </div>
         <div className="vtree__gp-group">
-          {renderCard('maternal_grandfather', 'Avô Materno', 'vt-card--gp-m')}
-          {renderCard('maternal_grandmother', 'Avó Materna', 'vt-card--gp-m')}
+          {renderCard('maternal_grandfather', 'Maternal Grandfather', 'vt-card--gp-m')}
+          {renderCard('maternal_grandmother', 'Maternal Grandmother', 'vt-card--gp-m')}
         </div>
       </div>
 
