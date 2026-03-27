@@ -76,11 +76,14 @@ const GenealogyTree = ({ horse }) => {
         {/* Father branch */}
         <div className="gtree__branch">
           {renderCard('father', 'Father', 'father')}
+
           <div className="gtree__vstem gtree__vstem--light" />
           <div className="gtree__hbar">
             <div className="gtree__arm gtree__arm--gp-l" />
             <div className="gtree__arm gtree__arm--gp-r" />
           </div>
+
+          {/* Paternal: Grandfather LEFT, Grandmother RIGHT */}
           <div className="gtree__gp-row">
             {renderCard('paternal_grandfather', 'Pat. Grandfather', 'gp')}
             {renderCard('paternal_grandmother', 'Pat. Grandmother', 'gp')}
@@ -90,14 +93,17 @@ const GenealogyTree = ({ horse }) => {
         {/* Mother branch */}
         <div className="gtree__branch">
           {renderCard('mother', 'Mother', 'mother')}
+
           <div className="gtree__vstem gtree__vstem--light" />
           <div className="gtree__hbar">
             <div className="gtree__arm gtree__arm--gp-l" />
             <div className="gtree__arm gtree__arm--gp-r" />
           </div>
+
+          {/* Maternal: Grandmother LEFT, Grandfather RIGHT (mirrored) */}
           <div className="gtree__gp-row">
-            {renderCard('maternal_grandfather', 'Mat. Grandfather', 'gp-m')}
             {renderCard('maternal_grandmother', 'Mat. Grandmother', 'gp-m')}
+            {renderCard('maternal_grandfather', 'Mat. Grandfather', 'gp-m')}
           </div>
         </div>
 
