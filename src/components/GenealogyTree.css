@@ -1,11 +1,12 @@
+
 .gtree {
   display: flex;
   flex-direction: column;
   align-items: center;
   padding: 24px 16px 40px;
   font-family: 'Inter', sans-serif;
-  overflow-x: auto;
-  min-width: 620px;
+  width: 100%;
+  box-sizing: border-box;
 }
 
 .gtree__subject {
@@ -53,27 +54,25 @@
   display: flex;
 }
 
+/* Arms — Desktop defaults */
 .gtree__arm--main-l {
   width: 155px;
   height: 20px;
   border-top: 2px solid #47663B;
   border-left: 2px solid #47663B;
 }
-
 .gtree__arm--main-r {
   width: 155px;
   height: 20px;
   border-top: 2px solid #47663B;
   border-right: 2px solid #47663B;
 }
-
 .gtree__arm--gp-l {
   width: 70px;
   height: 16px;
   border-top: 2px solid #8EB486;
   border-left: 2px solid #8EB486;
 }
-
 .gtree__arm--gp-r {
   width: 70px;
   height: 16px;
@@ -100,7 +99,6 @@
 }
 
 /* ════════ CARDS ════════ */
-
 .gt-card {
   border-radius: 10px;
   padding: 8px 10px;
@@ -111,21 +109,12 @@
   user-select: none;
 }
 
-.gt-card[role="button"] {
-  cursor: pointer;
-}
-
+.gt-card[role="button"] { cursor: pointer; }
 .gt-card[role="button"]:hover {
   transform: translateY(-2px);
   box-shadow: 0 5px 16px rgba(0, 0, 0, 0.13);
 }
-
-.gt-card--empty {
-  opacity: 0.4;
-  border-style: dashed !important;
-  cursor: default;
-}
-
+.gt-card--empty { opacity: 0.4; border-style: dashed !important; cursor: default; }
 .gt-card--open {
   box-shadow: 0 6px 20px rgba(71, 102, 59, 0.24) !important;
   transform: translateY(-1px);
@@ -165,10 +154,7 @@
   overflow: hidden;
   transition: max-height 0.28s ease;
 }
-
-.gt-card--open .gt-details {
-  max-height: 160px;
-}
+.gt-card--open .gt-details { max-height: 160px; }
 
 .gt-detail {
   display: block;
@@ -180,65 +166,127 @@
   line-height: 1.5;
   margin-top: 4px;
 }
+.gt-detail b { color: #333; font-weight: 600; }
 
-.gt-detail b {
-  color: #333;
-  font-weight: 600;
-}
+.gt-hint { display: block; font-size: 9px; color: #47663B; margin-top: 4px; opacity: 0.65; }
+.gt-hint--close { opacity: 0.45; }
 
-.gt-hint {
-  display: block;
-  font-size: 9px;
-  color: #47663B;
-  margin-top: 4px;
-  opacity: 0.65;
-  letter-spacing: 0.3px;
-}
-
-.gt-hint--close {
-  opacity: 0.45;
-}
-
-/* ════════ VARIANTS ════════ */
-
-.gt-card--father {
-  background: #EFF6EE;
-  border: 2px solid #47663B;
-  width: 160px;
-}
+/* ════════ CARD VARIANTS — Desktop ════════ */
+.gt-card--father { background: #EFF6EE; border: 2px solid #47663B; width: 160px; }
 .gt-card--father .gt-label { color: #2d5227; }
 
-.gt-card--mother {
-  background: #F1F8EF;
-  border: 2px solid #6A9A5E;
-  width: 160px;
-}
+.gt-card--mother { background: #F1F8EF; border: 2px solid #6A9A5E; width: 160px; }
 .gt-card--mother .gt-label { color: #4a7a3e; }
 
-.gt-card--gp {
-  background: #F5FAF4;
-  border: 2px solid #8EB486;
-  width: 130px;
-}
-.gt-card--gp .gt-label {
-  color: #5a8050;
-  font-size: 7px;
-  letter-spacing: 0.3px;
+.gt-card--gp { background: #F5FAF4; border: 2px solid #8EB486; width: 130px; }
+.gt-card--gp .gt-label { color: #5a8050; font-size: 7px; letter-spacing: 0.3px; }
+
+.gt-card--gp-m { background: #F8FCF7; border: 2px solid #9EC496; width: 130px; }
+.gt-card--gp-m .gt-label { color: #6a9060; font-size: 7px; letter-spacing: 0.3px; }
+
+
+/* ════════════════════════════════════════
+   TABLET  481–768px
+   GP:105 gap:8 branch:218 level-gap:28
+   main-arm=(218+28)/2=123  gp-arm=109-56.5≈57
+════════════════════════════════════════ */
+@media (max-width: 768px) {
+  .gtree { padding: 20px 12px 32px; }
+
+  .gtree__subject { width: 160px; padding: 12px 16px; }
+  .gtree__subject-img { width: 60px; height: 60px; }
+  .gtree__subject-name { font-size: 13px; }
+
+  .gtree__vstem        { height: 20px; }
+  .gtree__vstem--light { height: 16px; }
+
+  .gtree__arm--main-l { width: 123px; height: 16px; }
+  .gtree__arm--main-r { width: 123px; height: 16px; }
+  .gtree__arm--gp-l   { width: 57px;  height: 13px; }
+  .gtree__arm--gp-r   { width: 57px;  height: 13px; }
+
+  .gtree__level  { gap: 28px; }
+  .gtree__branch { width: 218px; }
+  .gtree__gp-row { gap: 8px; }
+
+  .gt-card--father,
+  .gt-card--mother { width: 128px; }
+  .gt-card--gp,
+  .gt-card--gp-m   { width: 105px; }
+
+  .gt-name   { font-size: 12px; }
+  .gt-detail { font-size: 10px; }
 }
 
-.gt-card--gp-m {
-  background: #F8FCF7;
-  border: 2px solid #9EC496;
-  width: 130px;
-}
-.gt-card--gp-m .gt-label {
-  color: #6a9060;
-  font-size: 7px;
-  letter-spacing: 0.3px;
+
+/* ════════════════════════════════════════
+   MOBILE  361–480px
+   GP:82 gap:6 branch:170 level-gap:16
+   main-arm=(170+16)/2=93  gp-arm=85-41=44
+════════════════════════════════════════ */
+@media (max-width: 480px) {
+  .gtree { padding: 16px 8px 24px; }
+
+  .gtree__subject { width: 130px; padding: 10px 12px; border-radius: 12px; }
+  .gtree__subject-img { width: 48px; height: 48px; margin-bottom: 6px; }
+  .gtree__subject-name { font-size: 12px; }
+
+  .gtree__vstem        { height: 16px; }
+  .gtree__vstem--light { height: 14px; }
+
+  .gtree__arm--main-l { width: 93px; height: 14px; }
+  .gtree__arm--main-r { width: 93px; height: 14px; }
+  .gtree__arm--gp-l   { width: 44px; height: 11px; }
+  .gtree__arm--gp-r   { width: 44px; height: 11px; }
+
+  .gtree__level  { gap: 16px; }
+  .gtree__branch { width: 170px; }
+  .gtree__gp-row { gap: 6px; }
+
+  .gt-card { padding: 6px 7px; border-radius: 8px; }
+
+  .gt-card--father,
+  .gt-card--mother { width: 100px; }
+  .gt-card--gp,
+  .gt-card--gp-m   { width: 82px; }
+
+  .gt-label  { font-size: 7px; letter-spacing: 0.2px; }
+  .gt-name   { font-size: 11px; }
+  .gt-detail { font-size: 9px; }
+  .gt-hint   { font-size: 8px; }
 }
 
-@media (max-width: 640px) {
-  .gtree {
-    padding: 16px 8px 24px;
-  }
+
+/* ════════════════════════════════════════
+   SMALL  ≤ 360px  (iPhone SE, Galaxy A)
+   GP:68 gap:4 branch:140 level-gap:10
+   main-arm=(140+10)/2=75  gp-arm=70-34=36
+════════════════════════════════════════ */
+@media (max-width: 360px) {
+  .gtree__subject { width: 110px; padding: 8px 10px; }
+  .gtree__subject-img { width: 40px; height: 40px; }
+  .gtree__subject-name { font-size: 11px; }
+
+  .gtree__vstem        { height: 14px; }
+  .gtree__vstem--light { height: 12px; }
+
+  .gtree__arm--main-l { width: 75px; height: 12px; }
+  .gtree__arm--main-r { width: 75px; height: 12px; }
+  .gtree__arm--gp-l   { width: 36px; height: 10px; }
+  .gtree__arm--gp-r   { width: 36px; height: 10px; }
+
+  .gtree__level  { gap: 10px; }
+  .gtree__branch { width: 140px; }
+  .gtree__gp-row { gap: 4px; }
+
+  .gt-card { padding: 5px 6px; }
+
+  .gt-card--father,
+  .gt-card--mother { width: 84px; }
+  .gt-card--gp,
+  .gt-card--gp-m   { width: 68px; }
+
+  .gt-label  { font-size: 6px; letter-spacing: 0.1px; }
+  .gt-name   { font-size: 10px; }
+  .gt-detail { font-size: 9px; }
 }
