@@ -15,8 +15,8 @@ const RegisterPage = () => {
   const [countries, setCountries] = useState([]);
   const [country, setCountry] = useState('');
   const [gender, setGender] = useState('');
-  const [sharedToken, setSharedToken] = useState(null); // Estado para armazenar o token compartilhado
-  const [acceptPrivacyPolicy, setAcceptPrivacyPolicy] = useState(false); // Estado para aceitar a Política de Privacidade
+  const [sharedToken, setSharedToken] = useState(null);
+  const [acceptPrivacyPolicy, setAcceptPrivacyPolicy] = useState(false);
 
   const { register, token, loading, error } = useRegister();
   const navigate = useNavigate();
@@ -29,11 +29,11 @@ const RegisterPage = () => {
     const fetchCountries = async () => {
       try {
         const response = await fetch(`${process.env.REACT_APP_API_SERVER_URL}/countries`);
-        if (!response.ok) throw new Error('Erro ao carregar países');
+        if (!response.ok) throw new Error('Error loading countries');
         const data = await response.json();
 
-        console.log('Países carregados:', data); // 👀 Depuração
-        setCountries(Array.isArray(data) ? data : []); // ✅ Garantir que seja um array
+        console.log('Countries loaded:', data);
+        setCountries(Array.isArray(data) ? data : []);
       } catch (err) {
         console.error(err.message);
       }
@@ -45,13 +45,12 @@ const RegisterPage = () => {
   const handleSubmit = async (e) => {
     e.preventDefault();
 
-    // Verifica se o utilizador aceitou a Política de Privacidade
-    // ✅ Verifica se o utilizador aceitou a Política de Privacidade
+    // Check if user accepted the Privacy Policy
     if (!acceptPrivacyPolicy) {
       alert('You must accept the Privacy Policy to register.');
       return;
     }
-    // Cria o objeto com os dados do utilizador
+    // Create user data object
     const userData = {
       first_name: firstName,
       last_name: lastName,
@@ -64,8 +63,8 @@ const RegisterPage = () => {
       gender,
     };
 
-    // Enviar o token de compartilhamento junto com os dados do usuário
-    const receivedToken = await register(userData, sharedToken || null); // Passando o token compartilhado para a requisição
+    // Send shared token along with user data
+    const receivedToken = await register(userData, sharedToken || null);
 
     if (receivedToken) {
       navigate('/dashboard');
@@ -139,7 +138,7 @@ const RegisterPage = () => {
           <select
             className="half-width"
             value={country} onChange={(e) => setCountry(e.target.value)} required>
-            <option value="">Selecione um País</option>
+            <option value="">Select a Country</option>
                {countries.map((c) => (
               <option key={c.code} value={c.name}>{c.name}</option>
              ))}
@@ -168,7 +167,6 @@ const RegisterPage = () => {
             onChange={(e) => setPasswordConfirmation(e.target.value)}
             required
           />
-          {/* ✅ Checkbox da Política de Privacidade */}
           <div className="privacy-checkbox">
             <input
               type="checkbox"

@@ -52,13 +52,15 @@
   font-weight: bold;
   color: #2980b9;
   margin-top: 0.5rem;
-}.back-to-register {
+}
+
+.back-to-register {
   text-align: center;
   margin-top: 2rem;
 }
 
-.back-button {
-  background-color: #47663B; /* Cor principal do site */
+.pp-back-button {
+  background-color: #47663B;
   color: #fff;
   border: none;
   padding: 10px 20px;
@@ -69,6 +71,6 @@
   transition: background-color 0.3s ease;
 }
 
-.back-button:hover {
-  background-color: #8EB486; /* Verde mais claro no hover */
+.pp-back-button:hover {
+  background-color: #8EB486;
 }

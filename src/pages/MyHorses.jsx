@@ -2,6 +2,8 @@ import React, { useState, useEffect } from 'react';
 import { Link, useNavigate } from 'react-router-dom';
 import './MyHorses.css';
 import Layout from '../components/Layout';
+import LoadingPopup from '../components/LoadingPopup';
+import { isNativeiOS } from '../utils/isNative';
 
 const MyHorses = () => {
   const [horses, setHorses] = useState([]);
@@ -12,6 +14,7 @@ const MyHorses = () => {
 
   const token = localStorage.getItem('authToken');
   const navigate = useNavigate();
+  const native = isNativeiOS();
 
   useEffect(() => {
     const fetchHorses = async () => {
@@ -21,7 +24,7 @@ const MyHorses = () => {
           headers: { Authorization: `Bearer ${token}` },
         });
 
-        if (!response.ok) throw new Error("Erro ao carregar os cavalos");
+        if (!response.ok) throw new Error("Error loading horses");
 
         const data = await response.json();
         setHorses(data);
@@ -42,12 +45,12 @@ const MyHorses = () => {
           },
         });
 
-        if (!response.ok) throw new Error("Erro ao carregar status do usuário");
+        if (!response.ok) throw new Error("Error loading user status");
 
         const data = await response.json();
         setUserStatus(data);
       } catch (error) {
-        console.error("Erro ao buscar status do usuário:", error);
+        console.error("Error fetching user status:", error);
       }
     };
 
@@ -67,24 +70,24 @@ const MyHorses = () => {
     }
   };
 
+  if (loading) return <LoadingPopup message="Loading..." />;
+
   return (
     <Layout>
-      <div className="my-horses-container">
+      <div className="my-horses-container" data-testid="my-horses-container">
         <h1 className="page-title">My Horses</h1>
 
         <div className="profile-breadcrumb-container">
           <div className="breadcrumbs">
             <Link to="/dashboard">Dashboard</Link> / <span>My Horses</span>
           </div>
-          <button className="create-button" onClick={handleCreateClick}>
+          <button className="create-button" data-testid="create-horse-btn" onClick={handleCreateClick}>
             <span>+</span> Create
           </button>
         </div>
 
         <div className="horses-grid">
-          {loading ? (
-            <p className="horses-loading">Loading horses...</p>
-          ) : fetchError ? (
+          {fetchError ? (
             <p className="horses-error">{fetchError}</p>
           ) : horses.length === 0 ? (
             <p className="horses-empty">No horses yet. Create your first horse!</p>
@@ -92,7 +95,7 @@ const MyHorses = () => {
             horses
               .sort((a, b) => new Date(b.created_at) - new Date(a.created_at))
               .map((horse) => (
-                <div className="horse-card" key={horse.id}>
+                <div className="horse-card" key={horse.id} data-testid={`horse-card-${horse.id}`}>
                   <div className="horse-image-container">
                     {horse.images && horse.images.length > 0 ? (
                       <img src={horse.images[0]} alt={horse.name} className="myhorse-image" />
@@ -112,21 +115,33 @@ const MyHorses = () => {
           )}
         </div>
 
-        {/* Popup de Limite de Cavalos */}
+        {/* Horse limit popup — on native iOS, hide upgrade/payment references */}
         {showLimitPopup && (
-          <div className="popup-overlay">
+          <div className="popup-overlay" data-testid="horse-limit-popup">
             <div className="popup-content">
-              <h3>🚨 Horse Limit Reached!</h3>
-              <p>You have reached the horse limit of your plan. To continue, please upgrade.</p>
-
-              <div className="popup-buttons">
-                <button className="popup-btn secondary" onClick={() => setShowLimitPopup(false)}>
-                  OK
-                </button>
-                <button className="popup-btn primary" onClick={() => navigate('/profile')}>
-                  View My Plan
-                </button>
-              </div>
+              <h3>Horse Limit Reached!</h3>
+              {native ? (
+                <>
+                  <p>You have reached the horse limit of your current plan. Please manage your subscription through your device settings.</p>
+                  <div className="popup-buttons">
+                    <button className="popup-btn secondary" data-testid="limit-popup-ok-btn" onClick={() => setShowLimitPopup(false)}>
+                      OK
+                    </button>
+                  </div>
+                </>
+              ) : (
+                <>
+                  <p>You have reached the horse limit of your plan. To continue, please upgrade.</p>
+                  <div className="popup-buttons">
+                    <button className="popup-btn secondary" data-testid="limit-popup-ok-btn" onClick={() => setShowLimitPopup(false)}>
+                      OK
+                    </button>
+                    <button className="popup-btn primary" data-testid="limit-popup-upgrade-btn" onClick={() => navigate('/profile')}>
+                      View My Plan
+                    </button>
+                  </div>
+                </>
+              )}
             </div>
           </div>
         )}

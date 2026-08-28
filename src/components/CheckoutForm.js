@@ -10,13 +10,12 @@ const CheckoutForm = ({ setIsLoggedIn }) => {
     event.preventDefault();
 
     if (!stripe || !elements) {
-      // Certifique-se de que o Stripe e Elements foram carregados corretamente
       return;
     }
 
     setIsProcessing(true);
 
-    // Criar o método de pagamento com o cartão
+    // Create payment method with card
     const { error, paymentMethod } = await stripe.createPaymentMethod({
       type: 'card',
       card: elements.getElement(CardElement),
@@ -29,7 +28,7 @@ const CheckoutForm = ({ setIsLoggedIn }) => {
       return;
     }
 
-    // Aqui, você pode enviar o paymentMethod.id para o seu backend para criar a assinatura
+    // Send paymentMethod.id to backend to create subscription
     const response = await fetch('/api/v1/your-api-endpoint', {
       method: 'POST',
       body: JSON.stringify({ paymentMethod: paymentMethod.id }),
@@ -39,10 +38,10 @@ const CheckoutForm = ({ setIsLoggedIn }) => {
     const data = await response.json();
 
     if (data.success) {
-      alert('Pagamento realizado com sucesso!');
-      setIsLoggedIn(true); // Se o pagamento for bem-sucedido, você pode marcar o usuário como logado
+      alert('Payment successful!');
+      setIsLoggedIn(true);
     } else {
-      alert('Erro ao processar o pagamento');
+      alert('Error processing payment');
     }
 
     setIsProcessing(false);
@@ -50,10 +49,10 @@ const CheckoutForm = ({ setIsLoggedIn }) => {
 
   return (
     <form onSubmit={handleSubmit}>
-      <h3>Informações de Pagamento</h3>
+      <h3>Payment Information</h3>
       <CardElement />
       <button type="submit" disabled={!stripe || isProcessing}>
-        {isProcessing ? 'Processando...' : 'Pagar'}
+        {isProcessing ? 'Processing...' : 'Pay'}
       </button>
     </form>
   );

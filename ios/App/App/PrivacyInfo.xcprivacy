@@ -1,0 +1,45 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE plist PUBLIC "-//Apple//DTD PLIST 1.0//EN" "http://www.apple.com/DTDs/PropertyList-1.0.dtd">
+<!--
+  Baseline de manifesto de privacidade para o target "App".
+
+  NSPrivacyAccessedAPITypes: declara UserDefaults porque o runtime do
+  Capacitor (e plugins como Push Notifications) usam-no internamente, e
+  nenhum dos Pods instalados (Capacitor, CapacitorCordova,
+  CapacitorPushNotifications, CapacitorPrivacyScreen,
+  CapacitorCommunityPrivacyScreen, CapacitorScreenGuard) traz o seu próprio
+  PrivacyInfo.xcprivacy. Não foi detetado uso direto de APIs de timestamp
+  de ficheiros, boot time ou espaço em disco no código deste target (ver
+  AppDelegate.swift e os plugins locais).
+
+  NSPrivacyCollectedDataTypes fica vazio de propósito: essa declaração tem
+  de corresponder ao questionário de privacidade preenchido no App Store
+  Connect, e isso é uma decisão do dono do produto, não algo para assumir
+  aqui.
+
+  Antes de submeter: gerar o "App Privacy Report" no Xcode (Product >
+  Archive > Distribute App) para confirmar que não faltam categorias, já
+  que este ficheiro foi feito por inspeção de código, não por análise do
+  binário compilado.
+-->
+<plist version="1.0">
+<dict>
+	<key>NSPrivacyTracking</key>
+	<false/>
+	<key>NSPrivacyTrackingDomains</key>
+	<array/>
+	<key>NSPrivacyCollectedDataTypes</key>
+	<array/>
+	<key>NSPrivacyAccessedAPITypes</key>
+	<array>
+		<dict>
+			<key>NSPrivacyAccessedAPIType</key>
+			<string>NSPrivacyAccessedAPICategoryUserDefaults</string>
+			<key>NSPrivacyAccessedAPITypeReasons</key>
+			<array>
+				<string>CA92.1</string>
+			</array>
+		</dict>
+	</array>
+</dict>
+</plist>

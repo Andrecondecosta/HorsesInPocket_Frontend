@@ -1,3 +1,4 @@
+
 @import url('https://fonts.googleapis.com/css2?family=Inter:wght@700&display=swap');
 /* Estilos Gerais */
 body, html {
@@ -5,7 +6,7 @@ body, html {
   padding: 0;
   box-sizing: border-box;
   font-family: 'inter', sans-serif;
-  background-color: #d3d3d3;
+  background-color: #d3d3d3; /* Cinzento claro */
   height: 100%;
 }
 
@@ -13,11 +14,11 @@ body, html {
 .layout-container {
   display: flex;
   flex-direction: column;
-  min-height: 100vh;
+  min-height: 100vh; /* Altura total da viewport */
 }
 
 /* Navbar */
-.navbar {
+.navbar { /* Cor verde escuro */
   color: #000000;
   padding: 15px 69px;
   display: flex;
@@ -26,9 +27,9 @@ body, html {
   position: fixed;
   top: 8px;
   width: 100%;
-  height: 60px;
+  height: 60px; /* Define altura fixa para navbar */
   z-index: 10;
-  position: absolute;
+  position: absolute; /* Fixa a navbar no topo da janela */
 
 .logo-image{
   width: 39%;
@@ -46,13 +47,12 @@ a.logo-link{
 }
 
 .user-avatar {
-  width: 40px;
+  width: 40px; /* Ajuste o tamanho conforme necessário */
   height: auto;
-  margin-left: 8px;
+  margin-left: 8px; /* Espaçamento entre o nome do usuário e o avatar */
 }
 
 }
-
 /* Botão Voltar — discreto, canto superior esquerdo da área branca */
 .back-button {
   display: inline-flex;
@@ -75,12 +75,12 @@ a.logo-link{
 }
 
 .logo-link {
-  text-decoration: none;
-  color: black;
+  text-decoration: none; /* Remove o sublinhado */
+  color: black; /* Define a cor do texto como preto */
 }
 
 .logo-link:hover {
-  color: black;
+  color: black; /* Mantém a cor preta ao passar o mouse */
 }
 
 /* Estiliza o texto do utilizador e o ícone */
@@ -106,8 +106,8 @@ a.logo-link{
   position: absolute;
   top: 60px;
   right: 55px;
-  background-color: #fff;
-  border: 2px solid #8EB486;
+  background-color: #fff; /* Fundo branco */
+  border: 2px solid #8EB486; /* Borda verde */
   border-radius: 8px;
   box-shadow: 0 4px 8px rgba(0, 0, 0, 0.2);
   z-index: 1001;
@@ -118,29 +118,33 @@ a.logo-link{
 .dropdown-menu a {
   display: block;
   padding: 10px 15px;
-  color: #333;
+  color: #333; /* Cor do texto */
   text-decoration: none;
   font-size: 14px;
   transition: background-color 0.2s ease, color 0.2s ease;
 }
 
+/* Aplica cinzento à primeira opção inicialmente */
 .dropdown-menu a:first-child {
-  background-color: #dfdfdf;
+  background-color: #dfdfdf; /* Fundo cinzento */
   color: #333;
 }
 
+/* Remove o fundo cinzento do primeiro item ao passar o rato sobre outro */
 .dropdown-menu:hover a:first-child {
-  background-color: #fff;
+  background-color: #fff; /* Fundo branco */
   color: #333;
 }
 
+/* Fundo cinzento ao passar o rato sobre qualquer item */
 .dropdown-menu a:hover {
-  background-color: #dfdfdf;
+  background-color: #dfdfdf; /* Fundo cinzento */
   color: #333;
 }
 
+/* Restaura fundo cinzento ao voltar ao primeiro item */
 .dropdown-menu a:first-child:hover {
-  background-color: #dfdfdf;
+  background-color: #dfdfdf; /* Fundo cinzento */
   color: #333;
 }
 
@@ -165,21 +169,41 @@ a.logo-link{
   color: #a93226;
 }
 
+
 /* Conteúdo Central */
 .content-wrapper {
   background-color: #fff;
   margin: 80px 63px 42px 58px;
   padding: 17px;
   width: 94%;
+  min-height: calc(100vh - 150px); /* Ensures enough vertical space */
   border-radius: 12px;
   box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
   flex: 1 1;
   overflow-y: auto;
-  overflow: visible;
+  overflow-x: hidden;
+  overflow: visible; /* Garante que o conteúdo não é cortado */
 }
 
+
 /* Responsividade */
-@media (max-width: 1024px) {
+
+/* iPad e tablets grandes */
+@media (min-width: 1025px) and (max-width: 1400px) {
+  .navbar {
+    padding: 15px 40px;
+  }
+
+  .content-wrapper {
+    width: 96%;
+    margin: 80px auto 40px;
+    padding: 30px;
+    min-height: calc(100vh - 140px);
+  }
+}
+
+/* iPad Air 11-inch and similar tablets (768px - 1024px) */
+@media (min-width: 768px) and (max-width: 1024px) {
   .navbar {
     padding: 15px 30px;
 
@@ -187,10 +211,10 @@ a.logo-link{
       width: 52%;
       margin-left: 46%;
       margin-top: -14px;
-    }
-    a.logo-link{
-      width: 70%;
-    }
+  }
+  a.logo-link{
+    width: 70%;
+  }
   }
 
   .dropdown-menu {
@@ -198,8 +222,15 @@ a.logo-link{
   }
 
   .content-wrapper {
-    width: 95%;
-    margin: 80px auto 20px;
+    width: 92%;
+    margin: 90px auto 50px;
+    padding: 30px;
+    min-height: calc(100vh - 160px);
+    overflow-y: auto;
+  }
+
+  .back-button {
+    font-size: 12px;
   }
 }
 
@@ -214,8 +245,7 @@ a.logo-link{
     padding: 10px;
     max-width: 100%;
     box-sizing: border-box;
-  }
-
+    }
   .navbar {
     flex-direction: row;
     padding: 28px;
@@ -246,15 +276,21 @@ a.logo-link{
   }
 
   .content-wrapper {
-    margin: 50px 30px 61px;
-    padding: 5px;
-    border-radius: 4px;
-    width: 93%;
+      margin: 50px 30px 61px;
+      padding: 5px;
+      border-radius: 4px;
+      width: 93%;
+  }
+
+  .back-button {
+    font-size: 11px;
+    padding: 2px 0 6px 0;
+    gap: 3px;
   }
 }
 
 @media (max-width: 480px) {
-  body, html {
+    body, html {
     overflow: auto;
     height: auto;
   }
@@ -263,8 +299,7 @@ a.logo-link{
     padding: 10px;
     max-width: 100%;
     box-sizing: border-box;
-  }
-
+    }
   .navbar {
     flex-direction: row;
     padding: 20px;
@@ -280,7 +315,6 @@ a.logo-link{
     a.logo-link{
       width: 61%;
     }
-
     .user-avatar {
       width: 25px;
     }
@@ -301,5 +335,12 @@ a.logo-link{
     border-radius: 4px;
     margin: 100px 11px 29px;
     width: 95%;
+  }
+
+  .back-button {
+    font-size: 10px;
+    padding: 1px 0 5px 0;
+    gap: 2px;
+    letter-spacing: 0;
   }
 }

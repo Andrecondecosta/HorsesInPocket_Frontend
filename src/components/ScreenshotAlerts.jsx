@@ -12,7 +12,7 @@ const ScreenshotAlerts = () => {
       const res = await fetch(`${API_URL}/screenshot_alerts`, {
         headers: { Authorization: `Bearer ${token}` },
       });
-      if (!res.ok) throw new Error('Failed to load alerts');
+      if (!res.ok) throw new Error('Error loading alerts');
       const data = await res.json();
       setAlertGroups(data.screenshot_alerts || []);
     } catch (err) {
@@ -35,7 +35,7 @@ const ScreenshotAlerts = () => {
           Authorization: `Bearer ${token}`,
         },
       });
-      if (!res.ok) throw new Error(`Failed to ${action}`);
+      if (!res.ok) throw new Error(`Error performing action: ${action}`);
 
       setAlertGroups((prev) =>
         prev
@@ -69,7 +69,6 @@ const ScreenshotAlerts = () => {
         group.alerts.map((alert, index) => (
           <div key={alert.user_horse_id} className="sa-row" data-testid={`sa-horse-group-${group.horse_id}`}>
             <span className="sa-horse-name">{group.horse_name}</span>
-            <span className="sa-req-label">Request #{index + 1}</span>
             <div className="sa-actions">
               <button
                 data-testid={`sa-approve-btn-${alert.user_horse_id}`}

@@ -2,7 +2,7 @@ import { useState, useEffect, useRef } from "react";
 import { FaTrash, FaChevronDown } from "react-icons/fa";
 import "./Deleteshares.css";
 
-export default function DeleteShares({ horseId, token }) {
+export default function DeleteShares({ horseId, token, onDeleteSuccess = () => {} }) {
   const [isOpen, setIsOpen] = useState(false);
   const [shares, setShares] = useState([]);
   const [selectedShares, setSelectedShares] = useState([]);
@@ -18,7 +18,7 @@ export default function DeleteShares({ horseId, token }) {
     })
       .then((res) => res.json())
       .then((data) => setShares(data.shares || []))
-      .catch((err) => console.error("❌ Erro ao carregar partilhas:", err));
+      .catch((err) => console.error("Error loading shares:", err));
   }, [horseId, token]);
 
   const toggleSelection = (userId) => {
@@ -37,15 +37,16 @@ export default function DeleteShares({ horseId, token }) {
       body: JSON.stringify({ user_ids: selectedShares }),
     })
       .then((res) => {
-        if (!res.ok) throw new Error("Erro ao remover partilhas");
+        if (!res.ok) throw new Error("Error removing shares");
         return res.json();
       })
       .then(() => {
         setShares((prev) => prev.filter((share) => !selectedShares.includes(share.user_id)));
         setSelectedShares([]);
-        setIsOpen(false); // Fecha a lista após deletar
+        setIsOpen(false);
+        onDeleteSuccess();
       })
-      .catch((err) => console.error("❌ Erro ao remover partilhas:", err));
+      .catch((err) => console.error("Error removing shares:", err));
   };
 
   const handleClickOutside = (event) => {

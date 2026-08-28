@@ -4,11 +4,14 @@ import { Elements } from '@stripe/react-stripe-js';
 import { loadStripe } from '@stripe/stripe-js';
 import { App as CapacitorApp } from '@capacitor/app';
 import Content from './components/Content';
+import usePushNotifications from './hooks/usePushNotifications';
+import { isNativeiOS } from './utils/isNative';
 import './App.css';
 
-const stripePromise = loadStripe(process.env.REACT_APP_STRIPE_PUBLIC_KEY);
+// Only load Stripe when NOT on native iOS (App Store compliance)
+const stripePromise = isNativeiOS() ? null : loadStripe(process.env.REACT_APP_STRIPE_PUBLIC_KEY);
 
-// Interceptor global: redireciona para login em qualquer resposta 401 com token ativo
+// Global interceptor: redirect to login on any 401 response with active token
 const _originalFetch = window.fetch;
 window.fetch = async (...args) => {
   const response = await _originalFetch(...args);
@@ -32,7 +35,7 @@ function DeepLinkHandler() {
         const path = url.pathname + url.search;
         if (path) navigate(path);
       } catch (e) {
-    console.warn('Deep link parse error:', e);
+        console.warn('Deep link parse error:', e);
       }
     }).then((l) => {
       listener = l;
@@ -47,22 +50,29 @@ function DeepLinkHandler() {
 }
 
 function App() {
-  const [isLoggedIn, setIsLoggedIn] = useState(false);
+  const [, setIsLoggedIn] = useState(false);
 
   useEffect(() => {
     const token = localStorage.getItem('authToken');
-    if (token) {
-      setIsLoggedIn(true);
-    }
+    if (token) setIsLoggedIn(true);
   }, []);
+
+  // Register for push notifications when user is logged in (iOS only)
+  usePushNotifications();
+
+  const content = <Content setIsLoggedIn={setIsLoggedIn} />;
 
   return (
     <Router>
       <div className="app-container">
         <DeepLinkHandler />
-        <Elements stripe={stripePromise}>
-          <Content setIsLoggedIn={setIsLoggedIn} />
-        </Elements>
+        {stripePromise ? (
+          <Elements stripe={stripePromise}>
+            {content}
+          </Elements>
+        ) : (
+          content
+        )}
       </div>
     </Router>
   );

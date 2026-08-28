@@ -13,7 +13,7 @@ const DashboardPage = ({ setIsLoggedIn }) => {
   const token = localStorage.getItem('authToken');
 
   useEffect(() => {
-    window.scrollTo(0, 0); // Scrolls to the top when the component is mounted
+    window.scrollTo(0, 0);
 
     const hasSeenPopup = localStorage.getItem("hasSeenPopup");
 
@@ -34,12 +34,12 @@ useEffect(() => {
         },
       });
 
-      if (!response.ok) throw new Error("Erro ao carregar status do usuário");
+      if (!response.ok) throw new Error("Error loading user status");
 
       const data = await response.json();
       setUserStatus(data);
     } catch (error) {
-      console.error("Erro ao buscar status do usuário:", error);
+      console.error("Error fetching user status:", error);
     }
   };
 
@@ -51,7 +51,6 @@ useEffect(() => {
 
   return (
     <Layout setIsLoggedIn={setIsLoggedIn}>
-      {/* O popup só aparece se showPopup for true */}
       {showPopup && <WelcomePopup onClose={() => setShowPopup(false)} />}
 
       <div className="dashboard-container">

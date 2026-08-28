@@ -8,6 +8,8 @@ PODS:
   - CapacitorCordova (7.4.2)
   - CapacitorPrivacyScreen (1.1.0):
     - Capacitor
+  - CapacitorPushNotifications (7.0.6):
+    - Capacitor
   - CapacitorScreenGuard (0.0.1):
     - Capacitor
 
@@ -17,6 +19,7 @@ DEPENDENCIES:
   - "CapacitorCommunityPrivacyScreen (from `../../node_modules/@capacitor-community/privacy-screen`)"
   - "CapacitorCordova (from `../../node_modules/@capacitor/ios`)"
   - "CapacitorPrivacyScreen (from `../../node_modules/@capacitor/privacy-screen`)"
+  - "CapacitorPushNotifications (from `../../node_modules/@capacitor/push-notifications`)"
   - CapacitorScreenGuard (from `../../plugins/capacitor-screen-guard`)
 
 EXTERNAL SOURCES:
@@ -30,6 +33,8 @@ EXTERNAL SOURCES:
     :path: "../../node_modules/@capacitor/ios"
   CapacitorPrivacyScreen:
     :path: "../../node_modules/@capacitor/privacy-screen"
+  CapacitorPushNotifications:
+    :path: "../../node_modules/@capacitor/push-notifications"
   CapacitorScreenGuard:
     :path: "../../plugins/capacitor-screen-guard"
 
@@ -39,8 +44,9 @@ SPEC CHECKSUMS:
   CapacitorCommunityPrivacyScreen: 088ffe903fe97c6de54f31407d1bc72c2528a5fc
   CapacitorCordova: 5e58d04631bc5094894ac106e2bf1da18a9e6151
   CapacitorPrivacyScreen: a6c9dc10d9547feb5ac1c28c74e520d7f0b208f6
+  CapacitorPushNotifications: c6158ba6f3777f281a675aa43e4011e9723e822b
   CapacitorScreenGuard: 68db6ce186598753f896a13f75bc0a0384d0c2bd
 
-PODFILE CHECKSUM: 06872b905d5120d16a8e6eab6a4f1a563acb61c1
+PODFILE CHECKSUM: 8346905bb49591c97cb6f8cd22944b336b1199b3
 
 COCOAPODS: 1.16.2

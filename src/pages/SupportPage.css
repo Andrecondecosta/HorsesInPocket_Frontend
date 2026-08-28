@@ -186,3 +186,21 @@
     padding: 24px 16px;
   }
 }
+
+.support-back-btn {
+  display: inline-flex;
+  align-items: center;
+  gap: 4px;
+  background: none;
+  border: none;
+  cursor: pointer;
+  color: #aaa;
+  font-size: 13px;
+  font-family: 'inter', sans-serif;
+  padding: 4px 0;
+  transition: color 0.15s ease;
+}
+
+.support-back-btn:hover {
+  color: #47663B;
+}
