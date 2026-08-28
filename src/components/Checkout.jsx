@@ -20,7 +20,7 @@ const Checkout = ({ plan }) => {
 
     const session = await response.json();
 
-    // Redireciona o usuário para o checkout do Stripe
+    // Redirect user to Stripe checkout
     const result = await stripe.redirectToCheckout({
       sessionId: session.id,
     });
@@ -30,7 +30,7 @@ const Checkout = ({ plan }) => {
     }
   };
 
-  return <button onClick={handleCheckout}>Mudar para {plan}</button>;
+  return <button onClick={handleCheckout}>Switch to {plan}</button>;
 };
 
 export default Checkout;

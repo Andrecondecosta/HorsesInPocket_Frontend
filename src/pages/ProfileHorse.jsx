@@ -1,6 +1,6 @@
 import React, { useState, useEffect, useRef } from 'react';
 import { useParams, useNavigate, useLocation, Link } from 'react-router-dom';
-import { FaEdit, FaTrash, FaShareAlt } from 'react-icons/fa';
+import { FaEdit, FaTrash, FaShareAlt, FaChevronDown } from 'react-icons/fa';
 import Lightbox from "yet-another-react-lightbox";
 import GenealogyTree from '../components/GenealogyTree';
 import Layout from '../components/Layout';
@@ -10,8 +10,11 @@ import "yet-another-react-lightbox/styles.css";
 import LoadingPopup from '../components/LoadingPopup';
 import DeleteShares from '../components/Deleteshares';
 import { useScreenshotProtection } from '../hooks/useScreenshotProtection';
+import { Capacitor } from '@capacitor/core';
 import ScreenshotApprovals from '../components/ScreenshotApprovals';
+import { isNativeiOS } from '../utils/isNative';
 import './ProfileHorse.css';
+
 
 const ProfileHorse = ({ setIsLoggedIn }) => {
   const { id } = useParams();
@@ -45,57 +48,61 @@ const ProfileHorse = ({ setIsLoggedIn }) => {
           Authorization: `Bearer ${token}`,
         },
       });
-      if (!response.ok) throw new Error("Erro ao carregar status");
+
+      if (!response.ok) throw new Error("Error loading user status");
+
       const data = await response.json();
       setUserStatus(data);
     } catch (error) {
-      console.error("Erro ao buscar status:", error);
+      console.error("Error fetching status:", error);
     }
   };
 
-  useEffect(() => {
-    const queryParams = new URLSearchParams(location.search);
-    const isReadonly = queryParams.get('readonly') === 'true';
-    setReadonly(isReadonly);
+useEffect(() => {
+  const queryParams = new URLSearchParams(location.search);
+  setReadonly(queryParams.get('readonly') === 'true');
 
-    const fetchHorse = async () => {
-      try {
-        const response = await fetch(`${process.env.REACT_APP_API_SERVER_URL}/horses/${id}`, {
-          method: 'GET',
-          headers: {
-            'Content-Type': 'application/json',
-            'Authorization': `Bearer ${token}`,
-          },
-        });
+  const fetchHorse = async () => {
+    try {
+      const response = await fetch(`${process.env.REACT_APP_API_SERVER_URL}/horses/${id}`, {
+        method: 'GET',
+        headers: {
+          'Content-Type': 'application/json',
+          'Authorization': `Bearer ${token}`,
+        },
+      });
 
-        if (!response.ok) throw new Error('Failed to fetch horse');
-
-        const data = await response.json();
-
-        if (data.status === "pending_approval") {
-          alert("This horse is awaiting the creator's approval.");
-          navigate(isReadonly ? '/received' : '/myhorses');
-          return;
-        }
-
-        setHorse(data);
-        setIsOwner(data.is_owner);
-        setSelectedImage(0);
-      } catch (error) {
-        setError('Failed to load horse profile');
-      } finally {
-        setIsLoading(false);
+      if (!response.ok) {
+        throw new Error('Failed to fetch horse');
       }
-    };
 
-    if (token) {
-      fetchHorse();
-      fetchUserStatus();
-    } else {
-      setError('Token not found');
+      const data = await response.json();
+
+      if (data.status === "pending_approval") {
+        alert("This horse is awaiting the creator's approval. You will be redirected to My Horses.");
+        navigate('/myhorses');
+        return;
+      }
+
+      setHorse(data);
+      setIsOwner(data.is_owner);
+      setSelectedImage(0);
+    } catch (error) {
+      setError('Failed to load horse profile');
+    } finally {
       setIsLoading(false);
     }
-  }, [id, location.search, token]);
+  };
+
+  if (token) {
+    fetchHorse();
+    fetchUserStatus();
+  } else {
+    setError('Token not found');
+    setIsLoading(false);
+  }
+}, [id, location.search, token]);
+
 
   const handleClickOutside = (event) => {
     if (menuRef.current && !menuRef.current.contains(event.target)) {
@@ -105,7 +112,9 @@ const ProfileHorse = ({ setIsLoggedIn }) => {
 
   useEffect(() => {
     document.addEventListener('mousedown', handleClickOutside);
-    return () => document.removeEventListener('mousedown', handleClickOutside);
+    return () => {
+      document.removeEventListener('mousedown', handleClickOutside);
+    };
   }, []);
 
   const hasAncestorsData = (ancestors) => {
@@ -156,8 +165,13 @@ const ProfileHorse = ({ setIsLoggedIn }) => {
   const heightInHH = (horse.height_cm / 0.1016).toFixed(1);
 
   const handleShareClick = () => {
-    if (!userStatus) return;
+    if (!userStatus) {
+      console.error("userStatus not yet loaded!");
+      return;
+    }
+
     if (userStatus.used_shares >= userStatus.max_shares) {
+      console.warn("Sharing limit reached! Showing popup.");
       setShowLimitPopup(true);
     } else {
       setShowShareModal(true);
@@ -167,6 +181,7 @@ const ProfileHorse = ({ setIsLoggedIn }) => {
   return (
     <Layout setIsLoggedIn={setIsLoggedIn}>
       <div className={`profile-container ${screenshotTaken ? 'blurred' : ''}`}>
+        {/* Header with title and buttons */}
         <div className="profile-header">
           {/* Breadcrumbs */}
           <div className="breadcrumbs">
@@ -196,7 +211,7 @@ const ProfileHorse = ({ setIsLoggedIn }) => {
             )}
           </div>
 
-          {/* Buttons for Mobile */}
+          {/* Three-dot menu for Mobile */}
           <div className="mobile-menu mobile-only" ref={menuRef}>
             {isOwner && !readonly && (
               <button className="edit-button" onClick={() => navigate(`/horses/${id}/edit`)}>
@@ -219,64 +234,67 @@ const ProfileHorse = ({ setIsLoggedIn }) => {
         {/* Screenshot Approvals — visible only to the horse creator */}
         {isOwner && <ScreenshotApprovals horseId={id} />}
 
-        {screenshotTaken ? (
-          <div className="screenshot-warning">
-            <p>🚫 Screenshot detected. Data hidden for security.</p>
-          </div>
-        ) : (
-          <div className="horse-info-section">
-            <h2 className="section-title">Specific Information</h2>
-            <div className="info-grid">
-              <div className="info-item">
-                <strong>Horse Name</strong>
-                <p>{horse.name}</p>
-              </div>
-              <div className="info-item">
-                <strong>Year of Birth</strong>
-                <p>{horse.age}</p>
-              </div>
-              <div className="info-item">
-                <strong>Gender</strong>
-                <p>{horse.gender}</p>
-              </div>
-              <div className="info-item">
-                <strong>Color</strong>
-                <p>{horse.color}</p>
-              </div>
-              <div className="info-item">
-                <strong>Height</strong>
-                <p>{horse.height_cm} m ({heightInHH} hh)</p>
-              </div>
-              <div className="info-item">
-                <strong>Piroplasmosis</strong>
-                <p>{horse.piroplasmosis ? 'Yes' : 'No'}</p>
-              </div>
-              <div className="info-item">
-                <strong>Breed</strong>
-                <p>{horse.breed || "Not specified"}</p>
-              </div>
-              <div className="info-item">
-                <strong>Breeder</strong>
-                <p>{horse.breeder || "Not specified"}</p>
-              </div>
-              <div className="info-item">
-                <strong>Training Level</strong>
-                <p>{horse.training_level}</p>
-              </div>
+              {screenshotTaken ? (
+            <div className="screenshot-warning">
+    <p>Screenshot detected. Data hidden for security.</p>
+  </div>
+) : (
+        <div className="horse-info-section">
+          <h2 className="section-title">Specific Information</h2>
+          <div className="info-grid">
+            <div className="info-item">
+              <strong>Horse Name</strong>
+              <p>{horse.name}</p>
             </div>
+            <div className="info-item">
+              <strong>Year of Birth</strong>
+              <p>{horse.age}</p>
+            </div>
+            <div className="info-item">
+              <strong>Gender</strong>
+              <p>{horse.gender}</p>
+            </div>
+            <div className="info-item">
+              <strong>Color</strong>
+              <p>{horse.color}</p>
+            </div>
+            <div className="info-item">
+              <strong>Height</strong>
+              <p>{horse.height_cm} m ({heightInHH} hh)</p>
+            </div>
+            <div className="info-item">
+              <strong>Piroplasmosis</strong>
+              <p>{horse.piroplasmosis ? 'Yes' : 'No'}</p>
+            </div>
+            <div className="info-item">
+              <strong>Breed</strong>
+              <p>{horse.breed || "Not specified"}</p>
+            </div>
+            <div className="info-item">
+              <strong>Breeder</strong>
+              <p>{horse.breeder || "Not specified"}</p>
+            </div>
+            <div className="info-item">
+              <strong>Training Level</strong>
+              <p>{horse.training_level}</p>
+            </div>
+          </div>
 
-            <div className="description-section">
-              <strong>Description</strong>
-              <p>{horse.description || 'Not specified'}</p>
-            </div>
+          {/* Description */}
+          <div className="description-section">
+            <strong>Description</strong>
+            <p>{horse.description || 'Not specified'}</p>
           </div>
+        </div>
+
         )}
-
+        {/* Images and Videos */}
         <div className="profile-gallery">
           <h2 className="section-title">Images and Videos</h2>
           <ProfileMedia images={horse.images} videos={horse.videos} />
         </div>
 
+        {/* Genealogy */}
         <div className="genealogy-section">
           <h2 className="section-title-geno">Genealogy</h2>
           {hasAncestorsData(horse.ancestors) ? (
@@ -286,51 +304,74 @@ const ProfileHorse = ({ setIsLoggedIn }) => {
           )}
         </div>
 
-        {showDeleteModal && (
-          <div className="modal-overlay">
-            <div className="modal-content">
-              <h3>Delete Horse</h3>
-              <div className="delete-options">
-                {!deleteMessage ? (
+
+{showDeleteModal && (
+  <div className="modal-overlay">
+    <div className="modal-content">
+      <h3>Delete Horse</h3>
+      <div className="delete-options">
+        {!deleteMessage ? (
+          <>
+            <button
+              className="delete-option-button"
+              onClick={() => handleDelete("destroy")}
+            >
+              <FaTrash /> <p>Delete for Me and Everyone</p>
+            </button>
+
+            < DeleteShares horseId={id} token={token} onDeleteSuccess={fetchUserStatus}/>
+
+
+            <button className="modal-close" onClick={() => setShowDeleteModal(false)}>
+              Cancel
+            </button>
+          </>
+        ) : (
+          <p className="delete-message">{deleteMessage}</p>
+        )}
+      </div>
+    </div>
+  </div>
+)}
+
+
+
+        {/* Share Modal */}
+        {showShareModal && (
+          <ShareHorse
+            horseId={id}
+            onClose={() => setShowShareModal(false)}
+          />
+        )}
+
+         {/* Sharing limit popup — adjusted for native iOS */}
+         {showLimitPopup && (
+            <div className="popup-overlay" data-testid="share-limit-popup">
+              <div className="popup-content">
+                <h3>Sharing Limit Reached!</h3>
+                {isNativeiOS() ? (
                   <>
-                    <button
-                      className="delete-option-button"
-                      onClick={() => handleDelete("destroy")}
-                    >
-                      <FaTrash /> <p>Delete for Me and Everyone</p>
-                    </button>
-                    <DeleteShares horseId={id} token={token} onDeleteSuccess={fetchUserStatus} />
-                    <button className="modal-close" onClick={() => setShowDeleteModal(false)}>
-                      Cancel
-                    </button>
+                    <p>You have reached the sharing limit of your current plan. Please manage your subscription through your device settings.</p>
+                    <div className="popup-buttons">
+                      <button className="popup-btn secondary" data-testid="share-limit-ok-btn" onClick={() => setShowLimitPopup(false)}>OK</button>
+                    </div>
                   </>
                 ) : (
-                  <p className="delete-message">{deleteMessage}</p>
+                  <>
+                    <p>You have reached the sharing limit of your plan. To continue sharing, please upgrade.</p>
+                    <div className="popup-buttons">
+                      <button className="popup-btn secondary" data-testid="share-limit-ok-btn" onClick={() => setShowLimitPopup(false)}>OK</button>
+                      <button className="popup-btn primary" data-testid="share-limit-upgrade-btn" onClick={() => navigate('/profile')}>
+                        View My Plan
+                      </button>
+                    </div>
+                  </>
                 )}
               </div>
             </div>
-          </div>
-        )}
+          )}
 
-        {showShareModal && (
-          <ShareHorse horseId={id} onClose={() => setShowShareModal(false)} />
-        )}
-
-        {showLimitPopup && (
-          <div className="popup-overlay">
-            <div className="popup-content">
-              <h3>Sharing Limit Reached!</h3>
-              <p>You have reached the sharing limit of your plan. Please upgrade to continue sharing.</p>
-              <div className="popup-buttons">
-                <button className="popup-btn secondary" onClick={() => setShowLimitPopup(false)}>OK</button>
-                <button className="popup-btn primary" onClick={() => navigate('/profile')}>
-                  View My Plan
-                </button>
-              </div>
-            </div>
-          </div>
-        )}
-
+        {/* Lightbox for image preview */}
         {isOpen && (
           <Lightbox
             open={isOpen}

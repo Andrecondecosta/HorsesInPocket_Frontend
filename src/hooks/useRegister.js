@@ -16,25 +16,25 @@ export const useRegister = () => {
           'Content-Type': 'application/json',
         },
         body: JSON.stringify({
-          user: userData,  // Enviando os dados do usuário
-          shared_token: sharedToken,  // Enviando o token compartilhado
+          user: userData,
+          shared_token: sharedToken,
         }),
       });
 
       const data = await response.json();
 
       if (!response.ok || !data.token) {
-        throw new Error(data.errors?.join(', ') || 'Falha ao registrar usuário');
+        throw new Error(data.errors?.join(', ') || 'Failed to register user');
       }
 
       localStorage.setItem("authToken", data.token);
-      localStorage.setItem("hasSeenPopup", "newUser"); // 🔥 Marca como novo usuário
+      localStorage.setItem("hasSeenPopup", "newUser");
 
       setToken(data.token);
-      return data.token; // Retorna o token explicitamente
+      return data.token;
     } catch (err) {
       setError(err.message);
-      return null; // Retorna nulo em caso de erro
+      return null;
     } finally {
       setLoading(false);
     }

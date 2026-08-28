@@ -5,7 +5,7 @@ export const useLogin = () => {
   const [error, setError] = useState(null);
   const [token, setToken] = useState(null);
 
-  const login = async (email, password, sharedToken) => {  // Adicione o parâmetro sharedToken
+  const login = async (email, password, sharedToken) => {
     setLoading(true);
     setError(null);
 
@@ -15,19 +15,19 @@ export const useLogin = () => {
         headers: {
           'Content-Type': 'application/json',
         },
-        body: JSON.stringify({ email, password, shared_token: sharedToken }),  // Envia o sharedToken no corpo
+        body: JSON.stringify({ email, password, shared_token: sharedToken }),
       });
 
       const data = await response.json();
 
       if (response.ok) {
         setToken(data.token);
-        localStorage.setItem('authToken', data.token);  // Use a chave 'authToken'
+        localStorage.setItem('authToken', data.token);
       } else {
-        setError(data.error || 'Erro ao fazer login');
+        setError(data.error || 'Login failed');
       }
     } catch (err) {
-      setError('Erro de rede');
+      setError('Network error');
     } finally {
       setLoading(false);
     }
@@ -35,7 +35,7 @@ export const useLogin = () => {
 
   const logout = () => {
     setToken(null);
-    localStorage.removeItem('authToken');  // Use a chave 'authToken'
+    localStorage.removeItem('authToken');
   };
 
   return { login, logout, token, loading, error };

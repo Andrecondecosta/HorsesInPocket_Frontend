@@ -6,7 +6,7 @@ const PrivacyPolicy = () => {
   const navigate = useNavigate();
 
   const handleBackToRegister = () => {
-    navigate('/register');
+    navigate(-1);
   };
 
   return (
@@ -62,7 +62,9 @@ const PrivacyPolicy = () => {
         </p>
 
         <h2 className="page-section-title">7. Your Rights (GDPR)</h2>
-        <p className="page-text">Under GDPR and applicable law, you have the right to:</p>
+        <p className="page-text">
+          Under GDPR and applicable law, you have the right to:
+        </p>
         <ul className="page-list">
           <li>Access the personal data we hold about you.</li>
           <li>Correct inaccurate or incomplete data.</li>
@@ -98,8 +100,8 @@ const PrivacyPolicy = () => {
           <p className="page-text">
             Ready to create your account? You can return to the registration page now.
           </p>
-          <button className="back-button" onClick={handleBackToRegister}>
-            Back to Register
+          <button className="pp-back-button" onClick={handleBackToRegister}>
+            Back
           </button>
         </div>
       </div>

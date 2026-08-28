@@ -26,7 +26,6 @@ const SubscriptionPlans = ({ onSelectPlan, onClose, currentPlan, setUserStatus }
                 ))}
               </ul>
 
-              {/* Se for o plano atual, mostra um botão desativado */}
               {isCurrentPlan ? (
                 <button className="current-plan-btn" disabled>✔ Current Plan</button>
               ) : (
@@ -45,21 +44,20 @@ const SubscriptionPlans = ({ onSelectPlan, onClose, currentPlan, setUserStatus }
                           body: JSON.stringify({ plan: "Basic" }),
                         });
 
-                        if (!response.ok) throw new Error("Erro ao atualizar o plano para Free!");
+                        if (!response.ok) throw new Error("Error updating plan to Free!");
 
                         const data = await response.json();
-                        alert("✅ Seu plano foi atualizado para Free!"); // Feedback para o usuário
+                        alert("Your plan has been updated to Free!");
 
-                        // 🔄 Atualiza o estado do usuário globalmente
                         setUserStatus((prev) => ({ ...prev, plan: "Basic", max_horses: 1, max_shares: 3 }));
 
-                        onClose(); // Fecha o popup após a atualização
+                        onClose();
                       } catch (error) {
-                        console.error("❌ Erro ao atualizar o plano:", error);
-                        alert("❌ Ocorreu um erro ao tentar mudar para o plano Free.");
+                        console.error("Error updating plan:", error);
+                        alert("An error occurred while switching to the Free plan.");
                       }
                     } else {
-                      onSelectPlan(plan); // Continua para o pagamento nos outros planos
+                      onSelectPlan(plan);
                     }
                   }}
                   className={`select-plan-btn ${plan.name === "Basic" ? "disabled" : ""}`}
