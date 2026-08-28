@@ -1,5 +1,6 @@
 import React, { useEffect, useState } from "react";
 import Layout from "../components/Layout";
+import LoadingPopup from "../components/LoadingPopup";
 import "./AdminDashboard.css";
 
 const AdminDashboard = () => {
@@ -8,7 +9,7 @@ const AdminDashboard = () => {
   const [horses, setHorses] = useState([]);
   const [logs, setLogs] = useState([]);
   const [activeSection, setActiveSection] = useState(null);
-  const [sortConfig, setSortConfig] = useState({ key: null, direction: "asc" }); // 🔀 Controle de ordenação
+  const [sortConfig, setSortConfig] = useState({ key: null, direction: "asc" });
   const [error, setError] = useState(null);
   const [loading, setLoading] = useState(true);
 
@@ -33,7 +34,7 @@ const AdminDashboard = () => {
         ]);
 
         if (!statsRes.ok || !usersRes.ok || !horsesRes.ok || !logsRes.ok) {
-          throw new Error("Erro ao carregar dados.");
+          throw new Error("Error loading data.");
         }
 
         setStatistics(await statsRes.json());
@@ -42,7 +43,7 @@ const AdminDashboard = () => {
         setLogs(await logsRes.json());
       } catch (err) {
         console.error(err);
-        setError("Erro ao carregar dados do painel de controlo.");
+        setError("Error loading dashboard data.");
       } finally {
         setLoading(false);
       }
@@ -52,7 +53,7 @@ const AdminDashboard = () => {
   }, []);
 
   const handleDeleteUser = async (userId) => {
-  const confirmDelete = window.confirm("Tem certeza que deseja excluir este usuário?");
+  const confirmDelete = window.confirm("Are you sure you want to delete this user?");
   if (!confirmDelete) return;
 
   try {
@@ -65,18 +66,16 @@ const AdminDashboard = () => {
     });
 
     if (!response.ok) {
-      throw new Error("Erro ao deletar o usuário.");
+      throw new Error("Error deleting user.");
     }
 
     setUsers((prevUsers) => prevUsers.filter((user) => user.id !== userId));
-    alert("Usuário excluído com sucesso!");
+    alert("User deleted successfully!");
   } catch (error) {
-    console.error("Erro ao excluir usuário:", error);
+    console.error("Error deleting user:", error);
   }
 };
 
-
-  // 🔀 Função de ordenação
   const handleSort = (key) => {
     let direction = "asc";
     if (sortConfig.key === key && sortConfig.direction === "asc") {
@@ -85,7 +84,6 @@ const AdminDashboard = () => {
     setSortConfig({ key, direction });
   };
 
-  // 🔍 Função para ordenar dados
   const sortedData = (data) => {
     if (!sortConfig.key) return data;
 
@@ -104,7 +102,6 @@ const AdminDashboard = () => {
     });
   };
 
-  // ✅ Renderizar a tabela com ordenação
   const renderSortableHeader = (label, key) => (
     <th onClick={() => handleSort(key)}>
       {label} {sortConfig.key === key && (sortConfig.direction === "asc" ? "▲" : "▼")}
@@ -116,14 +113,14 @@ const AdminDashboard = () => {
       case "users":
         return (
           <div className="dashboard-section">
-            <h2>Utilizadores</h2>
+            <h2>Users</h2>
             <table>
               <thead>
                 <tr>
-                  {renderSortableHeader("Nome", "name")}
+                  {renderSortableHeader("Name", "name")}
                   {renderSortableHeader("Email", "email")}
-                  {renderSortableHeader("Data de Registo", "created_at")}
-                  {renderSortableHeader("Ações", "actions")}
+                  {renderSortableHeader("Registration Date", "created_at")}
+                  {renderSortableHeader("Actions", "actions")}
                 </tr>
               </thead>
               <tbody>
@@ -150,15 +147,15 @@ const AdminDashboard = () => {
         case "horses":
           return (
             <div className="dashboard-section">
-              <h2>Cavalos</h2>
+              <h2>Horses</h2>
               <table>
                 <thead>
                   <tr>
-                    {renderSortableHeader("Nome", "name")}
-                    {renderSortableHeader("Idade", "age")}
-                    {renderSortableHeader("Gênero", "gender")}
-                    {renderSortableHeader("Cor", "color")}
-                    {renderSortableHeader("Data de Registo", "created_at")} {/* ✅ Novo cabeçalho */}
+                    {renderSortableHeader("Name", "name")}
+                    {renderSortableHeader("Age", "age")}
+                    {renderSortableHeader("Gender", "gender")}
+                    {renderSortableHeader("Color", "color")}
+                    {renderSortableHeader("Registration Date", "created_at")}
                   </tr>
                 </thead>
                 <tbody>
@@ -168,7 +165,7 @@ const AdminDashboard = () => {
                       <td>{horse.age}</td>
                       <td>{horse.gender}</td>
                       <td>{horse.color}</td>
-                      <td>{new Date(horse.created_at).toLocaleDateString()}</td> {/* ✅ Exibe a data */}
+                      <td>{new Date(horse.created_at).toLocaleDateString()}</td>
                     </tr>
                   ))}
                 </tbody>
@@ -178,7 +175,7 @@ const AdminDashboard = () => {
       case "logs":
         return (
           <div className="dashboard-section">
-            <h2>Atividades Recentes</h2>
+            <h2>Recent Activity</h2>
             <ul>
               {sortedData(logs).map((log, index) => (
                 <li key={index}>
@@ -193,28 +190,29 @@ const AdminDashboard = () => {
     }
   };
 
+  if (loading) return <LoadingPopup message="Loading..." />;
+
   return (
     <Layout>
       <div className="admin-dashboard">
-        <h1>Painel de Controlo</h1>
+        <h1>Control Panel</h1>
 
         {statistics && (
           <div className="dashboard-summary">
             <div className="card" onClick={() => setActiveSection("horses")}>
-              <h3>Total de Cavalos</h3>
+              <h3>Total Horses</h3>
               <p>{statistics.total_horses}</p>
             </div>
             <div className="card" onClick={() => setActiveSection("users")}>
-              <h3>Total de Utilizadores</h3>
+              <h3>Total Users</h3>
               <p>{statistics.total_users}</p>
             </div>
             <div className="card" onClick={() => setActiveSection("logs")}>
-              <h3>Total de Logs</h3>
+              <h3>Total Logs</h3>
               <p>{statistics.total_logs}</p>
             </div>
           </div>
         )}
-        {/* ✅ Detalhes da secção selecionada */}
         {renderSection()}
       </div>
     </Layout>

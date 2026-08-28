@@ -1,8 +1,9 @@
 import React, { useState } from 'react';
-import { Link } from 'react-router-dom';
+import { Link, useNavigate } from 'react-router-dom';
 import './SupportPage.css';
 
 const SupportPage = () => {
+  const navigate = useNavigate();
   const [name, setName] = useState('');
   const [email, setEmail] = useState('');
   const [message, setMessage] = useState('');
@@ -97,7 +98,7 @@ const SupportPage = () => {
         </div>
 
         <div className="support-footer">
-          <Link to="/login">Back to Login</Link>
+          <button type="button" onClick={() => navigate(-1)} className="support-back-btn">&#8592; Back</button>
           <span>·</span>
           <Link to="/privacy-policy">Privacy Policy</Link>
         </div>

@@ -14,6 +14,7 @@ def capacitor_pods
   pod 'CapacitorCommunityPrivacyScreen', :path => '../../node_modules/@capacitor-community/privacy-screen'
   pod 'CapacitorApp', :path => '../../node_modules/@capacitor/app'
   pod 'CapacitorPrivacyScreen', :path => '../../node_modules/@capacitor/privacy-screen'
+  pod 'CapacitorPushNotifications', :path => '../../node_modules/@capacitor/push-notifications'
   pod 'CapacitorScreenGuard', :path => '../../plugins/capacitor-screen-guard'
 end
 
@@ -24,4 +25,5 @@ end
 
 post_install do |installer|
   assertDeploymentTarget(installer)
+
 end

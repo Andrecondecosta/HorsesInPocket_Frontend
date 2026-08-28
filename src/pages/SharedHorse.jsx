@@ -7,7 +7,7 @@ const SharedHorse = () => {
   const hasFetched = useRef(false);
   const location = useLocation();
 
-  // 🔍 Captura a URL e extrai os parâmetros corretamente
+  // Capture URL and extract parameters correctly
   const fullUrl = `${location.pathname}${location.search}`;
   console.log("Full URL received:", fullUrl);
 
@@ -39,15 +39,14 @@ const SharedHorse = () => {
         .then((data) => {
           console.log("API response:", data);
           if (data.error) {
-            console.log("🚨 Link já foi usado, redirecionando para /received com mensagem de erro.");
+            console.log("Link already used, redirecting to /received with error message.");
 
-            // ✅ Guarda no `localStorage` para persistir no reload
-            localStorage.setItem('receivedMessage', "⚠️ The horse had already been shared and was not added again.");
+            localStorage.setItem('receivedMessage', "The horse had already been shared and was not added again.");
             localStorage.setItem('receivedMessageType', "error");
 
-            navigate('/received', { state: { message: "⚠️ The horse had already been shared and was not added again.", type: "error" } });
+            navigate('/received', { state: { message: "The horse had already been shared and was not added again.", type: "error" } });
           } else {
-            console.log("✅ Cavalo adicionado com sucesso! Redirecionando para /received");
+            console.log("Horse added successfully! Redirecting to /received");
             navigate('/received');
           }
         })
@@ -61,15 +60,13 @@ const SharedHorse = () => {
       fetch(`${process.env.REACT_APP_API_SERVER_URL}/horses/shared/${cleanToken}`)
         .then((response) => response.json())
         .then((data) => {
-          console.log("🚨 API Response before redirecting:", data);
+          console.log("API Response before redirecting:", data);
 
           if (data.error && (data.error.includes("used") || data.error.includes("expired"))) {
-            // ✅ Link já foi utilizado ou expirou, mostramos erro na Welcome Page
-            const errorRedirectUrl = `/welcome?token=${cleanToken}&message=${encodeURIComponent("⚠️ This sharing link has already been used or expired.")}&horseImage=${encodeURIComponent(horseImage)}&horseName=${encodeURIComponent(horseName)}`;
+            const errorRedirectUrl = `/welcome?token=${cleanToken}&message=${encodeURIComponent("This sharing link has already been used or expired.")}&horseImage=${encodeURIComponent(horseImage)}&horseName=${encodeURIComponent(horseName)}`;
             console.log("Redirecting to Welcome Page with error:", errorRedirectUrl);
             navigate(errorRedirectUrl);
           } else {
-            // ✅ Link ainda válido, redirecionamos normalmente
             const queryString = new URLSearchParams({ horseImage, horseName }).toString();
             const redirectUrl = `/welcome?redirect=${correctedUrl}&token=${cleanToken}&${queryString}`;
             console.log("Redirecting to:", redirectUrl);
@@ -78,7 +75,7 @@ const SharedHorse = () => {
         })
         .catch((err) => {
           console.log("Error in request:", err);
-          navigate(`/welcome?token=${cleanToken}&message=${encodeURIComponent("❌ Error checking the link.")}&horseImage=${encodeURIComponent(horseImage)}&horseName=${encodeURIComponent(horseName)}`);
+          navigate(`/welcome?token=${cleanToken}&message=${encodeURIComponent("Error checking the link.")}&horseImage=${encodeURIComponent(horseImage)}&horseName=${encodeURIComponent(horseName)}`);
         });
     }
   }, [cleanToken, correctedUrl, navigate]);

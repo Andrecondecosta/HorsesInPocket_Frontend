@@ -1,11 +1,13 @@
+
 import React, { useState, useEffect } from "react";
 import { FaEdit } from "react-icons/fa";
-import { Link } from "react-router-dom";
+import { Link, useNavigate } from "react-router-dom";
 import Layout from "../components/Layout";
 import LoadingPopup from "../components/LoadingPopup";
-import SavePaymentMethod from "../components/SavePaymentMethod"; // 🆕 Importing the Payment Component
-import "./ProfilePage.css";
+import SavePaymentMethod from "../components/SavePaymentMethod";
 import SubscriptionPlans from "../components/SubscriptionPlans";
+import { isNativeiOS } from "../utils/isNative";
+import "./ProfilePage.css";
 
 const plans = [
   { name: "Basic", price: "€0,00", priceId: null },
@@ -23,7 +25,11 @@ const ProfilePage = () => {
   const [showPaymentPopup, setShowPaymentPopup] = useState(false);
   const [selectedPlan, setSelectedPlan] = useState(null);
   const [refreshKey, setRefreshKey] = useState(0);
+  const [showDeleteConfirm, setShowDeleteConfirm] = useState(false);
+  const [deleteConfirmText, setDeleteConfirmText] = useState("");
+  const [isDeleting, setIsDeleting] = useState(false);
   const token = localStorage.getItem("authToken");
+  const navigate = useNavigate();
 
   useEffect(() => {
     const fetchProfile = async () => {
@@ -80,7 +86,7 @@ const ProfilePage = () => {
       try {
         const response = await fetch(`${process.env.REACT_APP_API_SERVER_URL}/change_plan`, {
           method: "POST",
-          body: JSON.stringify({ plan: plan.name }), // Sending the correct plan?
+          body: JSON.stringify({ plan: plan.name }),
           headers: {
             "Content-Type": "application/json",
             Authorization: `Bearer ${token}`,
@@ -93,7 +99,7 @@ const ProfilePage = () => {
         setPlan(plan.name);
         setUser((prevUser) => ({
           ...prevUser,
-          subscription_canceled: false, // Ensuring local update
+          subscription_canceled: false,
         }));
         setShowPlanPopup(false);
       } catch (error) {
@@ -133,8 +139,39 @@ const ProfilePage = () => {
     }
   };
 
-  if (isLoading) return <LoadingPopup message="Loading ..." />;
+  const handleDeleteAccount = async () => {
+    if (deleteConfirmText !== "DELETE") return;
+
+    setIsDeleting(true);
+    try {
+      const res = await fetch(`${process.env.REACT_APP_API_SERVER_URL}/delete_account`, {
+        method: "DELETE",
+        headers: {
+          "Content-Type": "application/json",
+          Authorization: `Bearer ${token}`,
+        },
+      });
+
+      if (res.ok) {
+        localStorage.removeItem("authToken");
+        alert("Your account has been permanently deleted.");
+        navigate("/login");
+      } else {
+        const data = await res.json();
+        alert(data.error || "Error deleting account. Please try again.");
+      }
+    } catch (error) {
+      console.error("Error deleting account:", error);
+      alert("Error deleting account. Please try again.");
+    } finally {
+      setIsDeleting(false);
+    }
+  };
+
+  if (isLoading) return <LoadingPopup message="Loading..." />;
   if (error) return <p>{error}</p>;
+
+  const native = isNativeiOS();
 
   return (
     <Layout>
@@ -145,14 +182,13 @@ const ProfilePage = () => {
             <Link to="/dashboard">Dashboard</Link> / <span>Settings</span>
           </div>
           <Link to="/update-profile" className="profile-edit-button-link">
-            <button className="profile-edit-button">
+            <button className="profile-edit-button" data-testid="profile-edit-button">
               <FaEdit /> Edit
             </button>
           </Link>
         </div>
 
         <div className="profile-details-container">
-          {/* Profile image */}
           <div className="profile-image">
             <img
               src={
@@ -163,7 +199,6 @@ const ProfilePage = () => {
             />
           </div>
 
-          {/* Profile information */}
           <div className="profile-details">
             <p>
               <strong>Name:</strong> {user.first_name} {user.last_name}
@@ -172,7 +207,7 @@ const ProfilePage = () => {
               <strong>Date of Birth:</strong> {user.birthdate ? user.birthdate.split('-').reverse().join('/') : 'dd/mm/yyyy'}
             </p>
             <p>
-              <strong>Gender:</strong> {user.gender || "Not specified"}
+              <strong>Gender:</strong> {user.gender ? user.gender.charAt(0).toUpperCase() + user.gender.slice(1) : 'Not specified'}
             </p>
             <p>
               <strong>Phone:</strong> {user.phone_number || "Not specified"}
@@ -180,44 +215,48 @@ const ProfilePage = () => {
             <p>
               <strong>Country:</strong> {user.country || "Not specified"}
             </p>
-            {/*}
-            <div className="subscription-container">
-              <div className="subscription-header">
-                <p>
-                  <strong>Plan:</strong> {plan}
-                </p>
-                {user?.subscription_end &&
-                  new Date(user.subscription_end) > new Date() &&
-                  !user?.subscription_canceled && (
-                    <p className="subscription-status">
-                      <strong>Expires on:</strong>{" "}
-                      {new Date(user.subscription_end).toLocaleDateString()}
-                    </p>
-                  )}
-                {user?.plan !== "Basic" &&
-                  user?.subscription_end &&
-                  new Date(user.subscription_end) > new Date() &&
-                  !user?.subscription_canceled && (
-                    <button onClick={handleCancelSubscription} className="cancel-btn">
-                      Cancel Subscription
-                    </button>
-                  )}
+
+            {/* Subscription section — hidden on native iOS for App Store compliance */}
+            {!native && (
+              <div className="subscription-container" data-testid="subscription-container">
+                <div className="subscription-header">
+                  <p>
+                    <strong>Plan:</strong> {plan}
+                  </p>
+                  {user?.subscription_end &&
+                    new Date(user.subscription_end) > new Date() &&
+                    !user?.subscription_canceled && (
+                      <p className="subscription-status">
+                        <strong>Expires on:</strong>{" "}
+                        {new Date(user.subscription_end).toLocaleDateString()}
+                      </p>
+                    )}
+                  {user?.plan !== "Basic" &&
+                    user?.subscription_end &&
+                    new Date(user.subscription_end) > new Date() &&
+                    !user?.subscription_canceled && (
+                      <button onClick={handleCancelSubscription} className="cancel-btn" data-testid="cancel-subscription-btn">
+                        Cancel Subscription
+                      </button>
+                    )}
+                </div>
+
+                {user?.plan !== "Basic" && user?.subscription_canceled && (
+                  <p className="subscription-warning">
+                    Your subscription has been canceled and{" "}
+                    <strong>will not be renewed after</strong>{" "}
+                    {new Date(user.subscription_end).toLocaleDateString()}.
+                  </p>
+                )}
+
+                <button onClick={() => setShowPlanPopup(true)} className="upgrade-btn" data-testid="upgrade-plan-btn">
+                  Upgrade Plan
+                </button>
               </div>
+            )}
 
-              {user?.plan !== "Basic" && user?.subscription_canceled && (
-                <p className="subscription-warning">
-                  🚨 Your subscription has been canceled and{" "}
-                  <strong>will not be renewed after</strong>{" "}
-                  {new Date(user.subscription_end).toLocaleDateString()}.
-                </p>
-              )}
-
-              <button onClick={() => setShowPlanPopup(true)} className="upgrade-btn">
-                Upgrade Plan
-              </button>
-            </div>
-            */}
-            {showPlanPopup && (
+            {/* Payment popups — hidden on native iOS for App Store compliance */}
+            {!native && showPlanPopup && (
               <div className="popup-overlay">
                 <div className="popup-content">
                   <SubscriptionPlans
@@ -228,13 +267,60 @@ const ProfilePage = () => {
               </div>
             )}
 
-            {showPaymentPopup && selectedPlan && (
+            {!native && showPaymentPopup && selectedPlan && (
               <div className="popup-overlay">
                 <div className="popup-content1">
                   <SavePaymentMethod
                     selectedPlan={selectedPlan}
                     onPaymentSuccess={() => handlePaymentSuccess(selectedPlan.name)}
                   />
+                </div>
+              </div>
+            )}
+
+            {/* Delete Account Section */}
+            <div className="delete-account-section" data-testid="delete-account-section">
+              <button
+                className="delete-account-btn"
+                data-testid="delete-account-btn"
+                onClick={() => setShowDeleteConfirm(true)}
+              >
+                Delete Account
+              </button>
+            </div>
+
+            {/* Delete Account Confirmation Modal */}
+            {showDeleteConfirm && (
+              <div className="popup-overlay" data-testid="delete-account-modal">
+                <div className="popup-content delete-confirm-modal">
+                  <h3>Delete Account</h3>
+                  <p>This action is <strong>permanent and irreversible</strong>. All your data, horses, images, and shares will be permanently deleted.</p>
+                  <p>Type <strong>DELETE</strong> to confirm:</p>
+                  <input
+                    type="text"
+                    className="delete-confirm-input"
+                    data-testid="delete-confirm-input"
+                    value={deleteConfirmText}
+                    onChange={(e) => setDeleteConfirmText(e.target.value)}
+                    placeholder="Type DELETE to confirm"
+                  />
+                  <div className="delete-confirm-buttons">
+                    <button
+                      className="delete-confirm-cancel"
+                      data-testid="delete-confirm-cancel"
+                      onClick={() => { setShowDeleteConfirm(false); setDeleteConfirmText(""); }}
+                    >
+                      Cancel
+                    </button>
+                    <button
+                      className="delete-confirm-yes"
+                      data-testid="delete-confirm-yes"
+                      disabled={deleteConfirmText !== "DELETE" || isDeleting}
+                      onClick={handleDeleteAccount}
+                    >
+                      {isDeleting ? "Deleting..." : "Delete My Account"}
+                    </button>
+                  </div>
                 </div>
               </div>
             )}
