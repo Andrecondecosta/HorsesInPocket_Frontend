@@ -1,0 +1,143 @@
+/*
+ * Design system do HorseHub (Tailwind + shadcn/ui), direção "editorial + iOS".
+ *
+ * O preflight global do Tailwind NÃO é importado: os ecrãs antigos mantêm o
+ * aspeto atual. O reset aplica-se só dentro de .hh-ui, a classe que os ecrãs
+ * do novo design põem no seu elemento raiz.
+ *
+ * "legacy" (todo o CSS antigo de src/, ver vite.config.mjs) é a camada de menor
+ * prioridade, para as suas regras globais não afetarem os componentes novos.
+ */
+@layer legacy, theme, base, components, utilities;
+@import "tailwindcss/theme.css" layer(theme);
+@import "tailwindcss/utilities.css" layer(utilities);
+
+:root {
+  --radius: 0.75rem;
+
+  /* Fundos e texto */
+  --background: #f7f4ee;          /* marfim: fundo das páginas */
+  --foreground: #1f2420;          /* texto principal */
+  --card: #ffffff;
+  --card-foreground: #1f2420;
+  --popover: #ffffff;
+  --popover-foreground: #1f2420;
+
+  /* Marca */
+  --primary: #47663b;             /* verde-oliva HorseHub: ações principais */
+  --primary-foreground: #ffffff;
+  --primary-soft: #ecf3e8;        /* fundo suave de estados positivos ("Shared", "Negative") */
+  --primary-soft-foreground: #2e4327;
+  --leather: #8a5530;             /* couro: etiquetas pequenas ("No. 01", "Private portfolio") */
+  --leather-soft: #efe7da;        /* fundo de avisos (ex.: screenshot detetado) */
+
+  /* Neutros */
+  --secondary: #ebe5d9;           /* controlos segmentados, fundos secundários */
+  --secondary-foreground: #1f2420;
+  --muted: #ebe5d9;
+  --muted-foreground: #6b6f68;    /* texto secundário (4.8:1 sobre o marfim) */
+  --accent: #efe7da;
+  --accent-foreground: #1f2420;
+  --destructive: #a1261f;         /* só em ações destrutivas */
+
+  /* Linhas e foco */
+  --border: #e3ded3;
+  --input: #d9d2c3;
+  --ring: #47663b;
+}
+
+@theme inline {
+  --color-background: var(--background);
+  --color-foreground: var(--foreground);
+  --color-card: var(--card);
+  --color-card-foreground: var(--card-foreground);
+  --color-popover: var(--popover);
+  --color-popover-foreground: var(--popover-foreground);
+  --color-primary: var(--primary);
+  --color-primary-foreground: var(--primary-foreground);
+  --color-primary-soft: var(--primary-soft);
+  --color-primary-soft-foreground: var(--primary-soft-foreground);
+  --color-leather: var(--leather);
+  --color-leather-soft: var(--leather-soft);
+  --color-secondary: var(--secondary);
+  --color-secondary-foreground: var(--secondary-foreground);
+  --color-muted: var(--muted);
+  --color-muted-foreground: var(--muted-foreground);
+  --color-accent: var(--accent);
+  --color-accent-foreground: var(--accent-foreground);
+  --color-destructive: var(--destructive);
+  --color-border: var(--border);
+  --color-input: var(--input);
+  --color-ring: var(--ring);
+
+  --font-sans: "Inter", -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, sans-serif;
+  --font-serif: "Cormorant Garamond", Georgia, "Times New Roman", serif;
+
+  --radius-sm: calc(var(--radius) - 4px);
+  --radius-md: calc(var(--radius) - 2px);
+  --radius-lg: var(--radius);
+  --radius-xl: calc(var(--radius) + 4px);
+}
+
+/* Reset (equivalente ao preflight do Tailwind) limitado aos ecrãs do novo design */
+@layer base {
+  .hh-ui,
+  .hh-ui *,
+  .hh-ui ::before,
+  .hh-ui ::after {
+    box-sizing: border-box;
+    margin: 0;
+    padding: 0;
+    border: 0 solid var(--border);
+  }
+
+  .hh-ui {
+    background-color: var(--background);
+    color: var(--foreground);
+    font-family: var(--font-sans);
+    font-size: 14px;
+    line-height: 1.45;
+    -webkit-font-smoothing: antialiased;
+    -moz-osx-font-smoothing: grayscale;
+  }
+
+  .hh-ui :where(h1, h2, h3, h4, h5, h6) {
+    font-size: inherit;
+    font-weight: inherit;
+  }
+
+  .hh-ui :where(a) {
+    color: inherit;
+    text-decoration: inherit;
+  }
+
+  .hh-ui :where(ol, ul, menu) {
+    list-style: none;
+  }
+
+  .hh-ui :where(img, svg, video, canvas) {
+    display: block;
+    vertical-align: middle;
+  }
+
+  .hh-ui :where(img, video) {
+    max-width: 100%;
+    height: auto;
+  }
+
+  .hh-ui :where(button, input, select, textarea) {
+    font: inherit;
+    color: inherit;
+    background-color: transparent;
+    border-radius: 0;
+  }
+
+  .hh-ui :where(button, [role="button"]) {
+    cursor: pointer;
+  }
+
+  .hh-ui :where(:focus-visible) {
+    outline: 2px solid var(--ring);
+    outline-offset: 2px;
+  }
+}

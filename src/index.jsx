@@ -1,5 +1,7 @@
 import React from 'react';
 import ReactDOM from 'react-dom/client';
+// ui.css primeiro: declara a ordem das camadas CSS antes de qualquer outro estilo
+import './ui.css';
 import './index.css';
 import App from './App';
 
