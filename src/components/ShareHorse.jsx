@@ -7,6 +7,7 @@ const ShareHorse = ({ horseId, onClose }) => {
   const [shareLink, setShareLink] = useState('');
   const [horse, setHorse] = useState(null);
   const [isLoading, setIsLoading] = useState(true);
+  const [isGenerating, setIsGenerating] = useState(false);
   const [error, setError] = useState(null);
   const [email, setEmail] = useState('');
   const [emailSuccess, setEmailSuccess] = useState(null);
@@ -35,6 +36,7 @@ const ShareHorse = ({ horseId, onClose }) => {
         setHorse({ ...data, imageUrl: horseImageUrl });
       } catch (err) {
         setError(err.message);
+      } finally {
         setIsLoading(false);
       }
     };
@@ -42,45 +44,39 @@ const ShareHorse = ({ horseId, onClose }) => {
     fetchHorseData();
   }, [horseId, API_URL, token]);
 
-  useEffect(() => {
-    const generateShareLink = async () => {
-      if (!horse) return;
+  // Gera o link só a pedido do utilizador: no backend, cada chamada a
+  // share_via_link consome uma partilha do plano (used_shares).
+  const generateShareLink = async () => {
+    setIsGenerating(true);
+    setError(null);
 
-      setIsLoading(true);
-      setError(null);
+    try {
+      const response = await fetch(`${API_URL}/horses/${horseId}/share_via_link`, {
+        method: 'POST',
+        headers: {
+          'Content-Type': 'application/json',
+          Authorization: `Bearer ${token}`,
+        },
+        body: JSON.stringify({ expires_at: null }),
+      });
 
-      try {
-        const response = await fetch(`${API_URL}/horses/${horseId}/share_via_link`, {
-          method: 'POST',
-          headers: {
-            'Content-Type': 'application/json',
-            Authorization: `Bearer ${token}`,
-          },
-          body: JSON.stringify({ expires_at: null }),
-        });
-
-        if (!response.ok) {
-          throw new Error('Error generating share link.');
-        }
-
-        const data = await response.json();
-
-        const horseImage = encodeURIComponent(horse.imageUrl || '');
-        const horseName = encodeURIComponent(horse.name || '');
-        const fullShareLink = `${data.link}?horseImage=${horseImage}&horseName=${horseName}`;
-
-        setShareLink(fullShareLink);
-      } catch (err) {
-        setError(err.message);
-      } finally {
-        setIsLoading(false);
+      if (!response.ok) {
+        throw new Error('Error generating share link.');
       }
-    };
 
-    if (horse) {
-      generateShareLink();
+      const data = await response.json();
+
+      const horseImage = encodeURIComponent(horse.imageUrl || '');
+      const horseName = encodeURIComponent(horse.name || '');
+      const fullShareLink = `${data.link}?horseImage=${horseImage}&horseName=${horseName}`;
+
+      setShareLink(fullShareLink);
+    } catch (err) {
+      setError(err.message);
+    } finally {
+      setIsGenerating(false);
     }
-  }, [horse, horseId, API_URL, token]);
+  };
 
   // 🔹 Share by email
   const shareByEmail = async () => {
@@ -128,28 +124,43 @@ const ShareHorse = ({ horseId, onClose }) => {
             <div className="share-header">
               <h2>Share Horse</h2>
               <div className="share-options">
-                <button
-                  className="copy-button"
-                  onClick={() => {
-                    navigator.clipboard.writeText(shareLink);
-                    alert('Link copied!');
-                  }}
-                >
-                  <FaLink /> Copy Link
-                </button>
-                <button
-                  className="whatsapp-button"
-                  onClick={() =>
-                    window.open(
-                      `https://wa.me/?text=*${horse?.name}* has been shared with you!%0A🔗 ${encodeURIComponent(
-                        shareLink
-                      )}`,
-                      '_blank'
-                    )
-                  }
-                >
-                  <FaWhatsapp /> WhatsApp
-                </button>
+                {/* Copiar/WhatsApp só aparecem depois de gerado o link, para que
+                    o clique continue a ser um gesto direto do utilizador
+                    (clipboard e window.open são bloqueados após um await no iOS) */}
+                {!shareLink ? (
+                  <button
+                    className="copy-button"
+                    onClick={generateShareLink}
+                    disabled={isGenerating}
+                  >
+                    <FaLink /> {isGenerating ? 'Generating...' : 'Generate Link'}
+                  </button>
+                ) : (
+                  <>
+                    <button
+                      className="copy-button"
+                      onClick={() => {
+                        navigator.clipboard.writeText(shareLink);
+                        alert('Link copied!');
+                      }}
+                    >
+                      <FaLink /> Copy Link
+                    </button>
+                    <button
+                      className="whatsapp-button"
+                      onClick={() =>
+                        window.open(
+                          `https://wa.me/?text=*${horse?.name}* has been shared with you!%0A🔗 ${encodeURIComponent(
+                            shareLink
+                          )}`,
+                          '_blank'
+                        )
+                      }
+                    >
+                      <FaWhatsapp /> WhatsApp
+                    </button>
+                  </>
+                )}
               </div>
             </div>
 
