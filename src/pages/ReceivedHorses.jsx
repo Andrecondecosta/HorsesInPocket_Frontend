@@ -17,7 +17,6 @@ const ReceivedHorses = () => {
 
   useEffect(() => {
     if (location.state?.message) {
-      console.log("Received message:", location.state.message);
       setAlertMessage(location.state.message);
       setAlertType(location.state.type || 'info');
 
@@ -64,7 +63,6 @@ const ReceivedHorses = () => {
   const shouldRefresh = location.state?.refresh;
 
   if (shouldRefresh) {
-    console.log("🔁 Refresh triggered after screenshot");
     fetchReceivedHorses();
 
     // ⚠️ Espera 1 tick para garantir que a navegação terminou antes de limpar o estado

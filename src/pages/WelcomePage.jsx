@@ -15,15 +15,12 @@ const WelcomePage = () => {
   const rawHorseName = searchParams.get('horseName') || "Your Horse";
   const horseName = decodeURIComponent(rawHorseName);
 
-  console.log("Image received on welcome page:", horseImage);
-  console.log("Name received on welcome page:", horseName);
   const errorMessage = searchParams.get('message');
 
   const [alertMessage, setAlertMessage] = useState("");
 
   useEffect(() => {
     if (errorMessage) {
-      console.log("Showing error on Welcome Page:", decodeURIComponent(errorMessage));
       setAlertMessage(decodeURIComponent(errorMessage));
     }
   }, [errorMessage]);
