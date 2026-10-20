@@ -32,7 +32,6 @@ const RegisterPage = () => {
         if (!response.ok) throw new Error('Error loading countries');
         const data = await response.json();
 
-        console.log('Countries loaded:', data);
         setCountries(Array.isArray(data) ? data : []);
       } catch (err) {
         console.error(err.message);

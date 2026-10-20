@@ -21,7 +21,6 @@ export const useScreenshotProtection = (options) => {
     // Faz UMA tentativa de reportar o screenshot; lança exceção se falhar
     // (erro de rede ou resposta HTTP não-ok), em vez de engolir o erro.
     const notifyBackend = async () => {
-      console.log("Sending screenshot report for horse_id:", horseId);
       const response = await fetch(`${process.env.REACT_APP_API_SERVER_URL}/screenshots`, {
         method: "POST",
         headers: {
@@ -34,8 +33,6 @@ export const useScreenshotProtection = (options) => {
       if (!response.ok) {
         throw new Error(`Screenshot report failed with status ${response.status}`);
       }
-
-      console.log("Screenshot reported to backend successfully");
     };
 
     // Repete notifyBackend até MAX_REPORT_ATTEMPTS vezes, com pausa entre tentativas.

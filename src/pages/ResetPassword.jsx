@@ -12,7 +12,6 @@ const ResetPassword = () => {
 
   const handleSubmit = async (event) => {
     event.preventDefault();
-    console.log('Token sent:', token);
 
     if (password !== confirmPassword) {
       setMessage('Passwords do not match.');
