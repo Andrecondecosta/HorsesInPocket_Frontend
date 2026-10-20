@@ -34,7 +34,9 @@ const ProfileHorse = ({ setIsLoggedIn }) => {
   const [userStatus, setUserStatus] = useState(null);
   const [showLimitPopup, setShowLimitPopup] = useState(false);
   const [showDeleteShares, setShowDeleteShares] = useState(false);
-  const { screenshotTaken } = useScreenshotProtection({ horseId: id });
+  // Só protege cavalos recebidos: o dono pode tirar screenshots do próprio cavalo.
+  // Enquanto o cavalo não carrega, horseId fica null e o hook não regista o listener.
+  const { screenshotTaken } = useScreenshotProtection({ horseId: horse && !isOwner ? id : null });
 
   const navigate = useNavigate();
   const token = localStorage.getItem('authToken');
