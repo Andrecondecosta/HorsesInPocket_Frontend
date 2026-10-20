@@ -121,8 +121,14 @@ const ShareHorse = ({ horseId, onClose }) => {
       <div className="share-modal">
         {isLoading ? (
           <LoadingPopup message="Loading..." />
-        ) : error ? (
-          <p className="error-message">{error}</p>
+        ) : !horse ? (
+          // Sem dados do cavalo não há nada para partilhar: mostra o erro e permite fechar
+          <>
+            <p className="error-message">{error}</p>
+            <button className="close-button" onClick={onClose}>
+              Close
+            </button>
+          </>
         ) : (
           <>
             <div className="share-header">
@@ -162,6 +168,8 @@ const ShareHorse = ({ horseId, onClose }) => {
             />
             <div className="email-close-button">
               {emailSuccess && <p className="success-message">{emailSuccess}</p>}
+              {/* Erros de partilha aparecem dentro do modal, sem esconder os botões */}
+              {error && <p className="error-message">{error}</p>}
               <button className="close-button" onClick={onClose}>
                 Cancel
               </button>
