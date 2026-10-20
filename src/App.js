@@ -4,6 +4,7 @@ import { Elements } from '@stripe/react-stripe-js';
 import { loadStripe } from '@stripe/stripe-js';
 import { App as CapacitorApp } from '@capacitor/app';
 import Content from './components/Content';
+import InstallPrompt from './components/InstallPrompt';
 import usePushNotifications from './hooks/usePushNotifications';
 import { isNativeiOS } from './utils/isNative';
 import './App.css';
@@ -66,6 +67,7 @@ function App() {
     <Router>
       <div className="app-container">
         <DeepLinkHandler />
+        <InstallPrompt />
         {stripePromise ? (
           <Elements stripe={stripePromise}>
             {content}
