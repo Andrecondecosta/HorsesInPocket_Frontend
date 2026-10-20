@@ -1,6 +1,14 @@
 import React, { useEffect, useRef } from 'react';
 import { useParams, useNavigate, useLocation } from 'react-router-dom';
 
+// Mensagem a mostrar conforme o código HTTP de GET /horses/shared/:token
+// (403 = link já usado, 404 = link inexistente, outros = erro do servidor)
+const sharedLinkErrorMessage = (status) => {
+  if (status === 403) return "This sharing link has already been used or expired.";
+  if (status === 404) return "This sharing link is invalid.";
+  return "Error processing the sharing link. Please try again.";
+};
+
 const SharedHorse = () => {
   const { token } = useParams();
   const navigate = useNavigate();
@@ -35,20 +43,16 @@ const SharedHorse = () => {
           'Authorization': `Bearer ${authToken}`,
         },
       })
-        .then((response) => response.json())
-        .then((data) => {
-          console.log("API response:", data);
-          if (data.error) {
-            console.log("Link already used, redirecting to /received with error message.");
-
-            localStorage.setItem('receivedMessage', "The horse had already been shared and was not added again.");
-            localStorage.setItem('receivedMessageType', "error");
-
-            navigate('/received', { state: { message: "The horse had already been shared and was not added again.", type: "error" } });
-          } else {
+        .then((response) => {
+          if (response.ok) {
             console.log("Horse added successfully! Redirecting to /received");
             navigate('/received');
+            return;
           }
+
+          const message = sharedLinkErrorMessage(response.status);
+          console.log("Share link error:", response.status, message);
+          navigate('/received', { state: { message, type: "error" } });
         })
         .catch((err) => {
           console.log("Error in the request:", err);
@@ -58,12 +62,13 @@ const SharedHorse = () => {
       console.log("User not logged in, checking link status before redirecting...");
 
       fetch(`${process.env.REACT_APP_API_SERVER_URL}/horses/shared/${cleanToken}`)
-        .then((response) => response.json())
-        .then((data) => {
-          console.log("API Response before redirecting:", data);
+        .then((response) => {
+          console.log("API status before redirecting:", response.status);
 
-          if (data.error && (data.error.includes("used") || data.error.includes("expired"))) {
-            const errorRedirectUrl = `/welcome?token=${cleanToken}&message=${encodeURIComponent("This sharing link has already been used or expired.")}&horseImage=${encodeURIComponent(horseImage)}&horseName=${encodeURIComponent(horseName)}`;
+          // Sem login, o backend responde 401 a qualquer link existente (sem o consumir),
+          // por isso só um 404 ou um erro do servidor indicam um problema com o link.
+          if (response.status !== 401) {
+            const errorRedirectUrl = `/welcome?token=${cleanToken}&message=${encodeURIComponent(sharedLinkErrorMessage(response.status))}&horseImage=${encodeURIComponent(horseImage)}&horseName=${encodeURIComponent(horseName)}`;
             console.log("Redirecting to Welcome Page with error:", errorRedirectUrl);
             navigate(errorRedirectUrl);
           } else {
