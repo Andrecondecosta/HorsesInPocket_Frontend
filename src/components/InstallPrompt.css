@@ -1,0 +1,68 @@
+/* Aviso fixo no fundo do ecrã, acima da zona segura do iPhone */
+.install-prompt {
+  position: fixed;
+  left: 12px;
+  right: 12px;
+  bottom: calc(12px + env(safe-area-inset-bottom));
+  z-index: 2000;
+  display: flex;
+  align-items: center;
+  gap: 12px;
+  max-width: 480px;
+  margin: 0 auto;
+  padding: 12px 14px;
+  background-color: #fff;
+  border: 1px solid #8EB486;
+  border-radius: 12px;
+  box-shadow: 0 4px 16px rgba(0, 0, 0, 0.15);
+  font-size: 14px;
+  color: #333;
+}
+
+.install-prompt-icon {
+  width: 44px;
+  height: 44px;
+  border-radius: 10px;
+  flex-shrink: 0;
+}
+
+.install-prompt-text {
+  display: flex;
+  flex-direction: column;
+  gap: 2px;
+  flex: 1;
+  line-height: 1.35;
+}
+
+.install-prompt-text > strong {
+  color: #47663B;
+}
+
+.install-prompt-share {
+  vertical-align: -2px;
+  font-size: 16px;
+  color: #007aff; /* Azul do botão Partilhar do Safari */
+}
+
+.install-prompt-button {
+  flex-shrink: 0;
+  padding: 8px 14px;
+  border: none;
+  border-radius: 8px;
+  background-color: #47663B;
+  color: #fff;
+  font-weight: 600;
+  cursor: pointer;
+}
+
+.install-prompt-close {
+  flex-shrink: 0;
+  align-self: flex-start;
+  padding: 0 4px;
+  border: none;
+  background: none;
+  font-size: 22px;
+  line-height: 1;
+  color: #6e6e6e;
+  cursor: pointer;
+}
