@@ -8,12 +8,12 @@ const IPHONE_UA =
 const ANDROID_UA =
   'Mozilla/5.0 (Linux; Android 14; Pixel 8) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/126.0 Mobile Safari/537.36';
 
-const setUserAgent = (ua) => jest.spyOn(window.navigator, 'userAgent', 'get').mockReturnValue(ua);
+const setUserAgent = (ua) => vi.spyOn(window.navigator, 'userAgent', 'get').mockReturnValue(ua);
 
 // Simula o evento que o Chrome dispara quando a app pode ser instalada
 const fireBeforeInstallPrompt = () => {
   const event = new Event('beforeinstallprompt');
-  event.prompt = jest.fn();
+  event.prompt = vi.fn();
   event.userChoice = Promise.resolve({ outcome: 'accepted' });
   act(() => {
     window.dispatchEvent(event);
@@ -57,7 +57,7 @@ describe('InstallPrompt', () => {
 
   test('app nativa (Capacitor): não mostra nada', () => {
     setUserAgent(IPHONE_UA);
-    jest.spyOn(Capacitor, 'isNativePlatform').mockReturnValue(true);
+    vi.spyOn(Capacitor, 'isNativePlatform').mockReturnValue(true);
     render(<InstallPrompt />);
 
     expect(screen.queryByText('Install HorseHub')).not.toBeInTheDocument();

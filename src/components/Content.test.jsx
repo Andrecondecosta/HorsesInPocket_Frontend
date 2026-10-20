@@ -4,10 +4,6 @@ import { MemoryRouter } from 'react-router-dom';
 import Content from './Content';
 import { jsonResponse } from '../testUtils';
 
-// O lightbox é distribuído só como ESM, que o Jest do react-scripts não transforma
-jest.mock('yet-another-react-lightbox', () => () => null);
-jest.mock('yet-another-react-lightbox/styles.css', () => ({}), { virtual: true });
-
 // JWT sem assinatura válida: chega para o jwtDecode do ProtectedRoute ler o "exp"
 const fakeJwt = (exp) => {
   const encode = (obj) => btoa(JSON.stringify(obj)).replace(/=+$/, '');
@@ -23,7 +19,7 @@ const renderAt = (path) =>
 
 describe('Rota /dashboard', () => {
   beforeEach(() => {
-    global.fetch = jest.fn(() => jsonResponse(200, []));
+    global.fetch = vi.fn(() => jsonResponse(200, []));
   });
 
   test('sem sessão, redireciona para o login', async () => {

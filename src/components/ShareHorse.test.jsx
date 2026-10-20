@@ -8,7 +8,7 @@ const HORSE = { id: 7, name: 'Bolt', images: ['http://img/bolt.jpg'] };
 
 // Responde aos pedidos do modal conforme o URL e o método
 const mockApi = ({ horseStatus = 200 } = {}) => {
-  global.fetch = jest.fn((url, options = {}) => {
+  global.fetch = vi.fn((url, options = {}) => {
     if (url.endsWith('/share_via_link')) {
       return jsonResponse(201, { link: 'https://app/horses/shared/tok123' });
     }
@@ -29,7 +29,7 @@ describe('ShareHorse', () => {
 
   test('abrir o modal não gera link (não gasta quota)', async () => {
     mockApi();
-    render(<ShareHorse horseId={7} onClose={jest.fn()} />);
+    render(<ShareHorse horseId={7} onClose={vi.fn()} />);
 
     expect(await screen.findByRole('button', { name: /generate link/i })).toBeInTheDocument();
     expect(shareLinkCalls()).toHaveLength(0);
@@ -38,7 +38,7 @@ describe('ShareHorse', () => {
 
   test('o link só é gerado ao clicar em "Generate Link", uma única vez', async () => {
     mockApi();
-    render(<ShareHorse horseId={7} onClose={jest.fn()} />);
+    render(<ShareHorse horseId={7} onClose={vi.fn()} />);
 
     userEvent.click(await screen.findByRole('button', { name: /generate link/i }));
 
@@ -49,7 +49,7 @@ describe('ShareHorse', () => {
 
   test('email inválido mostra erro sem esconder os botões, e Cancel fecha o modal', async () => {
     mockApi();
-    const onClose = jest.fn();
+    const onClose = vi.fn();
     render(<ShareHorse horseId={7} onClose={onClose} />);
 
     userEvent.type(await screen.findByPlaceholderText('Enter email'), 'abc');
@@ -64,7 +64,7 @@ describe('ShareHorse', () => {
 
   test('falha ao carregar o cavalo mostra o erro e um botão Close', async () => {
     mockApi({ horseStatus: 500 });
-    const onClose = jest.fn();
+    const onClose = vi.fn();
     render(<ShareHorse horseId={7} onClose={onClose} />);
 
     expect(await screen.findByText('Error loading horse data.')).toBeInTheDocument();

@@ -35,7 +35,7 @@ describe('SharedHorse — utilizador com sessão', () => {
   });
 
   test('200: adiciona o cavalo e vai para /received sem mensagem de erro', async () => {
-    global.fetch = jest.fn(() => jsonResponse(200, { message: 'ok' }));
+    global.fetch = vi.fn(() => jsonResponse(200, { message: 'ok' }));
     renderSharedLink();
 
     await waitForPath('/received');
@@ -51,7 +51,7 @@ describe('SharedHorse — utilizador com sessão', () => {
     [404, 'This sharing link is invalid.'],
     [500, 'Error processing the sharing link. Please try again.'],
   ])('%i: vai para /received com a mensagem certa', async (status, message) => {
-    global.fetch = jest.fn(() => jsonResponse(status, { error: 'qualquer' }));
+    global.fetch = vi.fn(() => jsonResponse(status, { error: 'qualquer' }));
     renderSharedLink();
 
     await waitForPath('/received');
@@ -61,7 +61,7 @@ describe('SharedHorse — utilizador com sessão', () => {
 
 describe('SharedHorse — utilizador sem sessão', () => {
   test('401 (link existente): segue para /welcome sem mensagem de erro', async () => {
-    global.fetch = jest.fn(() => jsonResponse(401, { error: 'login' }));
+    global.fetch = vi.fn(() => jsonResponse(401, { error: 'login' }));
     renderSharedLink();
 
     await waitForPath('/welcome');
@@ -71,7 +71,7 @@ describe('SharedHorse — utilizador sem sessão', () => {
   });
 
   test('404 (link inexistente): segue para /welcome com mensagem de link inválido', async () => {
-    global.fetch = jest.fn(() => jsonResponse(404, { error: 'not found' }));
+    global.fetch = vi.fn(() => jsonResponse(404, { error: 'not found' }));
     renderSharedLink();
 
     await waitForPath('/welcome');
