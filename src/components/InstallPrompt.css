@@ -66,3 +66,11 @@
   color: #6e6e6e;
   cursor: pointer;
 }
+
+/* Nos ecrãs do novo design há uma barra de separadores fixa no fundo (telemóvel):
+   o aviso sobe para ficar por cima dela */
+@media (max-width: 767px) {
+  body.hh-has-tabbar .install-prompt {
+    bottom: calc(76px + env(safe-area-inset-bottom));
+  }
+}
