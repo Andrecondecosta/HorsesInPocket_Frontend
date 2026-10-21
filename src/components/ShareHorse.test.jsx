@@ -47,15 +47,16 @@ describe('ShareHorse', () => {
     expect(shareLinkCalls()).toHaveLength(1);
   });
 
-  test('email inválido mostra erro sem esconder os botões, e Cancel fecha o modal', async () => {
-    mockApi();
+  test('sem partilha por email (nunca funcionou); erros do link aparecem na janela e Cancel fecha', async () => {
+    global.fetch = vi.fn((url) =>
+      url.endsWith('/share_via_link') ? jsonResponse(403, { error: 'Not allowed' }) : jsonResponse(200, HORSE)
+    );
     const onClose = vi.fn();
     render(<ShareHorse horseId={7} onClose={onClose} />);
 
-    userEvent.type(await screen.findByPlaceholderText('Enter email'), 'abc');
-    userEvent.click(screen.getByRole('button', { name: 'Share' }));
-
-    expect(await screen.findByText('Enter a valid email.')).toBeInTheDocument();
+    userEvent.click(await screen.findByRole('button', { name: /generate link/i }));
+    expect(await screen.findByRole('alert')).toHaveTextContent('Error generating share link.');
+    expect(screen.queryByPlaceholderText('Enter email')).not.toBeInTheDocument();
     expect(screen.getByRole('button', { name: /generate link/i })).toBeInTheDocument();
 
     userEvent.click(screen.getByRole('button', { name: 'Cancel' }));

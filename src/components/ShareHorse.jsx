@@ -1,9 +1,8 @@
 import React, { useEffect, useState } from 'react';
-import { Check, Link2, Loader2, Mail } from 'lucide-react';
+import { Check, Link2, Loader2 } from 'lucide-react';
 import { FaWhatsapp } from 'react-icons/fa';
 
 import { Button } from '@/components/ui/button';
-import { Input } from '@/components/ui/input';
 import {
   Dialog,
   DialogContent,
@@ -25,8 +24,6 @@ const ShareHorse = ({ horseId, onClose }) => {
   const [allowReshare, setAllowReshare] = useState(false);
   const [copied, setCopied] = useState(false);
   const [error, setError] = useState(null);
-  const [email, setEmail] = useState('');
-  const [emailSuccess, setEmailSuccess] = useState(null);
 
   const token = localStorage.getItem('authToken');
   const API_URL = process.env.REACT_APP_API_SERVER_URL;
@@ -99,38 +96,6 @@ const ShareHorse = ({ horseId, onClose }) => {
     navigator.clipboard.writeText(shareLink);
     setCopied(true);
     setTimeout(() => setCopied(false), 2000);
-  };
-
-  // 🔹 Share by email
-  const shareByEmail = async () => {
-    if (!email || !/\S+@\S+\.\S+/.test(email)) {
-      setError('Enter a valid email.');
-      return;
-    }
-
-    setEmailSuccess(null);
-    setError(null);
-
-    try {
-      const response = await fetch(`${API_URL}/horses/${horseId}/share_via_email`, {
-        method: 'POST',
-        headers: {
-          'Content-Type': 'application/json',
-          Authorization: `Bearer ${token}`,
-        },
-        body: JSON.stringify({ email, can_reshare: allowReshare }),
-      });
-
-      if (!response.ok) {
-        const errorData = await response.json();
-        throw new Error(errorData.error || 'Error sharing via email.');
-      }
-
-      setEmailSuccess(`Horse successfully shared with ${email}`);
-      setEmail('');
-    } catch (err) {
-      setError(err.message);
-    }
   };
 
   return (
@@ -212,29 +177,14 @@ const ShareHorse = ({ horseId, onClose }) => {
               </div>
             )}
 
-            <div className="flex flex-col gap-2 border-t pt-4">
-              <label htmlFor="share-email" className="flex items-center gap-1.5 text-sm font-medium">
-                <Mail className="size-4 text-muted-foreground" aria-hidden="true" />
-                Or send it by email
-              </label>
-              <Input
-                id="share-email"
-                type="email"
-                placeholder="Enter email"
-                value={email}
-                onChange={(e) => setEmail(e.target.value)}
-              />
-              {emailSuccess && <p className="text-sm font-medium text-primary">{emailSuccess}</p>}
-              {/* Erros de partilha aparecem dentro da janela, sem esconder os botões */}
-              {error && <p role="alert" className="text-sm font-medium text-destructive">{error}</p>}
-            </div>
+            {/* Erros de partilha aparecem dentro da janela, sem esconder os botões */}
+            {error && <p role="alert" className="text-sm font-medium text-destructive">{error}</p>}
 
-            <div className="flex flex-col-reverse gap-2 sm:flex-row sm:justify-end">
+            {/* O link copiado pode ser enviado por qualquer app (Mensagens, email, ...);
+                a partilha por email no servidor foi retirada porque nunca funcionou */}
+            <div className="flex justify-end border-t pt-4">
               <Button variant="ghost" onClick={onClose}>
-                Cancel
-              </Button>
-              <Button variant="secondary" onClick={shareByEmail}>
-                Share
+                {shareLink ? 'Done' : 'Cancel'}
               </Button>
             </div>
           </>
