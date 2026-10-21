@@ -1,9 +1,9 @@
 import React, { useEffect, useMemo, useState } from 'react';
 import { Link, useNavigate } from 'react-router-dom';
-import { ChevronRight, Plus, Search } from 'lucide-react';
+import { Plus, Search } from 'lucide-react';
 
 import AppShell from '../components/AppShell';
-import { Badge } from '@/components/ui/badge';
+import HorseListItem, { HorseList } from '../components/HorseListItem';
 import { Button } from '@/components/ui/button';
 import { Input } from '@/components/ui/input';
 import {
@@ -179,47 +179,24 @@ const MyHorses = ({ setIsLoggedIn }) => {
         ) : visibleHorses.length === 0 ? (
           <p className="py-8 text-center text-sm text-muted-foreground">No horses match “{query}”.</p>
         ) : (
-          <ul className="divide-y divide-[#ece7dd] overflow-hidden rounded-[14px] border bg-card md:grid md:grid-cols-3 md:gap-5 md:divide-y-0 md:overflow-visible md:rounded-none md:border-0 md:bg-transparent lg:grid-cols-4">
+          <HorseList>
             {visibleHorses.map((horse) => {
-              const number = numbers.get(horse.id);
-              const photo = horse.images?.[0];
+              const number = `No. ${numbers.get(horse.id)}`;
               return (
-                <li key={horse.id} data-testid={`horse-card-${horse.id}`}>
-                  <Link
-                    to={`/horses/${horse.id}`}
-                    className="flex items-center gap-3.5 px-3.5 py-3 hover:bg-accent/60 md:h-full md:flex-col md:items-stretch md:gap-0 md:overflow-hidden md:rounded-[14px] md:border md:bg-card md:p-0 md:transition-shadow md:hover:bg-card md:hover:shadow-md"
-                  >
-                    <div className="relative size-[62px] shrink-0 overflow-hidden rounded-[10px] bg-[#e3ded3] md:aspect-[4/3] md:size-auto md:w-full md:rounded-none">
-                      {photo ? (
-                        <img src={photo} alt="" className="size-full object-cover" />
-                      ) : (
-                        <span aria-hidden="true" className="flex size-full items-center justify-center font-serif text-3xl font-bold text-[#5c5f58] md:text-5xl">
-                          {horse.name?.[0]?.toUpperCase()}
-                        </span>
-                      )}
-                      <Badge variant="overlay" className="absolute top-3 left-3 hidden text-[10.5px] md:inline-flex">
-                        No. {number}
-                      </Badge>
-                    </div>
-
-                    <div className="flex min-w-0 flex-1 flex-col md:px-4 md:pt-3 md:pb-4">
-                      <span className="text-[10px] font-semibold uppercase tracking-[0.12em] text-leather md:hidden">
-                        No. {number}
-                      </span>
-                      <span className="truncate font-serif text-[22px] font-bold leading-tight md:text-[26px]">
-                        {horse.name}
-                      </span>
-                      <span className="truncate text-[12.5px] text-muted-foreground md:text-[13px]">
-                        {horseMeta(horse)}
-                      </span>
-                    </div>
-
-                    <ChevronRight className="size-4 shrink-0 text-muted-foreground/70 md:hidden" aria-hidden="true" />
-                  </Link>
-                </li>
+                <HorseListItem
+                  key={horse.id}
+                  testId={`horse-card-${horse.id}`}
+                  to={`/horses/${horse.id}`}
+                  name={horse.name}
+                  photo={horse.images?.[0]}
+                  eyebrow={number}
+                  eyebrowMobileOnly
+                  overlay={number}
+                  meta={horseMeta(horse)}
+                />
               );
             })}
-          </ul>
+          </HorseList>
         )}
       </div>
 
