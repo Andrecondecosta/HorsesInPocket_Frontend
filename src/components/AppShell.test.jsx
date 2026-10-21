@@ -1,5 +1,5 @@
 import React from 'react';
-import { render, screen, fireEvent, within } from '@testing-library/react';
+import { cleanup, render, screen, fireEvent, within } from '@testing-library/react';
 import { MemoryRouter, Routes, Route } from 'react-router-dom';
 import AppShell from './AppShell';
 import { jsonResponse } from '../testUtils';
@@ -66,6 +66,7 @@ describe('AppShell — separador ativo no perfil de um cavalo', () => {
       <MemoryRouter initialEntries={[url]}>
         <Routes>
           <Route path="/horses/:id" element={<AppShell><p>Perfil</p></AppShell>} />
+          <Route path="*" element={<AppShell><p>Outro ecrã</p></AppShell>} />
         </Routes>
       </MemoryRouter>
     );
@@ -81,5 +82,11 @@ describe('AppShell — separador ativo no perfil de um cavalo', () => {
 
   test('cavalo recebido (readonly) → "Received"', () => {
     expect(activeTabAt('/horses/1?readonly=true')).toBe('Received');
+  });
+
+  test('formulários ficam no separador de onde se chega: novo cavalo → "Horses", editar perfil → "Profile"', () => {
+    expect(activeTabAt('/newhorse')).toBe('Horses');
+    cleanup();
+    expect(activeTabAt('/update-profile')).toBe('Profile');
   });
 });

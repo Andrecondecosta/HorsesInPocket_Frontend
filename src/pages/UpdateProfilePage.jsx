@@ -1,12 +1,20 @@
 import React, { useState, useEffect } from 'react';
-import { FaSave } from 'react-icons/fa';
 import { Link, useNavigate } from 'react-router-dom';
-import Layout from '../components/Layout';
-import LoadingPopup from '../components/LoadingPopup';
-import './ProfilePage.css';
-import './UpdateProfilePage.css';
+import { Check, ChevronLeft, Loader2 } from 'lucide-react';
 
-const UpdateProfilePage = () => {
+import AppShell from '../components/AppShell';
+import { Button } from '@/components/ui/button';
+import { Input } from '@/components/ui/input';
+import { NativeSelect } from '@/components/ui/native-select';
+
+const Field = ({ id, label, children }) => (
+  <div className="flex flex-col gap-1.5">
+    <label htmlFor={id} className="text-[13px] font-medium">{label}</label>
+    {children}
+  </div>
+);
+
+const UpdateProfilePage = ({ setIsLoggedIn }) => {
   const [formData, setFormData] = useState({
     first_name: '',
     last_name: '',
@@ -15,12 +23,12 @@ const UpdateProfilePage = () => {
     phone_number: '',
     country: '',
   });
-  const [avatar, setAvatar] = useState('');
-  const [user, setUser] = useState({});
   const [isLoading, setIsLoading] = useState(true);
   const [countryList, setCountryList] = useState([]);
+  const [loadError, setLoadError] = useState(null);
   const [error, setError] = useState(null);
   const [success, setSuccess] = useState(null);
+  const [isSaving, setIsSaving] = useState(false);
   const token = localStorage.getItem('authToken');
   const navigate = useNavigate();
 
@@ -48,13 +56,8 @@ const UpdateProfilePage = () => {
           phone_number: data.phone_number || '',
           country: data.country || '',
         });
-        const avatarUrl =
-          data.gender === 'male'
-            ? 'https://res.cloudinary.com/dcvtrregd/image/upload/v1736802678/user_1_vl6pae.png'
-            : 'https://res.cloudinary.com/dcvtrregd/image/upload/v1736802680/user_yp8nup.png';
-        setAvatar(data.avatar || avatarUrl);
       } catch (error) {
-        setError('Error loading user profile');
+        setLoadError('Unable to load your profile. Please try again.');
       } finally {
         setIsLoading(false);
       }
@@ -63,7 +66,7 @@ const UpdateProfilePage = () => {
     if (token) {
       fetchProfile();
     } else {
-      setError('Token not found');
+      setLoadError('Token not found');
       setIsLoading(false);
     }
   }, [token]);
@@ -75,14 +78,14 @@ const UpdateProfilePage = () => {
         if (!response.ok) throw new Error('Error loading countries');
 
         const data = await response.json();
-        setCountryList(data); // ✅ Agora garantimos que os países sejam carregados
+        setCountryList(data);
       } catch (error) {
         console.error('Error fetching countries:', error);
       }
     };
 
     fetchCountries();
-  }, []); // ✅ Executa apenas uma vez ao montar o componente
+  }, []);
 
   const handleInputChange = (e) => {
     const { name, value } = e.target;
@@ -94,8 +97,10 @@ const UpdateProfilePage = () => {
 
   const handleSubmit = async (e) => {
     e.preventDefault();
+    if (isSaving) return;
     setError(null);
     setSuccess(null);
+    setIsSaving(true);
 
     try {
       const response = await fetch(`${process.env.REACT_APP_API_SERVER_URL}/update`, {
@@ -104,7 +109,7 @@ const UpdateProfilePage = () => {
           'Content-Type': 'application/json',
           Authorization: `Bearer ${token}`,
         },
-        body: JSON.stringify({ user: formData }), // Ensure the use of "user"
+        body: JSON.stringify({ user: formData }),
       });
 
       if (!response.ok) {
@@ -112,119 +117,92 @@ const UpdateProfilePage = () => {
       }
 
       setSuccess('Profile updated successfully!');
-      setTimeout(() => navigate('/profile'), 2000);
+      setTimeout(() => navigate('/profile'), 1500);
     } catch (error) {
-      setError('Error updating profile');
+      setError('Your changes could not be saved. Please try again.');
+      setIsSaving(false);
     }
   };
 
-  if (isLoading) return <LoadingPopup message="Loading ..." />;
-  if (error) return <p>{error}</p>;
+  // O país guardado pode não estar na lista (ou a lista pode não ter carregado): mantém-se como opção
+  const countryNames = countryList.map((c) => c.name);
+  const showSavedCountry = formData.country && !countryNames.includes(formData.country);
 
   return (
-    <Layout>
-      <div className="update-profile-page-container">
-        <h1 className="page-title">Edit Profile</h1>
-        <div className="profile-breadcrumb-container">
-          <div className="breadcrumbs">
-            <Link to="/dashboard">Dashboard</Link> / <Link to="/profile">Settings</Link> / <span>Edit Profile</span>
-          </div>
-          {/* Save Button connected to the form */}
-          <div className="profile-edit-actions">
-            <button
-              type="submit"
-              className="profile-save-button"
-              form="update-profile-form" // Connect the button to the form
-            >
-              <FaSave /> Save
-            </button>
+    <AppShell setIsLoggedIn={setIsLoggedIn}>
+      <div className="mx-auto flex w-full max-w-2xl flex-col gap-6">
+        <div className="flex flex-col gap-3">
+          <Link to="/profile" className="flex items-center gap-1 self-start text-sm font-medium text-primary">
+            <ChevronLeft className="size-4" aria-hidden="true" />
+            Profile
+          </Link>
+          <div className="flex flex-col gap-0.5">
+            <span className="text-[11px] font-semibold uppercase tracking-[0.14em] text-leather">Account</span>
+            <h1 className="font-serif text-[44px] font-bold leading-none md:text-[56px]">Edit profile</h1>
           </div>
         </div>
-        <div className="update-profile-details-container">
-          {/* Profile Image */}
-          <div className="profile-image">
-            <img src={avatar} alt="Profile Picture" />
-          </div>
 
-          {/* Edit Form */}
-          <form
-            id="update-profile-form" // Form identifier
-            onSubmit={handleSubmit}
-            className="inline-edit-profile"
-          >
-            <div className="profile-details">
-              <p>
-                <strong>First Name:</strong>
-                <input
-                  type="text"
-                  name="first_name"
-                  value={formData.first_name}
-                  onChange={handleInputChange}
-                  className="inline-input"
-                />
-              </p>
-              <p>
-                <strong>Last Name:</strong>
-                <input
-                  type="text"
-                  name="last_name"
-                  value={formData.last_name}
-                  onChange={handleInputChange}
-                  className="inline-input"
-                />
-              </p>
-              <p>
-                <strong>Date of Birth:</strong>
-                <input
-                  type="date"
-                  name="birthdate"
-                  value={formData.birthdate}
-                  onChange={handleInputChange}
-                  className="inline-input"
-                />
-              </p>
-              <p>
-                <strong>Gender:</strong>
-                <select
-                  name="gender"
-                  value={formData.gender}
-                  onChange={handleInputChange}
-                  className="inline-input"
-                >
+        {isLoading ? (
+          <div aria-label="Loading profile" className="h-96 animate-pulse rounded-[14px] bg-secondary" />
+        ) : loadError ? (
+          <p role="alert" className="rounded-[14px] bg-leather-soft p-4 text-sm">{loadError}</p>
+        ) : (
+          <form id="update-profile-form" onSubmit={handleSubmit} className="flex flex-col gap-6">
+            <div className="grid gap-4 rounded-[14px] border bg-card p-4 md:grid-cols-2 md:gap-5 md:p-6">
+              <Field id="first_name" label="First name">
+                <Input id="first_name" name="first_name" value={formData.first_name} onChange={handleInputChange} autoComplete="given-name" />
+              </Field>
+              <Field id="last_name" label="Last name">
+                <Input id="last_name" name="last_name" value={formData.last_name} onChange={handleInputChange} autoComplete="family-name" />
+              </Field>
+              <Field id="birthdate" label="Date of birth">
+                <Input id="birthdate" type="date" name="birthdate" value={formData.birthdate} onChange={handleInputChange} autoComplete="bday" />
+              </Field>
+              <Field id="gender" label="Gender">
+                <NativeSelect id="gender" name="gender" value={formData.gender} onChange={handleInputChange}>
                   <option value="">Select</option>
                   <option value="male">Male</option>
                   <option value="female">Female</option>
                   <option value="other">Other</option>
-                </select>
-              </p>
-              <p>
-                <strong>Phone Number:</strong>
-                <input
-                  type="tel"
-                  name="phone_number"
-                  value={formData.phone_number}
-                  onChange={handleInputChange}
-                  className="inline-input"
-                />
-              </p>
-              <p>
-              <strong>Country:</strong>
-                <select name="country" value={formData.country} onChange={handleInputChange} className="inline-input">
+                </NativeSelect>
+              </Field>
+              <Field id="phone_number" label="Phone">
+                <Input id="phone_number" type="tel" name="phone_number" value={formData.phone_number} onChange={handleInputChange} autoComplete="tel" />
+              </Field>
+              <Field id="country" label="Country">
+                <NativeSelect id="country" name="country" value={formData.country} onChange={handleInputChange}>
                   <option value="">Select a country</option>
+                  {showSavedCountry && <option value={formData.country}>{formData.country}</option>}
                   {countryList.map((c) => (
                     <option key={c.code} value={c.name}>
                       {c.name}
                     </option>
                   ))}
-                </select>
+                </NativeSelect>
+              </Field>
+            </div>
+
+            {success && (
+              <p role="status" className="flex items-center gap-2 rounded-[14px] bg-primary-soft p-4 text-sm font-medium text-primary-soft-foreground">
+                <Check className="size-4" aria-hidden="true" />
+                {success}
               </p>
+            )}
+            {error && <p role="alert" className="rounded-[14px] bg-[#f6e3e1] p-4 text-sm font-medium text-destructive">{error}</p>}
+
+            <div className="flex items-center justify-between gap-3 border-t pt-5">
+              <Button asChild variant="ghost" size="lg">
+                <Link to="/profile">Cancel</Link>
+              </Button>
+              <Button type="submit" size="lg" disabled={isSaving}>
+                {isSaving && !success && <Loader2 className="animate-spin" aria-hidden="true" />}
+                {success ? 'Saved' : isSaving ? 'Saving…' : 'Save changes'}
+              </Button>
             </div>
           </form>
-        </div>
-        {success && <p className="success-message">{success}</p>}
-        {error && <p className="error-message">{error}</p>}
+        )}
       </div>
-    </Layout>
+    </AppShell>
   );
 };
 

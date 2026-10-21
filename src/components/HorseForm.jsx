@@ -1,11 +1,12 @@
 import React, { useEffect, useRef, useState } from 'react';
 import { Link } from 'react-router-dom';
-import { Check, ChevronDown, ChevronLeft, ImagePlus, Loader2, Video, X } from 'lucide-react';
+import { Check, ChevronLeft, ImagePlus, Loader2, Video, X } from 'lucide-react';
 
 import { cn } from '@/lib/utils';
 import { Button } from '@/components/ui/button';
 import { Input } from '@/components/ui/input';
 import { Textarea } from '@/components/ui/textarea';
+import { NativeSelect } from '@/components/ui/native-select';
 import { LINES } from './PedigreeTree';
 
 export const BREEDS = [
@@ -115,26 +116,6 @@ const Field = ({ id, label, error, optional, className, children }) => (
 const errorProps = (id, error) =>
   error ? { 'aria-invalid': true, 'aria-describedby': `${id}-error` } : {};
 
-// <select> nativo (melhor no telemóvel) com o aspeto do Input
-const NativeSelect = ({ id, error, className, children, ...props }) => (
-  <div className="relative">
-    <select
-      id={id}
-      {...errorProps(id, error)}
-      className={cn(
-        'h-10 w-full appearance-none rounded-md border border-input bg-card pr-9 pl-3 text-base text-foreground shadow-xs outline-none md:text-sm',
-        'focus-visible:border-ring focus-visible:ring-[3px] focus-visible:ring-ring/30',
-        'aria-invalid:border-destructive',
-        className
-      )}
-      {...props}
-    >
-      {children}
-    </select>
-    <ChevronDown className="pointer-events-none absolute top-1/2 right-3 size-4 -translate-y-1/2 text-muted-foreground" aria-hidden="true" />
-  </div>
-);
-
 const SectionTitle = ({ title, children }) => (
   <div className="flex flex-col gap-0.5">
     <h2 className="font-serif text-[28px] font-bold leading-tight">{title}</h2>
@@ -160,21 +141,21 @@ const DetailsStep = ({ horse, setHorse, errors, capitalize }) => {
         </Field>
 
         <Field id="horse-age" label="Year of birth" error={errors.age}>
-          <NativeSelect id="horse-age" name="age" value={horse.age || ''} error={errors.age} onChange={(e) => set('age', e.target.value ? Number(e.target.value) : '')}>
+          <NativeSelect id="horse-age" name="age" value={horse.age || ''} {...errorProps('horse-age', errors.age)} onChange={(e) => set('age', e.target.value ? Number(e.target.value) : '')}>
             <option value="">Select year</option>
             {yearOptions(horse.age).map((year) => <option key={year} value={year}>{year}</option>)}
           </NativeSelect>
         </Field>
 
         <Field id="horse-gender" label="Gender" error={errors.gender}>
-          <NativeSelect id="horse-gender" name="gender" value={horse.gender || ''} error={errors.gender} onChange={onPlain}>
+          <NativeSelect id="horse-gender" name="gender" value={horse.gender || ''} {...errorProps('horse-gender', errors.gender)} onChange={onPlain}>
             <option value="">Select gender</option>
             {GENDERS.map((gender) => <option key={gender} value={gender}>{gender}</option>)}
           </NativeSelect>
         </Field>
 
         <Field id="horse-color" label="Color" error={errors.color}>
-          <NativeSelect id="horse-color" name="color" value={horse.color || ''} error={errors.color} onChange={onPlain}>
+          <NativeSelect id="horse-color" name="color" value={horse.color || ''} {...errorProps('horse-color', errors.color)} onChange={onPlain}>
             <option value="">Select color</option>
             {COLORS.map((color) => <option key={color} value={color}>{color}</option>)}
           </NativeSelect>

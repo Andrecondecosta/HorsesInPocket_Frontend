@@ -29,6 +29,9 @@ const activeTabFor = ({ pathname, search }) => {
   if (pathname.startsWith('/horses/')) {
     return new URLSearchParams(search).get('readonly') === 'true' ? '/received' : '/myhorses';
   }
+  // Ecrãs sem separador próprio ficam no separador de onde se chega a eles
+  if (pathname === '/newhorse') return '/myhorses';
+  if (pathname === '/update-profile') return '/profile';
   return pathname;
 };
 
