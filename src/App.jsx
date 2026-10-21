@@ -4,7 +4,6 @@ import { App as CapacitorApp } from '@capacitor/app';
 import Content from './components/Content';
 import InstallPrompt from './components/InstallPrompt';
 import usePushNotifications from './hooks/usePushNotifications';
-import './App.css';
 
 // Global interceptor: redirect to login on any 401 response with active token
 const _originalFetch = window.fetch;

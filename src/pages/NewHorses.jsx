@@ -1,10 +1,5 @@
 import React, { useState } from 'react';
 import { useNavigate } from 'react-router-dom';
-// Estes dois CSS antigos ficam importados só porque têm regras globais (.page-title, .breadcrumbs,
-// .error-message, button, textarea) de que os ecrãs ainda no design antigo dependem.
-// Saem quando esses ecrãs forem redesenhados.
-import './NewHorses.css';
-import '../components/VideoUploader.css';
 
 import AppShell from '../components/AppShell';
 import HorseForm, { EMPTY_ANCESTORS, EMPTY_HORSE, validateNewHorse } from '../components/HorseForm';

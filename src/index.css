@@ -7,8 +7,9 @@ body {
     sans-serif;
   -webkit-font-smoothing: antialiased;
   -moz-osx-font-smoothing: grayscale;
-  background-color: #E8E8E8; /* Fundo cinza claro global */
-  color: #333333; /* Cor padrão do texto */
+  /* Mesmo fundo e texto do design novo (ui.css): é o que aparece no "elástico" do scroll no iPhone */
+  background-color: var(--background);
+  color: var(--foreground);
 }
 
 code {
