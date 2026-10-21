@@ -1,23 +1,25 @@
 import React, { useEffect, useState } from 'react';
-import { useNavigate, useLocation } from 'react-router-dom';
-import './WelcomePage.css';
+import { Link, useLocation } from 'react-router-dom';
 
+import AuthLayout, { FormMessage } from '../components/AuthLayout';
+import { Button } from '@/components/ui/button';
+
+// Página de chegada de um link de partilha, antes do login/registo
 const WelcomePage = () => {
-  const navigate = useNavigate();
   const location = useLocation();
   const searchParams = new URLSearchParams(location.search);
   const token = searchParams.get('token');
 
-  // Ensure parameters are correctly decoded
-  const rawHorseImage = searchParams.get('horseImage') || "";
-  const horseImage = rawHorseImage ? decodeURIComponent(rawHorseImage) : "";
+  // Os parâmetros vêm codificados do SharedHorse
+  const rawHorseImage = searchParams.get('horseImage') || '';
+  const horseImage = rawHorseImage ? decodeURIComponent(rawHorseImage) : '';
 
-  const rawHorseName = searchParams.get('horseName') || "Your Horse";
+  const rawHorseName = searchParams.get('horseName') || 'Your Horse';
   const horseName = decodeURIComponent(rawHorseName);
 
   const errorMessage = searchParams.get('message');
 
-  const [alertMessage, setAlertMessage] = useState("");
+  const [alertMessage, setAlertMessage] = useState('');
 
   useEffect(() => {
     if (errorMessage) {
@@ -25,53 +27,45 @@ const WelcomePage = () => {
     }
   }, [errorMessage]);
 
-
-  const handleRedirect = (path) => {
-    navigate(`${path}?token=${token}`);
-  };
+  // O token segue para o login/registo, para o cavalo ficar associado à conta
+  const withToken = (path) => (token ? `${path}?token=${encodeURIComponent(token)}` : path);
 
   return (
-    <div className="welcome-container">
-      <div className="welcome-card">
-        <h2>Welcome to <span>HorseHub</span>!</h2>
+    <AuthLayout
+      eyebrow="Shared with you"
+      title="A horse is waiting for you"
+      description="Someone shared a horse with you on HorseHub, a private portfolio for horse owners."
+    >
+      <FormMessage>{alertMessage}</FormMessage>
 
-        {/* Show error message if it exists */}
-        {alertMessage && <div className="alert-box error">{alertMessage}</div>}
-
-        <p className="welcome-message">
-          You have received a shared horse.
-        </p>
-
-        {/* Check if image is valid before displaying */}
-        {horseImage && horseImage.startsWith("http") ? (
-          <div className="horse-image-container">
-            <img src={horseImage} alt={horseName} className="horse-image" />
-          </div>
-        ) : (
-          <p className="no-image">📷 Image not available</p>
-        )}
-
-        <h3 className="horse-name">{horseName}</h3>
-
-        <div className="welcome-options">
-          <p className="welcome-text">
-            🔹 Already a part of HorseHub?{' '}
-            <span className="link-text" onClick={() => handleRedirect('/login')}>
-              Click here
-            </span>{' '}
-            to view the horse's details.
-          </p>
-
-          <p className="welcome-text">
-            🔹 First time with us?{' '}
-            <span className="link-text" onClick={() => handleRedirect('/register')}>
-              Click here
-            </span>{' '}
-            to create your account and discover everything our website has to offer.
-          </p>
+      <figure className="overflow-hidden rounded-[14px] border bg-card">
+        <div className="flex aspect-[4/3] items-center justify-center bg-[#e3ded3] md:aspect-[16/9]">
+          {horseImage && horseImage.startsWith('http') ? (
+            <img src={horseImage} alt={horseName} className="size-full object-cover" />
+          ) : (
+            <span aria-hidden="true" className="font-serif text-7xl font-bold text-[#5c5f58]">
+              {horseName.charAt(0).toUpperCase()}
+            </span>
+          )}
         </div>
+        <figcaption className="flex flex-col p-4">
+          <span className="text-[10.5px] font-semibold uppercase tracking-[0.1em] text-muted-foreground">Shared horse</span>
+          <span className="font-serif text-[28px] font-bold leading-tight">{horseName}</span>
+        </figcaption>
+      </figure>
+
+      <div className="flex flex-col gap-2.5">
+        <Button asChild size="xl">
+          <Link to={withToken('/login')}>Log in to view</Link>
+        </Button>
+        <Button asChild size="xl" variant="outline">
+          <Link to={withToken('/register')}>Create a free account</Link>
+        </Button>
+        <p className="text-center text-xs text-muted-foreground">
+          Already on HorseHub? Log in. First time here? Create your account.
+        </p>
       </div>
-    </div>
+    </AuthLayout>
   );
 };
 

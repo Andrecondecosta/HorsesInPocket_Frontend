@@ -1,0 +1,102 @@
+/*
+ * Regras globais que viviam nos CSS antigos do login, registo e password
+ * (LoginPage.css, RegisterPage.css, ForgotPassword.css, ResetPassword.css).
+ * Esses ecrãs já estão no design novo, mas os ecrãs ainda antigos (suporte,
+ * política de privacidade, home e admin) dependem destas regras.
+ * Copiadas tal e qual, pela mesma ordem; apagar quando esses ecrãs forem redesenhados.
+ * Como todo o CSS antigo, ficam na camada "legacy" e não afetam o design novo.
+ */
+
+:root {
+  --green-dark: #47663B;
+  --green-light: #E8ECD7;
+  --white: #FFFFFF;
+  --gray-border: #CCCCCC;
+  --text-dark: #333333;
+}
+
+* {
+  margin: 0;
+  padding: 0;
+  box-sizing: border-box;
+}
+
+body, html {
+  height: 100%;
+  font-family: 'Inter', sans-serif;
+  -webkit-text-size-adjust: 100%;
+}
+
+@media (max-width: 900px) {
+  html, body {
+    overflow: auto;
+    height: auto;
+    min-height: 100dvh;
+  }
+}
+
+@media (max-width: 768px) {
+  body, html { overflow: auto; }
+}
+
+@media (orientation: landscape) and (max-height: 480px) {
+  html, body { overflow: auto; }
+}
+
+@media (max-width: 480px) {
+  body, html { overflow: auto; }
+}
+
+/* ForgotPassword.css */
+button[type="submit"] {
+  background-color: var(--green-dark);
+  color: var(--white);
+  font-size: 18px;
+  padding: 14px;
+  border: none;
+  border-radius: 50px;
+  cursor: pointer;
+  transition: background-color 0.3s ease;
+  width: 100%;
+}
+
+button[type="submit"]:hover {
+  background-color: #8EB486;
+}
+
+@media (max-width: 480px) {
+  button[type="submit"] {
+    font-size: 16px;
+    padding: 12px;
+  }
+}
+
+/* ResetPassword.css (sem o margin-bottom: 25px, que na prática era anulado por outro CSS) */
+button {
+  background-color: var(--green-dark);
+  color: var(--white);
+  font-size: 18px;
+  padding: 14px;
+  border: none;
+  border-radius: 50px;
+  cursor: pointer;
+  transition: background-color 0.3s ease;
+}
+
+button:hover {
+  background-color: #8EB486;
+}
+
+@media (max-width: 768px) {
+  button {
+    font-size: 14px;
+    padding: 10px;
+  }
+}
+
+@media (max-width: 480px) {
+  button {
+    font-size: 13px;
+    padding: 8px;
+  }
+}

@@ -25,7 +25,7 @@ describe('Rota /dashboard', () => {
   test('sem sessão, redireciona para o login', async () => {
     renderAt('/dashboard');
 
-    expect(await screen.findByPlaceholderText('Password')).toBeInTheDocument();
+    expect(await screen.findByLabelText('Password')).toBeInTheDocument();
     expect(screen.queryByRole('heading', { name: /^Good (morning|afternoon|evening)/ })).not.toBeInTheDocument();
   });
 
@@ -33,7 +33,7 @@ describe('Rota /dashboard', () => {
     localStorage.setItem('authToken', fakeJwt(Math.floor(Date.now() / 1000) - 60));
     renderAt('/dashboard');
 
-    expect(await screen.findByPlaceholderText('Password')).toBeInTheDocument();
+    expect(await screen.findByLabelText('Password')).toBeInTheDocument();
     expect(localStorage.getItem('authToken')).toBeNull();
   });
 

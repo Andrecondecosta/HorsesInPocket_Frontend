@@ -1,7 +1,10 @@
 import React, { useState } from 'react';
-import { Link, useNavigate } from 'react-router-dom';
-import LoadingPopup from '../components/LoadingPopup';
-import './ForgotPassword.css';
+import { useNavigate } from 'react-router-dom';
+import { Loader2 } from 'lucide-react';
+
+import AuthLayout, { AuthField, FormMessage, TextLink } from '../components/AuthLayout';
+import { Button } from '@/components/ui/button';
+import { Input } from '@/components/ui/input';
 
 const ForgotPassword = () => {
   const [email, setEmail] = useState('');
@@ -38,34 +41,40 @@ const ForgotPassword = () => {
   };
 
   return (
-    <div className="forgot-password-page">
-      {loading && <LoadingPopup message="Loading..." />}
-      <div className="forgot-password-image"></div>
-      <div className="forgot-password-container">
-        <h2>Password Recovery</h2>
-        {successMessage && <p className="success-message">{successMessage}</p>}
-        {errorMessage && <p className="error-message">{errorMessage}</p>}
-        <form className="forgot-password-form" onSubmit={handleSubmit}>
-          <div className="input-group">
-            <input
+    <AuthLayout
+      eyebrow="Password recovery"
+      title="Forgot password?"
+      description="Enter your email and we will send you a link to choose a new password."
+      footer={
+        <p>
+          Remembered it? <TextLink to="/login">Log in</TextLink>
+        </p>
+      }
+    >
+      {successMessage ? (
+        <FormMessage type="success">{successMessage}</FormMessage>
+      ) : (
+        <form className="flex flex-col gap-4" onSubmit={handleSubmit}>
+          <AuthField id="forgot-email" label="Email">
+            <Input
+              id="forgot-email"
               type="email"
               value={email}
               onChange={(e) => setEmail(e.target.value)}
+              autoComplete="email"
+              inputMode="email"
+              autoCapitalize="none"
               required
-              placeholder="Enter your email"
             />
-          </div>
-          <button type="submit" disabled={loading}>
-            Send Email
-          </button>
+          </AuthField>
+          <FormMessage>{errorMessage}</FormMessage>
+          <Button type="submit" size="xl" disabled={loading}>
+            {loading && <Loader2 className="animate-spin" aria-hidden="true" />}
+            {loading ? 'Sending…' : 'Send recovery email'}
+          </Button>
         </form>
-        <div className="forgot-password-links">
-          <p className="register-message">
-            Remembered your password? <Link to="/login">Login here</Link>.
-          </p>
-        </div>
-      </div>
-    </div>
+      )}
+    </AuthLayout>
   );
 };
 

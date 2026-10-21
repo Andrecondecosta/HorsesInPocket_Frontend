@@ -1,5 +1,8 @@
 import React from 'react';
 import { Routes, Route, Navigate } from 'react-router-dom';
+// Regras globais do CSS antigo (antes nos CSS do login/registo). Tem de ser o primeiro CSS
+// a carregar, como esses ficheiros eram, para o resto do CSS antigo continuar a sobrepor-se.
+import '../legacy-globals.css';
 import LoginPage from '../pages/LoginPage';
 import RegisterPage from '../pages/RegisterPage';
 import DashboardPage from '../pages/DashboardPage';
