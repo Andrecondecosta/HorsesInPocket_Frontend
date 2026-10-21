@@ -2,10 +2,12 @@ import * as React from 'react';
 
 import { cn } from '@/lib/utils';
 
-// text-base (16px) no telemóvel evita que o iOS faça zoom ao focar o campo
-function Input({ className, type, ...props }) {
+// text-base (16px) no telemóvel evita que o iOS faça zoom ao focar o campo.
+// forwardRef: em React 18 é preciso para que um ref (foco, formulários) chegue ao <input>.
+const Input = React.forwardRef(function Input({ className, type, ...props }, ref) {
   return (
     <input
+      ref={ref}
       type={type}
       data-slot="input"
       className={cn(
@@ -17,6 +19,6 @@ function Input({ className, type, ...props }) {
       {...props}
     />
   );
-}
+});
 
 export { Input };

@@ -1,5 +1,5 @@
 import React, { useEffect, useState } from 'react';
-import { Link, NavLink, useNavigate } from 'react-router-dom';
+import { Link, useLocation, useNavigate } from 'react-router-dom';
 import { CircleUser, House, Inbox, LayoutGrid, LifeBuoy, LogOut, User } from 'lucide-react';
 
 import { cn } from '@/lib/utils';
@@ -23,6 +23,15 @@ const TABS = [
   { to: '/profile', label: 'Profile', icon: CircleUser },
 ];
 
+// Separador ativo: o perfil de um cavalo (/horses/:id) pertence a "Horses",
+// ou a "Received" quando é um cavalo recebido (?readonly=true)
+const activeTabFor = ({ pathname, search }) => {
+  if (pathname.startsWith('/horses/')) {
+    return new URLSearchParams(search).get('readonly') === 'true' ? '/received' : '/myhorses';
+  }
+  return pathname;
+};
+
 const initialsOf = (firstName, lastName) =>
   `${firstName?.[0] || ''}${lastName?.[0] || ''}`.toUpperCase() || '·';
 
@@ -33,6 +42,7 @@ const initialsOf = (firstName, lastName) =>
  */
 const AppShell = ({ setIsLoggedIn = () => {}, children }) => {
   const navigate = useNavigate();
+  const activeTab = activeTabFor(useLocation());
   const [profile, setProfile] = useState(null);
 
   useEffect(() => {
@@ -108,19 +118,18 @@ const AppShell = ({ setIsLoggedIn = () => {}, children }) => {
       >
         <div className="grid h-16 grid-cols-4">
           {TABS.map(({ to, label, icon: Icon }) => (
-            <NavLink
+            <Link
               key={to}
               to={to}
-              className={({ isActive }) =>
-                cn(
-                  'flex flex-col items-center justify-center gap-1 text-[10.5px] font-medium text-muted-foreground',
-                  isActive && 'font-semibold text-primary'
-                )
-              }
+              aria-current={activeTab === to ? 'page' : undefined}
+              className={cn(
+                'flex flex-col items-center justify-center gap-1 text-[10.5px] font-medium text-muted-foreground',
+                activeTab === to && 'font-semibold text-primary'
+              )}
             >
               <Icon className="size-6" strokeWidth={1.8} aria-hidden="true" />
               {label}
-            </NavLink>
+            </Link>
           ))}
         </div>
       </nav>

@@ -23,6 +23,12 @@ describe('Button', () => {
     expect(screen.getByRole('button', { name: 'Edit' })).toHaveClass('border-input', 'h-12');
   });
 
+  test('encaminha o ref até ao elemento (o Radix precisa dele para posicionar menus)', () => {
+    const ref = React.createRef();
+    render(<Button ref={ref}>More</Button>);
+    expect(ref.current).toBeInstanceOf(HTMLButtonElement);
+  });
+
   test('com asChild aplica o estilo ao elemento filho (ex.: um link)', () => {
     render(
       <Button asChild>

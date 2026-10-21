@@ -55,3 +55,31 @@ describe('AppShell', () => {
     expect(document.body).not.toHaveClass('hh-has-tabbar');
   });
 });
+
+describe('AppShell — separador ativo no perfil de um cavalo', () => {
+  beforeEach(() => {
+    global.fetch = vi.fn(() => jsonResponse(200, {}));
+  });
+
+  const activeTabAt = (url) => {
+    render(
+      <MemoryRouter initialEntries={[url]}>
+        <Routes>
+          <Route path="/horses/:id" element={<AppShell><p>Perfil</p></AppShell>} />
+        </Routes>
+      </MemoryRouter>
+    );
+    return within(screen.getByRole('navigation', { name: 'Main' }))
+      .getAllByRole('link')
+      .find((link) => link.getAttribute('aria-current') === 'page')
+      ?.textContent;
+  };
+
+  test('cavalo próprio → "Horses"', () => {
+    expect(activeTabAt('/horses/1')).toBe('Horses');
+  });
+
+  test('cavalo recebido (readonly) → "Received"', () => {
+    expect(activeTabAt('/horses/1?readonly=true')).toBe('Received');
+  });
+});

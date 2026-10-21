@@ -1,5 +1,5 @@
 import React from 'react';
-import { render, screen, waitFor, act } from '@testing-library/react';
+import { render, screen, waitFor, act, fireEvent } from '@testing-library/react';
 import { MemoryRouter, Routes, Route } from 'react-router-dom';
 import ProfileHorse from './ProfileHorse';
 import { jsonResponse } from '../testUtils';
@@ -24,9 +24,9 @@ const mockApi = (isOwner) => {
   });
 };
 
-const renderProfile = () =>
+const renderProfile = (url = '/horses/1') =>
   render(
-    <MemoryRouter initialEntries={['/horses/1']}>
+    <MemoryRouter initialEntries={[url]}>
       <Routes>
         <Route path="/horses/:id" element={<ProfileHorse />} />
         <Route path="/received" element={<p>Received page</p>} />
@@ -67,5 +67,43 @@ describe('ProfileHorse — proteção contra screenshots', () => {
 
     expect(screenshotReports()).toHaveLength(1);
     expect(await screen.findByText('Received page')).toBeInTheDocument();
+  });
+});
+
+describe('ProfileHorse — novo design', () => {
+  beforeEach(() => {
+    localStorage.setItem('authToken', 'jwt-de-teste');
+    delete window.__onCapEvent;
+  });
+
+  test('o dono vê as ações (partilhar, editar, mais) e a etiqueta "Owned by you"', async () => {
+    mockApi(true);
+    renderProfile();
+
+    expect(await screen.findByRole('heading', { name: 'Bolt' })).toBeInTheDocument();
+    expect(screen.getByText('Owned by you')).toBeInTheDocument();
+    expect(screen.getByRole('button', { name: /share privately/i })).toBeInTheDocument();
+    expect(screen.getByRole('button', { name: /edit/i })).toBeInTheDocument();
+    expect(screen.getByRole('button', { name: 'More actions' })).toBeInTheDocument();
+  });
+
+  test('em modo só de leitura (cavalo recebido) não há ações e volta-se para Received Horses', async () => {
+    mockApi(false);
+    renderProfile('/horses/1?readonly=true');
+
+    expect(await screen.findByRole('heading', { name: 'Bolt' })).toBeInTheDocument();
+    expect(screen.getByText('Shared with you')).toBeInTheDocument();
+    expect(screen.queryByRole('button', { name: /share privately/i })).not.toBeInTheDocument();
+    expect(screen.queryByRole('button', { name: 'More actions' })).not.toBeInTheDocument();
+    expect(screen.getAllByRole('link', { name: /received horses/i })[0]).toHaveAttribute('href', '/received');
+  });
+
+  test('o separador Pedigree mostra a árvore genealógica', async () => {
+    mockApi(true);
+    renderProfile();
+    await screen.findByRole('heading', { name: 'Bolt' });
+
+    fireEvent.mouseDown(screen.getByRole('tab', { name: 'Pedigree' }), { button: 0 });
+    expect(await screen.findByText('No pedigree recorded yet')).toBeInTheDocument();
   });
 });

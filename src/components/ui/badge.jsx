@@ -25,12 +25,13 @@ const badgeVariants = cva(
   }
 );
 
-function Badge({ className, variant, asChild = false, ...props }) {
+// forwardRef: em React 18 o ref não chega a componentes-função sem ele
+const Badge = React.forwardRef(function Badge({ className, variant, asChild = false, ...props }, ref) {
   const Comp = asChild ? Slot : 'span';
 
   return (
-    <Comp data-slot="badge" className={cn(badgeVariants({ variant }), className)} {...props} />
+    <Comp ref={ref} data-slot="badge" className={cn(badgeVariants({ variant }), className)} {...props} />
   );
-}
+});
 
 export { Badge, badgeVariants };

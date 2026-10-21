@@ -1,390 +1,397 @@
-import React, { useState, useEffect, useRef } from 'react';
-import { useParams, useNavigate, useLocation, Link } from 'react-router-dom';
-import { FaEdit, FaTrash, FaShareAlt, FaChevronDown } from 'react-icons/fa';
-import Lightbox from "yet-another-react-lightbox";
-import GenealogyTree from '../components/GenealogyTree';
-import Layout from '../components/Layout';
-import ProfileMedia from '../components/ProfileMedia';
-import ShareHorse from '../components/ShareHorse';
-import "yet-another-react-lightbox/styles.css";
-import LoadingPopup from '../components/LoadingPopup';
-import DeleteShares from '../components/Deleteshares';
-import { useScreenshotProtection } from '../hooks/useScreenshotProtection';
-import { Capacitor } from '@capacitor/core';
-import ScreenshotApprovals from '../components/ScreenshotApprovals';
-import { isNativeiOS } from '../utils/isNative';
-import './ProfileHorse.css';
+import React, { useEffect, useRef, useState } from 'react';
+import { Link, useLocation, useNavigate, useParams } from 'react-router-dom';
+import { ChevronLeft, EyeOff, MoreHorizontal, Pencil, Share2, Trash2 } from 'lucide-react';
 
+import AppShell from '../components/AppShell';
+import ShareHorse from '../components/ShareHorse';
+import DeleteShares from '../components/Deleteshares';
+import ScreenshotApprovals from '../components/ScreenshotApprovals';
+import PedigreeTree from '../components/PedigreeTree';
+import HorseGallery from '../components/HorseGallery';
+import { useScreenshotProtection } from '../hooks/useScreenshotProtection';
+import { isNativeiOS } from '../utils/isNative';
+import { cn } from '@/lib/utils';
+import { Badge } from '@/components/ui/badge';
+import { Button } from '@/components/ui/button';
+import { Tabs, TabsContent, TabsList, TabsTrigger } from '@/components/ui/tabs';
+import {
+  Dialog,
+  DialogContent,
+  DialogDescription,
+  DialogFooter,
+  DialogHeader,
+  DialogTitle,
+} from '@/components/ui/dialog';
+import {
+  DropdownMenu,
+  DropdownMenuContent,
+  DropdownMenuItem,
+  DropdownMenuTrigger,
+} from '@/components/ui/dropdown-menu';
+
+// Linha da lista "Identification"
+const InfoRow = ({ label, children }) => (
+  <div className="flex items-center justify-between gap-4 px-4 py-3">
+    <dt className="text-muted-foreground">{label}</dt>
+    <dd className="text-right font-medium">{children}</dd>
+  </div>
+);
 
 const ProfileHorse = ({ setIsLoggedIn }) => {
   const { id } = useParams();
   const location = useLocation();
+  const navigate = useNavigate();
+  const token = localStorage.getItem('authToken');
+
   const [horse, setHorse] = useState(null);
-  const [selectedImage, setSelectedImage] = useState(null);
-  const [isOpen, setIsOpen] = useState(false);
   const [isLoading, setIsLoading] = useState(true);
   const [error, setError] = useState(null);
   const [readonly, setReadonly] = useState(false);
-  const [showShareModal, setShowShareModal] = useState(false);
-  const [showDeleteModal, setShowDeleteModal] = useState(false);
-  const [deleteMessage, setDeleteMessage] = useState("");
-  const [isMenuOpen, setIsMenuOpen] = useState(false);
-  const menuRef = useRef(null);
   const [isOwner, setIsOwner] = useState(false);
   const [userStatus, setUserStatus] = useState(null);
+  const [tab, setTab] = useState('overview');
+  const [showShareModal, setShowShareModal] = useState(false);
+  const [showDeleteModal, setShowDeleteModal] = useState(false);
+  const [deleteMessage, setDeleteMessage] = useState('');
   const [showLimitPopup, setShowLimitPopup] = useState(false);
-  const [showDeleteShares, setShowDeleteShares] = useState(false);
+  // "Delete…" no menu só marca o pedido; a janela abre quando o menu acabar de fechar
+  const deleteRequested = useRef(false);
+
   // Só protege cavalos recebidos: o dono pode tirar screenshots do próprio cavalo.
   // Enquanto o cavalo não carrega, horseId fica null e o hook não regista o listener.
   const { screenshotTaken } = useScreenshotProtection({ horseId: horse && !isOwner ? id : null });
 
-  const navigate = useNavigate();
-  const token = localStorage.getItem('authToken');
-
   const fetchUserStatus = async () => {
     try {
       const response = await fetch(`${process.env.REACT_APP_API_SERVER_URL}/user_status`, {
-        method: "GET",
+        method: 'GET',
         headers: {
-          "Content-Type": "application/json",
+          'Content-Type': 'application/json',
           Authorization: `Bearer ${token}`,
         },
       });
 
-      if (!response.ok) throw new Error("Error loading user status");
+      if (!response.ok) throw new Error('Error loading user status');
 
       const data = await response.json();
       setUserStatus(data);
     } catch (error) {
-      console.error("Error fetching status:", error);
-    }
-  };
-
-useEffect(() => {
-  const queryParams = new URLSearchParams(location.search);
-  setReadonly(queryParams.get('readonly') === 'true');
-
-  const fetchHorse = async () => {
-    try {
-      const response = await fetch(`${process.env.REACT_APP_API_SERVER_URL}/horses/${id}`, {
-        method: 'GET',
-        headers: {
-          'Content-Type': 'application/json',
-          'Authorization': `Bearer ${token}`,
-        },
-      });
-
-      if (!response.ok) {
-        throw new Error('Failed to fetch horse');
-      }
-
-      const data = await response.json();
-
-      if (data.status === "pending_approval") {
-        alert("This horse is awaiting the creator's approval. You will be redirected to My Horses.");
-        navigate('/myhorses');
-        return;
-      }
-
-      setHorse(data);
-      setIsOwner(data.is_owner);
-      setSelectedImage(0);
-    } catch (error) {
-      setError('Failed to load horse profile');
-    } finally {
-      setIsLoading(false);
-    }
-  };
-
-  if (token) {
-    fetchHorse();
-    fetchUserStatus();
-  } else {
-    setError('Token not found');
-    setIsLoading(false);
-  }
-}, [id, location.search, token]);
-
-
-  const handleClickOutside = (event) => {
-    if (menuRef.current && !menuRef.current.contains(event.target)) {
-      setIsMenuOpen(false);
+      console.error('Error fetching status:', error);
     }
   };
 
   useEffect(() => {
-    document.addEventListener('mousedown', handleClickOutside);
-    return () => {
-      document.removeEventListener('mousedown', handleClickOutside);
+    const queryParams = new URLSearchParams(location.search);
+    setReadonly(queryParams.get('readonly') === 'true');
+
+    const fetchHorse = async () => {
+      try {
+        const response = await fetch(`${process.env.REACT_APP_API_SERVER_URL}/horses/${id}`, {
+          method: 'GET',
+          headers: {
+            'Content-Type': 'application/json',
+            Authorization: `Bearer ${token}`,
+          },
+        });
+
+        if (!response.ok) {
+          throw new Error('Failed to fetch horse');
+        }
+
+        const data = await response.json();
+
+        if (data.status === 'pending_approval') {
+          alert("This horse is awaiting the creator's approval. You will be redirected to My Horses.");
+          navigate('/myhorses');
+          return;
+        }
+
+        setHorse(data);
+        setIsOwner(data.is_owner);
+      } catch (error) {
+        setError('Failed to load horse profile');
+      } finally {
+        setIsLoading(false);
+      }
     };
-  }, []);
 
-  const hasAncestorsData = (ancestors) => {
-    return ancestors && ancestors.length > 0 && ancestors.some(
-      (ancestor) =>
-        ancestor.name?.trim() || ancestor.breeder?.trim() || ancestor.breed?.trim()
-    );
-  };
+    if (token) {
+      fetchHorse();
+      fetchUserStatus();
+    } else {
+      setError('Token not found');
+      setIsLoading(false);
+    }
+  }, [id, location.search, token]);
 
-  const handleDelete = async (deleteType) => {
+  const handleDelete = async () => {
     try {
-      const endpoint =
-        deleteType === "destroy"
-          ? `/horses/${id}`
-          : `/horses/${id}/delete_shares`;
-
-      const response = await fetch(`${process.env.REACT_APP_API_SERVER_URL}${endpoint}`, {
+      const response = await fetch(`${process.env.REACT_APP_API_SERVER_URL}/horses/${id}`, {
         method: 'DELETE',
         headers: {
           'Content-Type': 'application/json',
-          'Authorization': `Bearer ${token}`,
+          Authorization: `Bearer ${token}`,
         },
       });
 
-      if (response.ok) {
-        setDeleteMessage(
-          deleteType === "destroy"
-            ? "Horse deleted for everyone!"
-            : "Subsequent shares removed successfully!"
-        );
-        setTimeout(() => {
-          setDeleteMessage("");
-          setShowDeleteModal(false);
-          if (deleteType === "destroy") navigate("/myhorses");
-        }, 5000);
-      } else {
-        throw new Error("Error performing operation");
-      }
+      if (!response.ok) throw new Error('Error performing operation');
+
+      setDeleteMessage('Horse deleted for everyone.');
+      setTimeout(() => {
+        setDeleteMessage('');
+        setShowDeleteModal(false);
+        navigate('/myhorses');
+      }, 2500);
     } catch (error) {
-      console.error("Error:", error);
-      setDeleteMessage("Error performing operation. Please try again.");
+      console.error('Error:', error);
+      setDeleteMessage('Error performing operation. Please try again.');
     }
   };
 
-  if (isLoading) return <LoadingPopup message="Loading..." />;
-  if (error) return <p>{error}</p>;
-
-  const heightInHH = (horse.height_cm / 0.1016).toFixed(1);
-
   const handleShareClick = () => {
     if (!userStatus) {
-      console.error("userStatus not yet loaded!");
+      console.error('userStatus not yet loaded!');
       return;
     }
 
     if (userStatus.used_shares >= userStatus.max_shares) {
-      console.warn("Sharing limit reached! Showing popup.");
       setShowLimitPopup(true);
     } else {
       setShowShareModal(true);
     }
   };
 
-  return (
-    <Layout setIsLoggedIn={setIsLoggedIn}>
-      <div className={`profile-container ${screenshotTaken ? 'blurred' : ''}`}>
-        {/* Header with title and buttons */}
-        <div className="profile-header">
-          {/* Breadcrumbs */}
-          <div className="breadcrumbs">
-            <Link to="/dashboard">Dashboard</Link> /{' '}
-            <Link to={readonly ? '/received' : '/myhorses'}>
-              {readonly ? 'Received Horses' : 'My Horses'}
-            </Link>{' '}
-            / <span>Horse Information</span>
-          </div>
+  const backHref = readonly ? '/received' : '/myhorses';
+  const backLabel = readonly ? 'Received Horses' : 'My Horses';
+  const editHref = isOwner && !readonly ? `/horses/${id}/edit` : null;
 
-          {/* Buttons for Desktop */}
-          <div className="profile-actions desktop-only">
-            {isOwner && !readonly && (
-              <button className="edit-button" onClick={() => navigate(`/horses/${id}/edit`)}>
-                <FaEdit /> Edit
-              </button>
-            )}
-            {!readonly && (
-              <button className="delete-button" onClick={() => setShowDeleteModal(true)}>
-                <FaTrash /> Delete
-              </button>
-            )}
-            {!readonly && (
-              <button className="share-button" onClick={handleShareClick}>
-                <FaShareAlt /> Share
-              </button>
-            )}
-          </div>
-
-          {/* Three-dot menu for Mobile */}
-          <div className="mobile-menu mobile-only" ref={menuRef}>
-            {isOwner && !readonly && (
-              <button className="edit-button" onClick={() => navigate(`/horses/${id}/edit`)}>
-                <FaEdit />
-              </button>
-            )}
-            {!readonly && (
-              <button className="delete-button" onClick={() => setShowDeleteModal(true)}>
-                <FaTrash />
-              </button>
-            )}
-            {!readonly && (
-              <button className="share-button" onClick={handleShareClick}>
-                <FaShareAlt />
-              </button>
-            )}
-          </div>
-        </div>
-
-        {/* Screenshot Approvals — visible only to the horse creator */}
-        {isOwner && <ScreenshotApprovals horseId={id} />}
-
-              {screenshotTaken ? (
-            <div className="screenshot-warning">
-    <p>Screenshot detected. Data hidden for security.</p>
-  </div>
-) : (
-        <div className="horse-info-section">
-          <h2 className="section-title">Specific Information</h2>
-          <div className="info-grid">
-            <div className="info-item">
-              <strong>Horse Name</strong>
-              <p>{horse.name}</p>
-            </div>
-            <div className="info-item">
-              <strong>Year of Birth</strong>
-              <p>{horse.age}</p>
-            </div>
-            <div className="info-item">
-              <strong>Gender</strong>
-              <p>{horse.gender}</p>
-            </div>
-            <div className="info-item">
-              <strong>Color</strong>
-              <p>{horse.color}</p>
-            </div>
-            <div className="info-item">
-              <strong>Height</strong>
-              <p>{horse.height_cm} m ({heightInHH} hh)</p>
-            </div>
-            <div className="info-item">
-              <strong>Piroplasmosis</strong>
-              <p>{horse.piroplasmosis ? 'Yes' : 'No'}</p>
-            </div>
-            <div className="info-item">
-              <strong>Breed</strong>
-              <p>{horse.breed || "Not specified"}</p>
-            </div>
-            <div className="info-item">
-              <strong>Breeder</strong>
-              <p>{horse.breeder || "Not specified"}</p>
-            </div>
-            <div className="info-item">
-              <strong>Training Level</strong>
-              <p>{horse.training_level}</p>
-            </div>
-          </div>
-
-          {/* Description */}
-          <div className="description-section">
-            <strong>Description</strong>
-            <p>{horse.description || 'Not specified'}</p>
-          </div>
-        </div>
-
-        )}
-        {/* Images and Videos */}
-        <div className="profile-gallery">
-          <h2 className="section-title">Images and Videos</h2>
-          <ProfileMedia images={horse.images} videos={horse.videos} />
-        </div>
-
-        {/* Genealogy */}
-        <div className="genealogy-section">
-          <h2 className="section-title-geno">Genealogy</h2>
-          {hasAncestorsData(horse.ancestors) ? (
-            <GenealogyTree horse={horse} />
-          ) : (
-            <p className="no-genealogy">No genealogy information available.</p>
-          )}
-        </div>
-
-
-{showDeleteModal && (
-  <div className="modal-overlay">
-    <div className="modal-content">
-      <h3>Delete Horse</h3>
-      <div className="delete-options">
-        {!deleteMessage ? (
-          <>
-            <button
-              className="delete-option-button"
-              onClick={() => handleDelete("destroy")}
-            >
-              <FaTrash /> <p>Delete for Me and Everyone</p>
-            </button>
-
-            < DeleteShares horseId={id} token={token} onDeleteSuccess={fetchUserStatus}/>
-
-
-            <button className="modal-close" onClick={() => setShowDeleteModal(false)}>
-              Cancel
-            </button>
-          </>
+  if (isLoading || error) {
+    return (
+      <AppShell setIsLoggedIn={setIsLoggedIn}>
+        {error ? (
+          <p role="alert" className="rounded-[14px] bg-leather-soft p-4 text-sm">{error}</p>
         ) : (
-          <p className="delete-message">{deleteMessage}</p>
+          <div aria-label="Loading horse" className="flex animate-pulse flex-col gap-4 md:grid md:grid-cols-2 md:gap-10">
+            <div className="-mx-4 -mt-6 h-[330px] bg-secondary md:mx-0 md:mt-0 md:aspect-[4/3] md:h-auto md:rounded-2xl" />
+            <div className="flex flex-col gap-3">
+              <div className="h-12 w-2/3 rounded bg-secondary" />
+              <div className="h-4 w-1/2 rounded bg-secondary" />
+            </div>
+          </div>
         )}
-      </div>
-    </div>
-  </div>
-)}
+      </AppShell>
+    );
+  }
 
+  const images = horse.images || [];
+  const meta = [horse.breed, horse.gender, horse.age].filter(Boolean).join(' · ');
+  const heightInHH = horse.height_cm ? (horse.height_cm / 0.1016).toFixed(1) : null;
 
-
-        {/* Share Modal */}
-        {showShareModal && (
-          <ShareHorse
-            horseId={id}
-            onClose={() => setShowShareModal(false)}
-          />
+  return (
+    <AppShell setIsLoggedIn={setIsLoggedIn}>
+      <div
+        className={cn(
+          'md:grid md:grid-cols-[minmax(0,1.05fr)_minmax(0,1fr)] md:items-start md:gap-10 lg:gap-14',
+          screenshotTaken && 'pointer-events-none select-none blur-md'
         )}
+      >
+        {/* Fotografia de capa: a toda a largura no telemóvel, coluna esquerda no computador */}
+        <div className="-mx-4 -mt-6 md:sticky md:top-24 md:mx-0 md:mt-0">
+          <div className="relative h-[330px] overflow-hidden bg-[#e3ded3] md:aspect-[4/3] md:h-auto md:rounded-2xl">
+            {images[0] ? (
+              <img src={images[0]} alt={horse.name} className="size-full object-cover" />
+            ) : (
+              <span aria-hidden="true" className="flex size-full items-center justify-center font-serif text-8xl font-bold text-[#5c5f58]">
+                {horse.name?.[0]?.toUpperCase()}
+              </span>
+            )}
+            <Link
+              to={backHref}
+              aria-label={`Back to ${backLabel}`}
+              className="absolute top-4 left-4 flex size-10 items-center justify-center rounded-full bg-background/80 backdrop-blur md:hidden"
+            >
+              <ChevronLeft className="size-5" aria-hidden="true" />
+            </Link>
+            {images.length > 1 && (
+              <button
+                type="button"
+                onClick={() => setTab('gallery')}
+                className="absolute right-4 bottom-3.5 rounded-full bg-foreground/70 px-2.5 py-1 text-[11.5px] font-semibold text-background"
+              >
+                {images.length} photos
+              </button>
+            )}
+          </div>
+        </div>
 
-         {/* Sharing limit popup — adjusted for native iOS */}
-         {showLimitPopup && (
-            <div className="popup-overlay" data-testid="share-limit-popup">
-              <div className="popup-content">
-                <h3>Sharing Limit Reached!</h3>
-                {isNativeiOS() ? (
-                  <>
-                    <p>You have reached the sharing limit of your current plan. Please manage your subscription through your device settings.</p>
-                    <div className="popup-buttons">
-                      <button className="popup-btn secondary" data-testid="share-limit-ok-btn" onClick={() => setShowLimitPopup(false)}>OK</button>
-                    </div>
-                  </>
-                ) : (
-                  <>
-                    <p>You have reached the sharing limit of your plan. To continue sharing, please upgrade.</p>
-                    <div className="popup-buttons">
-                      <button className="popup-btn secondary" data-testid="share-limit-ok-btn" onClick={() => setShowLimitPopup(false)}>OK</button>
-                      <button className="popup-btn primary" data-testid="share-limit-upgrade-btn" onClick={() => navigate('/profile')}>
-                        View My Plan
-                      </button>
-                    </div>
-                  </>
-                )}
-              </div>
+        <div className="flex flex-col gap-5 pt-5 md:pt-0">
+          <Link to={backHref} className="hidden items-center gap-1 text-sm font-medium text-primary md:flex">
+            <ChevronLeft className="size-4" aria-hidden="true" />
+            {backLabel}
+          </Link>
+
+          <div className="flex flex-col gap-0.5">
+            <span className="text-[11px] font-semibold uppercase tracking-[0.14em] text-leather">
+              {isOwner ? 'Owned by you' : 'Shared with you'}
+            </span>
+            <h1 className="font-serif text-5xl font-bold leading-none md:text-6xl">{horse.name}</h1>
+            {meta && <span className="text-sm text-muted-foreground">{meta}</span>}
+          </div>
+
+          {!readonly && (
+            <div className="flex gap-2.5">
+              <Button size="xl" className="flex-1" onClick={handleShareClick}>
+                <Share2 />
+                Share privately
+              </Button>
+              {isOwner && (
+                <Button size="xl" variant="outline" onClick={() => navigate(`/horses/${id}/edit`)}>
+                  <Pencil />
+                  Edit
+                </Button>
+              )}
+              <DropdownMenu modal={false}>
+                <DropdownMenuTrigger asChild>
+                  <Button size="xl" variant="outline" aria-label="More actions" className="w-12 px-0">
+                    <MoreHorizontal />
+                  </Button>
+                </DropdownMenuTrigger>
+                {/* A janela de eliminação só abre depois de o menu fechar por completo:
+                    se abrisse ao mesmo tempo, o fecho do menu fechava-a logo a seguir */}
+                <DropdownMenuContent
+                  align="end"
+                  onCloseAutoFocus={(e) => {
+                    if (!deleteRequested.current) return;
+                    e.preventDefault();
+                    deleteRequested.current = false;
+                    setShowDeleteModal(true);
+                  }}
+                >
+                  <DropdownMenuItem variant="destructive" onSelect={() => { deleteRequested.current = true; }}>
+                    <Trash2 />
+                    Delete…
+                  </DropdownMenuItem>
+                </DropdownMenuContent>
+              </DropdownMenu>
             </div>
           )}
 
-        {/* Lightbox for image preview */}
-        {isOpen && (
-          <Lightbox
-            open={isOpen}
-            close={() => setIsOpen(false)}
-            slides={horse.images.map((image) => ({ src: image }))}
-            currentIndex={selectedImage}
-            onIndexChange={(index) => setSelectedImage(index)}
-          />
-        )}
+          {/* Pedidos de aprovação de screenshot — só para o dono do cavalo */}
+          {isOwner && <ScreenshotApprovals horseId={id} />}
+
+          <Tabs value={tab} onValueChange={setTab}>
+            <TabsList>
+              <TabsTrigger value="overview">Overview</TabsTrigger>
+              <TabsTrigger value="gallery">Gallery</TabsTrigger>
+              <TabsTrigger value="pedigree">Pedigree</TabsTrigger>
+            </TabsList>
+
+            <TabsContent value="overview" className="flex flex-col gap-4">
+              <section aria-labelledby="identification-title" className="flex flex-col gap-1.5">
+                <h2 id="identification-title" className="pl-1 text-[11px] font-semibold uppercase tracking-[0.12em] text-muted-foreground">
+                  Identification
+                </h2>
+                <dl className="divide-y divide-[#ece7dd] overflow-hidden rounded-[14px] border bg-card">
+                  <InfoRow label="Color">{horse.color || 'Not specified'}</InfoRow>
+                  <InfoRow label="Height">
+                    {horse.height_cm ? `${horse.height_cm} m · ${heightInHH} hh` : 'Not specified'}
+                  </InfoRow>
+                  <InfoRow label="Breeder">{horse.breeder || 'Not specified'}</InfoRow>
+                  <InfoRow label="Training level">{horse.training_level || 'Not specified'}</InfoRow>
+                  <InfoRow label="Piroplasmosis">
+                    <Badge variant={horse.piroplasmosis ? 'secondary' : 'soft'}>
+                      {horse.piroplasmosis ? 'Yes' : 'No'}
+                    </Badge>
+                  </InfoRow>
+                </dl>
+              </section>
+
+              {horse.description && (
+                <section aria-labelledby="description-title" className="flex flex-col gap-1.5">
+                  <h2 id="description-title" className="pl-1 text-[11px] font-semibold uppercase tracking-[0.12em] text-muted-foreground">
+                    Description
+                  </h2>
+                  <p className="whitespace-pre-line rounded-[14px] border bg-card px-4 py-3 leading-relaxed">
+                    {horse.description}
+                  </p>
+                </section>
+              )}
+            </TabsContent>
+
+            <TabsContent value="gallery">
+              <HorseGallery name={horse.name} images={images} videos={horse.videos || []} />
+            </TabsContent>
+
+            <TabsContent value="pedigree">
+              <PedigreeTree ancestors={horse.ancestors || []} editHref={editHref} />
+            </TabsContent>
+          </Tabs>
+        </div>
       </div>
-    </Layout>
+
+      {screenshotTaken && (
+        <div role="alert" className="fixed inset-x-4 top-1/3 z-50 mx-auto flex max-w-sm items-center gap-3 rounded-[14px] border bg-card p-4 shadow-lg">
+          <EyeOff className="size-5 shrink-0 text-leather" aria-hidden="true" />
+          <p className="text-sm font-medium">Screenshot detected. Data hidden for security.</p>
+        </div>
+      )}
+
+      {showShareModal && <ShareHorse horseId={id} onClose={() => setShowShareModal(false)} />}
+
+      <Dialog open={showDeleteModal} onOpenChange={setShowDeleteModal}>
+        <DialogContent>
+          <DialogHeader>
+            <DialogTitle>Delete {horse.name}?</DialogTitle>
+            <DialogDescription>
+              Remove access for some people, or delete the horse for everyone.
+            </DialogDescription>
+          </DialogHeader>
+
+          {deleteMessage ? (
+            <p role="status" className="rounded-lg bg-secondary p-3 text-sm font-medium">{deleteMessage}</p>
+          ) : (
+            <>
+              <DeleteShares horseId={id} token={token} onDeleteSuccess={fetchUserStatus} />
+              <div className="flex flex-col gap-2 border-t pt-4">
+                <Button variant="destructive" onClick={handleDelete}>
+                  <Trash2 />
+                  Delete for me and everyone
+                </Button>
+                <p className="text-xs text-muted-foreground">This cannot be undone.</p>
+              </div>
+            </>
+          )}
+
+          <DialogFooter>
+            <Button variant="ghost" onClick={() => setShowDeleteModal(false)}>Cancel</Button>
+          </DialogFooter>
+        </DialogContent>
+      </Dialog>
+
+      {/* Limite de partilhas do plano — em iOS nativo, sem referências a upgrade/pagamentos */}
+      <Dialog open={showLimitPopup} onOpenChange={setShowLimitPopup}>
+        <DialogContent data-testid="share-limit-popup">
+          <DialogHeader>
+            <DialogTitle>Sharing limit reached</DialogTitle>
+            <DialogDescription>
+              {isNativeiOS()
+                ? 'You have reached the sharing limit of your current plan. Please manage your subscription through your device settings.'
+                : 'You have reached the sharing limit of your plan. To continue sharing, please upgrade.'}
+            </DialogDescription>
+          </DialogHeader>
+          <DialogFooter>
+            <Button variant="outline" data-testid="share-limit-ok-btn" onClick={() => setShowLimitPopup(false)}>
+              OK
+            </Button>
+            {!isNativeiOS() && (
+              <Button data-testid="share-limit-upgrade-btn" onClick={() => navigate('/profile')}>
+                View my plan
+              </Button>
+            )}
+          </DialogFooter>
+        </DialogContent>
+      </Dialog>
+    </AppShell>
   );
 };
 

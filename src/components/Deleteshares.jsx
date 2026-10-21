@@ -1,24 +1,27 @@
-import { useState, useEffect, useRef } from "react";
-import { FaTrash, FaChevronDown } from "react-icons/fa";
-import "./Deleteshares.css";
+import { useEffect, useState } from 'react';
+import { UserMinus } from 'lucide-react';
 
+import { Button } from '@/components/ui/button';
+
+// Lista as pessoas com acesso ao cavalo e remove as que forem escolhidas
 export default function DeleteShares({ horseId, token, onDeleteSuccess = () => {} }) {
-  const [isOpen, setIsOpen] = useState(false);
   const [shares, setShares] = useState([]);
+  const [loaded, setLoaded] = useState(false);
   const [selectedShares, setSelectedShares] = useState([]);
-  const menuRef = useRef(null);
+  const [error, setError] = useState(null);
 
   useEffect(() => {
     fetch(`${process.env.REACT_APP_API_SERVER_URL}/horses/${horseId}/shares`, {
-      method: "GET",
+      method: 'GET',
       headers: {
-        "Content-Type": "application/json",
+        'Content-Type': 'application/json',
         Authorization: `Bearer ${token}`,
       },
     })
       .then((res) => res.json())
       .then((data) => setShares(data.shares || []))
-      .catch((err) => console.error("Error loading shares:", err));
+      .catch((err) => console.error('Error loading shares:', err))
+      .finally(() => setLoaded(true));
   }, [horseId, token]);
 
   const toggleSelection = (userId) => {
@@ -28,74 +31,71 @@ export default function DeleteShares({ horseId, token, onDeleteSuccess = () => {
   };
 
   const handleDelete = () => {
+    setError(null);
     fetch(`${process.env.REACT_APP_API_SERVER_URL}/horses/${horseId}/delete_shares`, {
-      method: "DELETE",
+      method: 'DELETE',
       headers: {
-        "Content-Type": "application/json",
+        'Content-Type': 'application/json',
         Authorization: `Bearer ${token}`,
       },
       body: JSON.stringify({ user_ids: selectedShares }),
     })
       .then((res) => {
-        if (!res.ok) throw new Error("Error removing shares");
+        if (!res.ok) throw new Error('Error removing shares');
         return res.json();
       })
       .then(() => {
         setShares((prev) => prev.filter((share) => !selectedShares.includes(share.user_id)));
         setSelectedShares([]);
-        setIsOpen(false);
         onDeleteSuccess();
       })
-      .catch((err) => console.error("Error removing shares:", err));
+      .catch((err) => {
+        console.error('Error removing shares:', err);
+        setError('Could not remove access. Please try again.');
+      });
   };
-
-  const handleClickOutside = (event) => {
-    if (menuRef.current && !menuRef.current.contains(event.target)) {
-      setIsOpen(false);
-    }
-  };
-
-  useEffect(() => {
-    document.addEventListener("mousedown", handleClickOutside);
-    return () => {
-      document.removeEventListener("mousedown", handleClickOutside);
-    };
-  }, []);
 
   return (
-    <div className="delete-shares-container" ref={menuRef}>
-      <button onClick={() => setIsOpen(!isOpen)} className="delete-option-button">
-        <FaTrash /> <p>Delete for Shared</p> <FaChevronDown className={`arrow ${isOpen ? "open" : ""}`} />
-      </button>
+    <div className="flex flex-col gap-3">
+      <div className="flex flex-col gap-0.5">
+        <h3 className="font-semibold">Remove access</h3>
+        <p className="text-[13px] text-muted-foreground">
+          Choose who should stop seeing this horse. You keep it in your portfolio.
+        </p>
+      </div>
 
-      {isOpen && (
-        <div className="delete-shares-dropdown">
-          <h6>Select shares to delete</h6>
-          {shares.length > 0 ? (
-            <div className="delete-shares-list">
-              {shares.map((share) => (
-                <label key={share.user_id} className="share-item">
+      {!loaded ? null : shares.length > 0 ? (
+        <>
+          <ul className="divide-y overflow-hidden rounded-lg border bg-card">
+            {shares.map((share) => (
+              <li key={share.user_id}>
+                <label className="flex cursor-pointer items-center gap-3 px-3 py-2.5">
                   <input
                     type="checkbox"
+                    className="size-4 accent-[var(--primary)]"
                     checked={selectedShares.includes(share.user_id)}
                     onChange={() => toggleSelection(share.user_id)}
                   />
                   {share.user_name || `User ${share.user_id}`}
                 </label>
-              ))}
-              <button
-                onClick={handleDelete}
-                disabled={selectedShares.length === 0}
-                className="delete-button"
-              >
-                <FaTrash /> Delete Selected
-              </button>
-            </div>
-          ) : (
-            <p className="no-shares">No shares found</p>
-          )}
-        </div>
+              </li>
+            ))}
+          </ul>
+          <Button
+            variant="outline"
+            className="text-destructive"
+            onClick={handleDelete}
+            disabled={selectedShares.length === 0}
+          >
+            <UserMinus />
+            Remove selected
+          </Button>
+        </>
+      ) : (
+        <p className="text-sm text-muted-foreground">This horse is not shared with anyone.</p>
       )}
+
+      {error && <p role="alert" className="text-sm font-medium text-destructive">{error}</p>}
     </div>
   );
 }
