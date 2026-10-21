@@ -72,4 +72,18 @@ describe('ShareHorse', () => {
 
     await waitFor(() => expect(onClose).toHaveBeenCalledTimes(1));
   });
+
+  test('a permissão para voltar a partilhar vai no pedido e fica bloqueada depois de gerado o link', async () => {
+    mockApi();
+    render(<ShareHorse horseId={7} onClose={vi.fn()} />);
+
+    const allow = await screen.findByRole('checkbox', { name: /allow them to share this horse/i });
+    expect(allow).not.toBeChecked();
+    userEvent.click(allow);
+    userEvent.click(screen.getByRole('button', { name: /generate link/i }));
+
+    await screen.findByRole('button', { name: /copy link/i });
+    expect(JSON.parse(shareLinkCalls()[0][1].body)).toEqual({ expires_at: null, can_reshare: true });
+    expect(allow).toBeDisabled();
+  });
 });

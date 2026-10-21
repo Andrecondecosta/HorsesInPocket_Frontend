@@ -4,10 +4,11 @@ import { MemoryRouter, Routes, Route } from 'react-router-dom';
 import ProfileHorse from './ProfileHorse';
 import { jsonResponse } from '../testUtils';
 
-const horse = (isOwner) => ({
+const horse = (isOwner, extra = {}) => ({
   id: 1,
   name: 'Bolt',
   is_owner: isOwner,
+  ...extra,
   height_cm: 1.6,
   images: [],
   videos: [],
@@ -15,9 +16,9 @@ const horse = (isOwner) => ({
 });
 
 // Responde aos pedidos da página conforme o URL
-const mockApi = (isOwner) => {
+const mockApi = (isOwner, extra) => {
   global.fetch = vi.fn((url) => {
-    if (url.endsWith('/horses/1')) return jsonResponse(200, horse(isOwner));
+    if (url.endsWith('/horses/1')) return jsonResponse(200, horse(isOwner, extra));
     if (url.endsWith('/user_status')) return jsonResponse(200, { used_shares: 0, max_shares: 5 });
     if (url.endsWith('/screenshots')) return jsonResponse(201, {});
     return jsonResponse(200, []);
@@ -96,6 +97,18 @@ describe('ProfileHorse — novo design', () => {
     expect(screen.queryByRole('button', { name: /share privately/i })).not.toBeInTheDocument();
     expect(screen.queryByRole('button', { name: 'More actions' })).not.toBeInTheDocument();
     expect(screen.getAllByRole('link', { name: /received horses/i })[0]).toHaveAttribute('href', '/received');
+  });
+
+  test('cavalo recebido com permissão: pode partilhar e gerir as suas partilhas, mas não editar nem apagar', async () => {
+    mockApi(false, { can_share: true });
+    renderProfile('/horses/1?readonly=true');
+
+    expect(await screen.findByRole('button', { name: /share privately/i })).toBeInTheDocument();
+    expect(screen.queryByRole('button', { name: /^edit$/i })).not.toBeInTheDocument();
+
+    fireEvent.keyDown(screen.getByRole('button', { name: 'More actions' }), { key: 'Enter' });
+    expect(await screen.findByRole('menuitem', { name: /manage shares/i })).toBeInTheDocument();
+    expect(screen.queryByRole('menuitem', { name: /delete/i })).not.toBeInTheDocument();
   });
 
   test('o separador Pedigree mostra a árvore genealógica', async () => {

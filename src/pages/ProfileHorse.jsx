@@ -1,6 +1,6 @@
 import React, { useEffect, useRef, useState } from 'react';
 import { Link, useLocation, useNavigate, useParams } from 'react-router-dom';
-import { ChevronLeft, EyeOff, MoreHorizontal, Pencil, Share2, Trash2 } from 'lucide-react';
+import { ChevronLeft, EyeOff, MoreHorizontal, Pencil, Share2, Trash2, Users } from 'lucide-react';
 
 import AppShell from '../components/AppShell';
 import ShareHorse from '../components/ShareHorse';
@@ -163,6 +163,8 @@ const ProfileHorse = ({ setIsLoggedIn }) => {
   const backHref = readonly ? '/received' : '/myhorses';
   const backLabel = readonly ? 'Received Horses' : 'My Horses';
   const editHref = isOwner && !readonly ? `/horses/${id}/edit?step=pedigree` : null;
+  // O backend diz se quem vê pode partilhar (dono, ou permissão dada por quem partilhou)
+  const canShare = isOwner || !!horse?.can_share;
 
   if (isLoading || error) {
     return (
@@ -237,7 +239,8 @@ const ProfileHorse = ({ setIsLoggedIn }) => {
             {meta && <span className="text-sm text-muted-foreground">{meta}</span>}
           </div>
 
-          {!readonly && (
+          {/* Partilhar: o dono, ou quem recebeu com permissão para voltar a partilhar */}
+          {canShare && (
             <div className="flex gap-2.5">
               <Button size="xl" className="flex-1" onClick={handleShareClick}>
                 <Share2 />
@@ -266,10 +269,17 @@ const ProfileHorse = ({ setIsLoggedIn }) => {
                     setShowDeleteModal(true);
                   }}
                 >
-                  <DropdownMenuItem variant="destructive" onSelect={() => { deleteRequested.current = true; }}>
-                    <Trash2 />
-                    Delete…
-                  </DropdownMenuItem>
+                  {isOwner ? (
+                    <DropdownMenuItem variant="destructive" onSelect={() => { deleteRequested.current = true; }}>
+                      <Trash2 />
+                      Delete…
+                    </DropdownMenuItem>
+                  ) : (
+                    <DropdownMenuItem onSelect={() => { deleteRequested.current = true; }}>
+                      <Users />
+                      Manage shares…
+                    </DropdownMenuItem>
+                  )}
                 </DropdownMenuContent>
               </DropdownMenu>
             </div>
@@ -340,9 +350,11 @@ const ProfileHorse = ({ setIsLoggedIn }) => {
       <Dialog open={showDeleteModal} onOpenChange={setShowDeleteModal}>
         <DialogContent>
           <DialogHeader>
-            <DialogTitle>Delete {horse.name}?</DialogTitle>
+            <DialogTitle>{isOwner ? `Delete ${horse.name}?` : 'Manage shares'}</DialogTitle>
             <DialogDescription>
-              Remove access for some people, or delete the horse for everyone.
+              {isOwner
+                ? 'Remove access for some people, or delete the horse for everyone.'
+                : 'Remove access for people you shared this horse with.'}
             </DialogDescription>
           </DialogHeader>
 
@@ -351,13 +363,16 @@ const ProfileHorse = ({ setIsLoggedIn }) => {
           ) : (
             <>
               <DeleteShares horseId={id} token={token} onDeleteSuccess={fetchUserStatus} />
-              <div className="flex flex-col gap-2 border-t pt-4">
-                <Button variant="destructive" onClick={handleDelete}>
-                  <Trash2 />
-                  Delete for me and everyone
-                </Button>
-                <p className="text-xs text-muted-foreground">This cannot be undone.</p>
-              </div>
+              {/* Apagar o cavalo é só para o dono */}
+              {isOwner && (
+                <div className="flex flex-col gap-2 border-t pt-4">
+                  <Button variant="destructive" onClick={handleDelete}>
+                    <Trash2 />
+                    Delete for me and everyone
+                  </Button>
+                  <p className="text-xs text-muted-foreground">This cannot be undone.</p>
+                </div>
+              )}
             </>
           )}
 

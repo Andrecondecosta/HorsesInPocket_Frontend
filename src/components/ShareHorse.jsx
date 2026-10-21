@@ -21,6 +21,8 @@ const ShareHorse = ({ horseId, onClose }) => {
   const [horse, setHorse] = useState(null);
   const [isLoading, setIsLoading] = useState(true);
   const [isGenerating, setIsGenerating] = useState(false);
+  // Se quem recebe pode voltar a partilhar (escolha de quem partilha, desligada por defeito)
+  const [allowReshare, setAllowReshare] = useState(false);
   const [copied, setCopied] = useState(false);
   const [error, setError] = useState(null);
   const [email, setEmail] = useState('');
@@ -71,7 +73,7 @@ const ShareHorse = ({ horseId, onClose }) => {
           'Content-Type': 'application/json',
           Authorization: `Bearer ${token}`,
         },
-        body: JSON.stringify({ expires_at: null }),
+        body: JSON.stringify({ expires_at: null, can_reshare: allowReshare }),
       });
 
       if (!response.ok) {
@@ -116,7 +118,7 @@ const ShareHorse = ({ horseId, onClose }) => {
           'Content-Type': 'application/json',
           Authorization: `Bearer ${token}`,
         },
-        body: JSON.stringify({ email }),
+        body: JSON.stringify({ email, can_reshare: allowReshare }),
       });
 
       if (!response.ok) {
@@ -159,6 +161,24 @@ const ShareHorse = ({ horseId, onClose }) => {
                 The link works once: the first person to open it gets read-only access.
               </DialogDescription>
             </DialogHeader>
+
+            {/* O link é criado com esta escolha: depois de gerado já não muda */}
+            <label htmlFor="share-allow-reshare" className="flex items-start gap-3 rounded-[12px] border p-3">
+              <input
+                id="share-allow-reshare"
+                type="checkbox"
+                checked={allowReshare}
+                onChange={(e) => setAllowReshare(e.target.checked)}
+                disabled={!!shareLink}
+                className="mt-0.5 size-4 shrink-0 accent-primary"
+              />
+              <span className="flex flex-col gap-0.5">
+                <span className="text-sm font-medium">Allow them to share this horse</span>
+                <span className="text-xs text-muted-foreground">
+                  You won't see who they share it with. If you remove their access, everyone they shared it with loses it too.
+                </span>
+              </span>
+            </label>
 
             {/* Copiar/WhatsApp só aparecem depois de gerado o link, para que
                 o clique continue a ser um gesto direto do utilizador
