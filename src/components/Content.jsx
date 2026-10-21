@@ -52,7 +52,7 @@ function Content({ setIsLoggedIn }) {
         <Route path="/received" element={<ProtectedRoute element={<ReceivedHorses setIsLoggedIn={setIsLoggedIn}/>} />} />
         <Route path="/dashboard" element={<ProtectedRoute element={<DashboardPage setIsLoggedIn={setIsLoggedIn}/>} />} />
         <Route path="/horses/shared/:token" element={<SharedHorse />} />
-        <Route path="/admin/dashboard" element={<ProtectedRoute element={<AdminDashboard />} />} />
+        <Route path="/admin/dashboard" element={<ProtectedRoute element={<AdminDashboard setIsLoggedIn={setIsLoggedIn}/>} />} />
 
         <Route path="*" element={<h1>404 - Página não encontrada</h1>} />
       </Routes>

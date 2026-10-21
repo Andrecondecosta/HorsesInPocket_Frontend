@@ -31,7 +31,7 @@ const activeTabFor = ({ pathname, search }) => {
   }
   // Ecrãs sem separador próprio ficam no separador de onde se chega a eles
   if (pathname === '/newhorse') return '/myhorses';
-  if (pathname === '/update-profile') return '/profile';
+  if (pathname === '/update-profile' || pathname.startsWith('/admin')) return '/profile';
   return pathname;
 };
 

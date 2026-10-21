@@ -1,6 +1,6 @@
 import React, { useEffect, useState } from 'react';
 import { Link, useNavigate } from 'react-router-dom';
-import { ChevronRight, LifeBuoy, LogOut, Pencil, ShieldCheck, Trash2 } from 'lucide-react';
+import { ChevronRight, LayoutDashboard, LifeBuoy, LogOut, Pencil, ShieldCheck, Trash2 } from 'lucide-react';
 
 import AppShell from '../components/AppShell';
 import { Button } from '@/components/ui/button';
@@ -184,6 +184,8 @@ const ProfilePage = ({ setIsLoggedIn = () => {} }) => {
 
             <nav aria-label="Account" className="flex flex-col divide-y divide-[#ece7dd] overflow-hidden rounded-[14px] border bg-card">
               <ActionRow to="/update-profile" icon={Pencil}>Edit profile</ActionRow>
+              {/* Só para administradores (o backend valida o acesso de qualquer forma) */}
+              {user.admin && <ActionRow to="/admin/dashboard" icon={LayoutDashboard}>Admin</ActionRow>}
               <ActionRow to="/support" icon={LifeBuoy}>Support</ActionRow>
               <ActionRow to="/privacy-policy" icon={ShieldCheck}>Privacy policy</ActionRow>
               <ActionRow onClick={handleLogout} icon={LogOut}>Logout</ActionRow>
