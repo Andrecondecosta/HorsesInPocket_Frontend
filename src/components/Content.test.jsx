@@ -44,3 +44,11 @@ describe('Rota /dashboard', () => {
     expect(await screen.findByRole('heading', { name: /^Good (morning|afternoon|evening)/ })).toBeInTheDocument();
   });
 });
+
+describe('Rota /home-page (retirada)', () => {
+  test('links antigos vão para o login', async () => {
+    global.fetch = vi.fn(() => jsonResponse(200, []));
+    renderAt('/home-page');
+    expect(await screen.findByLabelText('Password')).toBeInTheDocument();
+  });
+});

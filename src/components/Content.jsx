@@ -14,7 +14,6 @@ import NewHorses from '../pages/NewHorses';
 import ProfileHorse from '../pages/ProfileHorse';
 import EditHorse from '../pages/EditHorse';
 import ReceivedHorses from '../pages/ReceivedHorses';
-import HomePage from '../pages/HomePage';
 import SharedHorse from '../pages/SharedHorse';
 import AdminDashboard from '../pages/AdminDashboard';
 import ForgotPassword from '../pages/ForgotPassword';
@@ -38,7 +37,8 @@ function Content({ setIsLoggedIn }) {
         <Route path="/welcome" element={<WelcomePage />} />
         <Route path="/forgot/password" element={<ForgotPassword />} />
         <Route path="/reset/password/:token" element={<ResetPassword />} />
-        <Route path="/home-page" element={<HomePage />} />
+        {/* A antiga página de apresentação foi retirada; links antigos vão para o login */}
+        <Route path="/home-page" element={<Navigate to="/login" replace />} />
         <Route path="/privacy-policy" element={<PrivacyPolicy setIsLoggedIn={setIsLoggedIn} />} />
         <Route path="/support" element={<SupportPage setIsLoggedIn={setIsLoggedIn} />} />
 
