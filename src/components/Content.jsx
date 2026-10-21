@@ -39,8 +39,8 @@ function Content({ setIsLoggedIn }) {
         <Route path="/forgot/password" element={<ForgotPassword />} />
         <Route path="/reset/password/:token" element={<ResetPassword />} />
         <Route path="/home-page" element={<HomePage />} />
-        <Route path="/privacy-policy" element={<PrivacyPolicy />} />
-        <Route path="/support" element={<SupportPage />} />
+        <Route path="/privacy-policy" element={<PrivacyPolicy setIsLoggedIn={setIsLoggedIn} />} />
+        <Route path="/support" element={<SupportPage setIsLoggedIn={setIsLoggedIn} />} />
 
         {/* Protected Routes */}
         <Route path="/profile" element={<ProtectedRoute element={<ProfilePage setIsLoggedIn={setIsLoggedIn}/>} />} />
