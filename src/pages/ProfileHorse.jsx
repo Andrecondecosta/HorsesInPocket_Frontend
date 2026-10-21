@@ -9,7 +9,6 @@ import ScreenshotApprovals from '../components/ScreenshotApprovals';
 import PedigreeTree from '../components/PedigreeTree';
 import HorseGallery from '../components/HorseGallery';
 import { useScreenshotProtection } from '../hooks/useScreenshotProtection';
-import { isNativeiOS } from '../utils/isNative';
 import { cn } from '@/lib/utils';
 import { Badge } from '@/components/ui/badge';
 import { Button } from '@/components/ui/button';
@@ -368,26 +367,20 @@ const ProfileHorse = ({ setIsLoggedIn }) => {
         </DialogContent>
       </Dialog>
 
-      {/* Limite de partilhas do plano — em iOS nativo, sem referências a upgrade/pagamentos */}
+      {/* Limite de partilhas da conta (definido pelo backend). O HorseHub é gratuito:
+          sem referências a planos, upgrades ou pagamentos */}
       <Dialog open={showLimitPopup} onOpenChange={setShowLimitPopup}>
         <DialogContent data-testid="share-limit-popup">
           <DialogHeader>
             <DialogTitle>Sharing limit reached</DialogTitle>
             <DialogDescription>
-              {isNativeiOS()
-                ? 'You have reached the sharing limit of your current plan. Please manage your subscription through your device settings.'
-                : 'You have reached the sharing limit of your plan. To continue sharing, please upgrade.'}
+              You have reached the maximum number of shares for your account.
             </DialogDescription>
           </DialogHeader>
           <DialogFooter>
-            <Button variant="outline" data-testid="share-limit-ok-btn" onClick={() => setShowLimitPopup(false)}>
+            <Button data-testid="share-limit-ok-btn" onClick={() => setShowLimitPopup(false)}>
               OK
             </Button>
-            {!isNativeiOS() && (
-              <Button data-testid="share-limit-upgrade-btn" onClick={() => navigate('/profile')}>
-                View my plan
-              </Button>
-            )}
           </DialogFooter>
         </DialogContent>
       </Dialog>

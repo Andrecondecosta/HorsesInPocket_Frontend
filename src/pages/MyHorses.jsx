@@ -3,7 +3,6 @@ import { Link, useNavigate } from 'react-router-dom';
 import { ChevronRight, Plus, Search } from 'lucide-react';
 
 import AppShell from '../components/AppShell';
-import { isNativeiOS } from '../utils/isNative';
 import { Badge } from '@/components/ui/badge';
 import { Button } from '@/components/ui/button';
 import { Input } from '@/components/ui/input';
@@ -34,7 +33,6 @@ const MyHorses = ({ setIsLoggedIn }) => {
 
   const token = localStorage.getItem('authToken');
   const navigate = useNavigate();
-  const native = isNativeiOS();
 
   useEffect(() => {
     const fetchHorses = async () => {
@@ -225,26 +223,20 @@ const MyHorses = ({ setIsLoggedIn }) => {
         )}
       </div>
 
-      {/* Limite de cavalos do plano — em iOS nativo, sem referências a upgrade/pagamentos */}
+      {/* Limite de cavalos da conta (definido pelo backend). O HorseHub é gratuito:
+          sem referências a planos, upgrades ou pagamentos */}
       <Dialog open={showLimitPopup} onOpenChange={setShowLimitPopup}>
         <DialogContent data-testid="horse-limit-popup">
           <DialogHeader>
             <DialogTitle>Horse limit reached</DialogTitle>
             <DialogDescription>
-              {native
-                ? 'You have reached the horse limit of your current plan. Please manage your subscription through your device settings.'
-                : 'You have reached the horse limit of your plan. To continue, please upgrade.'}
+              You have reached the maximum number of horses for your account.
             </DialogDescription>
           </DialogHeader>
           <DialogFooter>
-            <Button variant="outline" data-testid="limit-popup-ok-btn" onClick={() => setShowLimitPopup(false)}>
+            <Button data-testid="limit-popup-ok-btn" onClick={() => setShowLimitPopup(false)}>
               OK
             </Button>
-            {!native && (
-              <Button data-testid="limit-popup-upgrade-btn" onClick={() => navigate('/profile')}>
-                View my plan
-              </Button>
-            )}
           </DialogFooter>
         </DialogContent>
       </Dialog>

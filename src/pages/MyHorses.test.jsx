@@ -80,7 +80,7 @@ describe('MyHorses (novo design)', () => {
     expect(await screen.findByText('New horse page')).toBeInTheDocument();
   });
 
-  test('no limite do plano mostra a janela de limite com "View my plan" (web)', async () => {
+  test('no limite mostra a janela de limite, sem referências a planos ou upgrade', async () => {
     mockApi({ status: { used_horses: 3, max_horses: 3 } });
     renderPage();
     await screen.findAllByTestId(/^horse-card-/);
@@ -91,6 +91,7 @@ describe('MyHorses (novo design)', () => {
 
     const dialog = await screen.findByTestId('horse-limit-popup');
     expect(within(dialog).getByText('Horse limit reached')).toBeInTheDocument();
-    expect(within(dialog).getByTestId('limit-popup-upgrade-btn')).toBeInTheDocument();
+    expect(within(dialog).queryByTestId('limit-popup-upgrade-btn')).not.toBeInTheDocument();
+    expect(within(dialog).queryByText(/upgrade|plan/i)).not.toBeInTheDocument();
   });
 });

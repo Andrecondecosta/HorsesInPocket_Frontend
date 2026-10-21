@@ -4,27 +4,12 @@ import { FaEdit } from "react-icons/fa";
 import { Link, useNavigate } from "react-router-dom";
 import Layout from "../components/Layout";
 import LoadingPopup from "../components/LoadingPopup";
-import SavePaymentMethod from "../components/SavePaymentMethod";
-import SubscriptionPlans from "../components/SubscriptionPlans";
-import { isNativeiOS } from "../utils/isNative";
 import "./ProfilePage.css";
-
-const plans = [
-  { name: "Basic", price: "€0,00", priceId: null },
-  { name: "Plus", price: "€4,99", priceId: "price_1Qo67GDCGWh9lQnCP4woIdoo" },
-  { name: "Premium", price: "€14,99", priceId: "price_1Qo67nDCGWh9lQnCV35pyiym" },
-  { name: "Ultimate", price: "€34,99", priceId: "price_1Qo68DDCGWh9lQnCaWeRF1YO" },
-];
 
 const ProfilePage = () => {
   const [user, setUser] = useState({});
-  const [plan, setPlan] = useState("");
   const [isLoading, setIsLoading] = useState(true);
   const [error, setError] = useState(null);
-  const [showPlanPopup, setShowPlanPopup] = useState(false);
-  const [showPaymentPopup, setShowPaymentPopup] = useState(false);
-  const [selectedPlan, setSelectedPlan] = useState(null);
-  const [refreshKey, setRefreshKey] = useState(0);
   const [showDeleteConfirm, setShowDeleteConfirm] = useState(false);
   const [deleteConfirmText, setDeleteConfirmText] = useState("");
   const [isDeleting, setIsDeleting] = useState(false);
@@ -46,19 +31,6 @@ const ProfilePage = () => {
 
         const data = await response.json();
         setUser(data);
-
-        const planResponse = await fetch(`${process.env.REACT_APP_API_SERVER_URL}/get_user_plan`, {
-          method: "GET",
-          headers: {
-            "Content-Type": "application/json",
-            Authorization: `Bearer ${token}`,
-          },
-        });
-
-        if (!planResponse.ok) throw new Error("Error loading plan");
-
-        const planData = await planResponse.json();
-        setPlan(planData.plan);
       } catch (error) {
         setError("Error loading user data");
       } finally {
@@ -69,75 +41,7 @@ const ProfilePage = () => {
     if (token) {
       fetchProfile();
     }
-  }, [token, refreshKey]);
-
-  const handleSelectPlan = async (plan) => {
-    if (!plan) {
-      alert("Invalid plan selected.");
-      return;
-    }
-
-    setSelectedPlan(plan);
-
-    if (plan.priceId) {
-      setShowPlanPopup(false);
-      setTimeout(() => setShowPaymentPopup(true), 300);
-    } else {
-      try {
-        const response = await fetch(`${process.env.REACT_APP_API_SERVER_URL}/change_plan`, {
-          method: "POST",
-          body: JSON.stringify({ plan: plan.name }),
-          headers: {
-            "Content-Type": "application/json",
-            Authorization: `Bearer ${token}`,
-          },
-        });
-
-        if (!response.ok) throw new Error("Error activating free plan.");
-
-        alert(`Plan ${plan.name} activated!`);
-        setPlan(plan.name);
-        setUser((prevUser) => ({
-          ...prevUser,
-          subscription_canceled: false,
-        }));
-        setShowPlanPopup(false);
-      } catch (error) {
-        alert("Error activating free plan.");
-      }
-    }
-  };
-
-  const handlePaymentSuccess = (newPlan) => {
-    setShowPaymentPopup(false);
-    setPlan(newPlan);
-    setRefreshKey((k) => k + 1);
-  };
-
-  const handleCancelSubscription = async () => {
-    if (!window.confirm("Are you sure you want to cancel your subscription?")) return;
-
-    try {
-      const res = await fetch(`${process.env.REACT_APP_API_SERVER_URL}/payments/cancel_subscription`, {
-        method: "POST",
-        headers: {
-          "Content-Type": "application/json",
-          Authorization: `Bearer ${token}`,
-        },
-      });
-
-      const data = await res.json();
-      if (res.ok) {
-        alert(data.message);
-        setRefreshKey((k) => k + 1);
-      } else {
-        alert(data.error);
-      }
-    } catch (error) {
-      console.error("Error canceling subscription:", error);
-      alert("Error canceling subscription.");
-    }
-  };
+  }, [token]);
 
   const handleDeleteAccount = async () => {
     if (deleteConfirmText !== "DELETE") return;
@@ -171,7 +75,6 @@ const ProfilePage = () => {
   if (isLoading) return <LoadingPopup message="Loading..." />;
   if (error) return <p>{error}</p>;
 
-  const native = isNativeiOS();
 
   return (
     <Layout>
@@ -215,68 +118,6 @@ const ProfilePage = () => {
             <p>
               <strong>Country:</strong> {user.country || "Not specified"}
             </p>
-
-            {/* Subscription section — hidden on native iOS for App Store compliance */}
-            {!native && (
-              <div className="subscription-container" data-testid="subscription-container">
-                <div className="subscription-header">
-                  <p>
-                    <strong>Plan:</strong> {plan}
-                  </p>
-                  {user?.subscription_end &&
-                    new Date(user.subscription_end) > new Date() &&
-                    !user?.subscription_canceled && (
-                      <p className="subscription-status">
-                        <strong>Expires on:</strong>{" "}
-                        {new Date(user.subscription_end).toLocaleDateString()}
-                      </p>
-                    )}
-                  {user?.plan !== "Basic" &&
-                    user?.subscription_end &&
-                    new Date(user.subscription_end) > new Date() &&
-                    !user?.subscription_canceled && (
-                      <button onClick={handleCancelSubscription} className="cancel-btn" data-testid="cancel-subscription-btn">
-                        Cancel Subscription
-                      </button>
-                    )}
-                </div>
-
-                {user?.plan !== "Basic" && user?.subscription_canceled && (
-                  <p className="subscription-warning">
-                    Your subscription has been canceled and{" "}
-                    <strong>will not be renewed after</strong>{" "}
-                    {new Date(user.subscription_end).toLocaleDateString()}.
-                  </p>
-                )}
-
-                <button onClick={() => setShowPlanPopup(true)} className="upgrade-btn" data-testid="upgrade-plan-btn">
-                  Upgrade Plan
-                </button>
-              </div>
-            )}
-
-            {/* Payment popups — hidden on native iOS for App Store compliance */}
-            {!native && showPlanPopup && (
-              <div className="popup-overlay">
-                <div className="popup-content">
-                  <SubscriptionPlans
-                    onSelectPlan={handleSelectPlan}
-                    onClose={() => setShowPlanPopup(false)}
-                  />
-                </div>
-              </div>
-            )}
-
-            {!native && showPaymentPopup && selectedPlan && (
-              <div className="popup-overlay">
-                <div className="popup-content1">
-                  <SavePaymentMethod
-                    selectedPlan={selectedPlan}
-                    onPaymentSuccess={() => handlePaymentSuccess(selectedPlan.name)}
-                  />
-                </div>
-              </div>
-            )}
 
             {/* Delete Account Section */}
             <div className="delete-account-section" data-testid="delete-account-section">

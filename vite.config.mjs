@@ -41,7 +41,6 @@ export default defineConfig(({ mode }) => {
     },
     define: {
       'process.env.REACT_APP_API_SERVER_URL': JSON.stringify(env.REACT_APP_API_SERVER_URL),
-      'process.env.REACT_APP_STRIPE_PUBLIC_KEY': JSON.stringify(env.REACT_APP_STRIPE_PUBLIC_KEY),
       'process.env.PUBLIC_URL': JSON.stringify(''),
     },
     css: {
