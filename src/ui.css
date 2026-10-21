@@ -132,8 +132,10 @@
     border-radius: 0;
   }
 
+  /* width: auto anula o "button[type=submit] { width: 100% }" global do CSS antigo */
   .hh-ui :where(button, [role="button"]) {
     cursor: pointer;
+    width: auto;
   }
 
   .hh-ui :where(:focus-visible) {

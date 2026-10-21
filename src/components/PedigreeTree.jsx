@@ -6,7 +6,7 @@ import { cn } from '@/lib/utils';
 import { Button } from '@/components/ui/button';
 
 // As duas linhas do pedigree, com os relation_type que o backend guarda
-const LINES = [
+export const LINES = [
   {
     key: 'sire',
     parent: { relation: 'father', label: 'Sire', dot: 'bg-primary', text: 'text-primary-soft-foreground' },

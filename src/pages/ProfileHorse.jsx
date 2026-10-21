@@ -162,7 +162,7 @@ const ProfileHorse = ({ setIsLoggedIn }) => {
 
   const backHref = readonly ? '/received' : '/myhorses';
   const backLabel = readonly ? 'Received Horses' : 'My Horses';
-  const editHref = isOwner && !readonly ? `/horses/${id}/edit` : null;
+  const editHref = isOwner && !readonly ? `/horses/${id}/edit?step=pedigree` : null;
 
   if (isLoading || error) {
     return (
