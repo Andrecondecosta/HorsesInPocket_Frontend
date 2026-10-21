@@ -1,7 +1,66 @@
 import React, { useEffect, useState } from 'react';
-import './HistoryTable.css';
-import LoadingPopup from './LoadingPopup';
+import {
+  Camera,
+  CheckCircle2,
+  Inbox,
+  Link2,
+  Mail,
+  Pencil,
+  Plus,
+  Trash2,
+  UserMinus,
+  XCircle,
+} from 'lucide-react';
 
+import { cn } from '@/lib/utils';
+
+// Texto e ícone de cada ação registada pelo backend (Log#action)
+const ACTIONS = {
+  created: { label: 'Added to your portfolio', icon: Plus },
+  updated: { label: 'Updated', icon: Pencil },
+  deleted: { label: 'Deleted', icon: Trash2, tone: 'danger' },
+  shared_via_link: { label: 'Shared via link', icon: Link2, tone: 'primary' },
+  shared_via_email: { label: 'Shared via email', icon: Mail, tone: 'primary' },
+  received: { label: 'Received', icon: Inbox, tone: 'primary' },
+  deleted_share: { label: 'Access removed', icon: UserMinus },
+  screenshot_requested: { label: 'Screenshot pending', icon: Camera, tone: 'warning' },
+  approved_share: { label: 'Screenshot approved', icon: CheckCircle2, tone: 'primary' },
+  revoked_share: { label: 'Screenshot revoked', icon: XCircle, tone: 'danger' },
+};
+
+const TONES = {
+  primary: 'bg-primary-soft text-primary-soft-foreground',
+  warning: 'bg-leather-soft text-leather',
+  danger: 'bg-[#f6e3e1] text-destructive',
+  neutral: 'bg-secondary text-foreground/70',
+};
+
+// O backend envia "AAAA-MM-DD HH:MM"; o Safari (iPhone) não lê esse formato com espaço
+const parseLogDate = (value) => new Date(String(value).replace(' ', 'T'));
+
+const isoOf = (value) => {
+  const date = parseLogDate(value);
+  return Number.isNaN(date.getTime()) ? undefined : date.toISOString();
+};
+
+const formatDate = (value) => {
+  const date = parseLogDate(value);
+  if (Number.isNaN(date.getTime())) return '';
+  return date.toLocaleString('pt-PT', {
+    day: '2-digit',
+    month: '2-digit',
+    year: 'numeric',
+    hour: '2-digit',
+    minute: '2-digit',
+  });
+};
+
+const recipientOf = (log) => {
+  if (!log.recipient || log.recipient === 'N/A') return null;
+  return log.recipient.startsWith('Pending') ? 'Waiting to be opened' : log.recipient;
+};
+
+/** Atividade recente do utilizador (GET /logs). */
 const HistoryTable = () => {
   const [logs, setLogs] = useState([]);
   const [loading, setLoading] = useState(true);
@@ -22,9 +81,9 @@ const HistoryTable = () => {
 
         const data = await response.json();
         setLogs(data);
-        setLoading(false);
       } catch (err) {
-        setError(err.message);
+        setError('Unable to load your recent activity.');
+      } finally {
         setLoading(false);
       }
     };
@@ -32,84 +91,59 @@ const HistoryTable = () => {
     fetchLogs();
   }, []);
 
-  if (loading) {
-    return <LoadingPopup message="Loading..." />;
-  }
-
-  if (error) {
-    return <p>Error: {error}</p>;
-  }
-
-  const getStatusClass = (action) => {
-    switch (action) {
-      case 'created':             return 'status-created';
-      case 'updated':             return 'status-updated';
-      case 'deleted':             return 'status-deleted';
-      case 'shared_via_link':     return 'status-shared-link';
-      case 'shared_via_email':    return 'status-shared-email';
-      case 'received':            return 'status-received';
-      case 'deleted_share':       return 'status-deleted-share';
-      case 'screenshot_requested':return 'status-screenshot-pending';
-      case 'approved_share':      return 'status-screenshot-approved';
-      case 'revoked_share':       return 'status-screenshot-revoked';
-      default:                    return 'status-default';
-    }
-  };
-
-  const formatActionText = (action) => {
-    switch (action) {
-      case 'created':             return 'Created';
-      case 'updated':             return 'Updated';
-      case 'deleted':             return 'Deleted';
-      case 'shared_via_link':     return 'Shared via Link';
-      case 'shared_via_email':    return 'Shared via Email';
-      case 'received':            return 'Received';
-      case 'deleted_share':       return 'Deleted Share';
-      case 'screenshot_requested':return 'Screenshot Pending';
-      case 'approved_share':      return 'Screenshot Approved';
-      case 'revoked_share':       return 'Screenshot Revoked';
-      default:                    return 'Unknown';
-    }
-  };
-
   return (
-    <div className="history-table">
-      <h2 className="history-titles">History</h2>
-      <div className="history-table-container">
-        <table>
-          <thead>
-            <tr>
-              <th>Name</th>
-              <th>User</th>
-              <th>Status</th>
-              <th>Date</th>
-            </tr>
-          </thead>
-          <tbody>
-            {logs.map((log) => (
-              <tr key={log.id}>
-                <td>{log.horse_name || 'N/A'}</td>
-                <td>{log.recipient?.startsWith('Pending') ? 'Pending' : (log.recipient || 'N/A')}</td>
-                <td>
-                  <span className={`status-tag ${getStatusClass(log.action)}`}>
-                    {formatActionText(log.action)}
+    <section aria-labelledby="recent-activity-title" className="flex flex-col gap-2">
+      <h2 id="recent-activity-title" className="pl-1 text-[11px] font-semibold uppercase tracking-[0.12em] text-muted-foreground">
+        Recent activity
+      </h2>
+
+      {loading ? (
+        <div aria-label="Loading activity" className="flex animate-pulse flex-col gap-3 rounded-[14px] border bg-card p-4">
+          {[0, 1, 2].map((i) => (
+            <div key={i} className="flex items-center gap-3">
+              <div className="size-8 rounded-full bg-secondary" />
+              <div className="h-3 w-1/2 rounded bg-secondary" />
+            </div>
+          ))}
+        </div>
+      ) : error ? (
+        <p role="alert" className="rounded-[14px] border bg-card p-4 text-sm text-muted-foreground">{error}</p>
+      ) : logs.length === 0 ? (
+        <p className="rounded-[14px] border bg-card p-4 text-sm text-muted-foreground">No activity yet.</p>
+      ) : (
+        <ul className="divide-y divide-[#ece7dd] overflow-hidden rounded-[14px] border bg-card">
+          {logs.map((log) => {
+            const action = ACTIONS[log.action] || { label: 'Activity', icon: Pencil };
+            const Icon = action.icon;
+            const recipient = recipientOf(log);
+            return (
+              <li key={log.id} className="flex items-center gap-3 px-4 py-3">
+                <span className={cn('flex size-8 shrink-0 items-center justify-center rounded-full', TONES[action.tone || 'neutral'])}>
+                  <Icon className="size-4" aria-hidden="true" />
+                </span>
+                <div className="flex min-w-0 flex-1 flex-col">
+                  <span>
+                    <span className="font-semibold">{log.horse_name !== 'N/A' ? log.horse_name : 'Horse'}</span>
+                    <span className="text-muted-foreground"> · {action.label}</span>
                   </span>
-                </td>
-                <td>
-                  {new Date(log.created_at).toLocaleString('pt-PT', {
-                    day: '2-digit',
-                    month: '2-digit',
-                    year: 'numeric',
-                    hour: '2-digit',
-                    minute: '2-digit',
-                  })}
-                </td>
-              </tr>
-            ))}
-          </tbody>
-        </table>
-      </div>
-    </div>
+                  {/* No telemóvel a data vem nesta linha, para o texto principal não ser cortado */}
+                  <span className="text-[12.5px] text-muted-foreground">
+                    {recipient}
+                    <span className="md:hidden">
+                      {recipient && ' · '}
+                      <time dateTime={isoOf(log.created_at)}>{formatDate(log.created_at)}</time>
+                    </span>
+                  </span>
+                </div>
+                <time className="shrink-0 text-xs text-muted-foreground max-md:hidden" dateTime={isoOf(log.created_at)}>
+                  {formatDate(log.created_at)}
+                </time>
+              </li>
+            );
+          })}
+        </ul>
+      )}
+    </section>
   );
 };
 

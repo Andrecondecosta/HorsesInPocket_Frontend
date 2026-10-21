@@ -1,4 +1,4 @@
-import React, { useEffect, useState } from 'react';
+import React, { createContext, useContext, useEffect, useState } from 'react';
 import { Link, useLocation, useNavigate } from 'react-router-dom';
 import { CircleUser, House, Inbox, LayoutGrid, LifeBuoy, LogOut, User } from 'lucide-react';
 
@@ -31,6 +31,11 @@ const activeTabFor = ({ pathname, search }) => {
   }
   return pathname;
 };
+
+// Perfil do utilizador (GET /profile) já carregado pela moldura, para os ecrãs
+// dentro dela o usarem sem novo pedido (ex.: a saudação do dashboard). null enquanto carrega.
+const ProfileContext = createContext(null);
+export const useShellProfile = () => useContext(ProfileContext);
 
 const initialsOf = (firstName, lastName) =>
   `${firstName?.[0] || ''}${lastName?.[0] || ''}`.toUpperCase() || '·';
@@ -110,7 +115,9 @@ const AppShell = ({ setIsLoggedIn = () => {}, children }) => {
         </div>
       </header>
 
-      <main className="mx-auto max-w-6xl px-4 pt-6 pb-28 md:px-8 md:pt-10 md:pb-16">{children}</main>
+      <main className="mx-auto max-w-6xl px-4 pt-6 pb-28 md:px-8 md:pt-10 md:pb-16">
+        <ProfileContext.Provider value={profile}>{children}</ProfileContext.Provider>
+      </main>
 
       <nav
         aria-label="Main"

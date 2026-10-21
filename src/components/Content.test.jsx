@@ -26,7 +26,7 @@ describe('Rota /dashboard', () => {
     renderAt('/dashboard');
 
     expect(await screen.findByPlaceholderText('Password')).toBeInTheDocument();
-    expect(screen.queryByRole('heading', { name: 'Dashboard' })).not.toBeInTheDocument();
+    expect(screen.queryByRole('heading', { name: /^Good (morning|afternoon|evening)/ })).not.toBeInTheDocument();
   });
 
   test('com token expirado, redireciona para o login e apaga o token', async () => {
@@ -41,6 +41,6 @@ describe('Rota /dashboard', () => {
     localStorage.setItem('authToken', fakeJwt(Math.floor(Date.now() / 1000) + 3600));
     renderAt('/dashboard');
 
-    expect(await screen.findByRole('heading', { name: 'Dashboard' })).toBeInTheDocument();
+    expect(await screen.findByRole('heading', { name: /^Good (morning|afternoon|evening)/ })).toBeInTheDocument();
   });
 });
